@@ -159,7 +159,7 @@ fun evenNumber ( list : List < Int > ) : Unit
     list.forEach { n -> if (n % 2 == 0) println ( n ) }
 }
 
-fun array_evenNumber ( array : Array <Int> ) : Boolean
+/*fun array_evenNumber ( array : Array <Int> ) : Boolean
 {
 
-}
+}*/
