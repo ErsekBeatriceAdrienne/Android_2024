@@ -18,13 +18,14 @@ object TreeSetDictionary  : IDictionary
         return true
     }
 
-    override fun find( word: String ): Boolean
+    override fun find( word: String ) : Boolean
     {
         if( words.contains(word)) return true
         return false
     }
 
-    override fun size(): Int {
+    override fun size() : Int
+    {
         return words.size
     }
 }

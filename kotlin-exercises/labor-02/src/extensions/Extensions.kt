@@ -1,11 +1,6 @@
 package src.extensions
 
-fun String.monogram() : String
-{
-    return split(" ").joinToString("") { it.first().uppercase() }
-}
+// compact functions
+fun String.monogram ( ) : String =  split(" ").joinToString("") { it.first().uppercase() }
 
-fun List<String>.joinWithSeparator (separator : String) : String
-{
-    return this.joinToString(separator)
-}
+fun List < String >.joinWithSeparator( separator: String ) = joinToString(separator)

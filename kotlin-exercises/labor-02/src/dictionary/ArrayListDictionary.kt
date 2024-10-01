@@ -3,7 +3,7 @@ package src.dictionary
 import java.io.File
 
 // singleton ha object
-object ListDictionary : IDictionary
+object ArrayListDictionary : IDictionary
 {
     private val words : MutableList < String > = mutableListOf < String >()
 
@@ -19,13 +19,14 @@ object ListDictionary : IDictionary
         return true
     }
 
-    override fun find( word: String ): Boolean
+    override fun find( word: String ) : Boolean
     {
         if( words.contains(word)) return true
         return false
     }
 
-    override fun size(): Int {
+    override fun size() : Int
+    {
         return words.size
     }
 }
