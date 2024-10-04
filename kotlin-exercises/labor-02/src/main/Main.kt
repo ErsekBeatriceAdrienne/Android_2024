@@ -6,6 +6,7 @@ import src.dictionary.DictionaryType
 import src.dictionary.IDictionary
 import src.extensions.joinWithSeparator
 import src.extensions.monogram
+import src.extra.TextGenerator
 import java.util.Random
 
 
@@ -29,6 +30,9 @@ fun main ( )
 
     // 3. DATE
     exercise_3()
+
+    // EXTRA
+    extra_exercise()
 
 }
 
@@ -126,4 +130,18 @@ fun exercise_3() : Unit
     dates.sortWith(comparator)
     println("\n3. e) Custom sorted valid dates (ascending order) : ")
     dates.forEach { println( " ${it}" ) }
+    println()
+}
+
+fun extra_exercise ( ) : Unit
+{
+    println ("EXTRA EXERCISE")
+    val text = "Now is not the time for sleep, now is the time for party!"
+    println (" - Input : $text")
+
+    val textGenerator = TextGenerator ( )
+    textGenerator.learnWords( text )
+    val generated = textGenerator.generateText ( )
+
+    println("\n - Generated text: $generated")
 }
