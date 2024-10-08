@@ -7,6 +7,7 @@ import src.dictionary.IDictionary
 import src.extensions.joinWithSeparator
 import src.extensions.monogram
 import src.extra.TextGenerator
+import src.test.TextGeneratorTest
 import java.util.Random
 
 
@@ -136,12 +137,16 @@ fun exercise_3() : Unit
 fun extra_exercise ( ) : Unit
 {
     println ("EXTRA EXERCISE")
-    val text = "jmdfbdhgr"
+    val text = "Now is not the time for sleep, now is the time for party!"
     println (" - Input : $text")
 
     val textGenerator = TextGenerator ( )
     textGenerator.learnWords( text )
     val generated = textGenerator.generateText ( )
 
-    println("\n - Generated text: $generated")
+    //println("\n - Generated text: $generated")
+
+    val test = TextGeneratorTest ( )
+    test.setUp()
+    test.testGenerateTextWithEmptyLearning()
 }

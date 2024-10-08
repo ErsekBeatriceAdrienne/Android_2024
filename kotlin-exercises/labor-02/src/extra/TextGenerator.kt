@@ -2,7 +2,7 @@ package src.extra
 
 class TextGenerator
 {
-    private val words_map = mutableMapOf < String, MutableList < String >> ()
+    val words_map = mutableMapOf < String, MutableList < String >> ()
 
     fun learnWords(text : String) : Unit
     {
