@@ -1,7 +1,5 @@
 package src.extra
 
-import kotlin.random.Random
-
 class TextGenerator
 {
     private val words_map = mutableMapOf < String, MutableList < String >> ()

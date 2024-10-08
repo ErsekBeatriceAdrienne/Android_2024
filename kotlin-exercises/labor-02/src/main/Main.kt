@@ -136,7 +136,7 @@ fun exercise_3() : Unit
 fun extra_exercise ( ) : Unit
 {
     println ("EXTRA EXERCISE")
-    val text = "Now is not the time for sleep, now is the time for party!"
+    val text = "jmdfbdhgr"
     println (" - Input : $text")
 
     val textGenerator = TextGenerator ( )
