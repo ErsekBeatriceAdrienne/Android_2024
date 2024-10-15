@@ -13,48 +13,57 @@ class SplashActivity : AppCompatActivity()
     {
         super.onCreate(savedInstanceState)
 
+        // we can access every object on the layout in ActivitySplashBinding
         val binding = ActivitySpalshBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        // setContentView(R.layout.activity_splash)
 
         binding.button.setOnClickListener {
-            val inputText = binding.editText.text.toString()
+            Log.i(TAG, "Button pressed")
 
-            if (inputText.isNotEmpty())
-            {
-                // an object from main activity
-                val intent = Intent(this, MainActivity :: class.java)
-                // sending the data from the splash activity
-                intent.putExtra("input_text", inputText)
-                // start the activity
-                startActivity(intent)
-                finish()
-            }
-            else Log.d(TAG, "onCreate: SplashActivity created.")
+            val message = binding.textView.text.toString()
+            val intent = Intent(this, MainActivity :: class.java)
+            // sending the data from the splash activity
+            intent.putExtra("message", message)
+            // start the activity
+            startActivity(intent)
+            finish()
         }
     }
 
-    override fun onStart() {
+    override fun onStart()
+    {
         super.onStart()
-        Log.d(TAG, "onStart: SplashActivity started.")
+        // .i is an information
+        Log.i("SplashActivity", "onStart: SplashActivity started.")
     }
 
-    override fun onResume() {
+    override fun onResume()
+    {
         super.onResume()
-        Log.d(TAG, "onResume: SplashActivity resumed.")
+        Log.i("SplashActivity", "onResume: SplashActivity resumed.")
     }
 
-    override fun onPause() {
+    override fun onPause()
+    {
         super.onPause()
-        Log.d(TAG, "onPause: SplashActivity paused.")
+        Log.i("SplashActivity", "onPause: SplashActivity paused.")
     }
 
-    override fun onStop() {
+    override fun onStop()
+    {
         super.onStop()
-        Log.d(TAG, "onStop: SplashActivity stopped.")
+        Log.i("SplashActivity", "onStop: SplashActivity stopped.")
     }
 
-    override fun onDestroy() {
+    override fun onDestroy()
+    {
         super.onDestroy()
-        Log.d(TAG, "onDestroy: SplashActivity destroyed.")
+        Log.i("SplashActivity", "onDestroy: SplashActivity destroyed.")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.i("SplashActivity", "onRestart: SplashActivity restarted.")
     }
 }

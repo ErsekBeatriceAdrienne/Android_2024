@@ -6,20 +6,21 @@ import android.os.Bundle
 import android.util.Log
 import com.tasty.recipesapp.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+class MainActivity : AppCompatActivity()
+{
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
 
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setContentView(R.layout.activity_main)
         Log.d(TAG, "onCreate: MainActivity created.")
 
-        val inputText = intent.getStringExtra("editText")
+        val message = intent.getStringExtra("message")
 
-        // Display the text in the TextView
-        binding.textView.text = inputText
+        // Display the message in the TextView
+        binding.textView.text = message ?: "No message received"
     }
 
     override fun onStart() {
