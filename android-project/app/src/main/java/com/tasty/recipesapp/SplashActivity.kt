@@ -1,11 +1,12 @@
 package com.tasty.recipesapp
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.HandlerThread
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.tasty.recipesapp.databinding.ActivitySpalshBinding
+import com.tasty.recipesapp.databinding.ActivitySplashBinding
 
 class SplashActivity : AppCompatActivity()
 {
@@ -14,21 +15,22 @@ class SplashActivity : AppCompatActivity()
         super.onCreate(savedInstanceState)
 
         // we can access every object on the layout in ActivitySplashBinding
-        val binding = ActivitySpalshBinding.inflate(layoutInflater)
+        val binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
         // setContentView(R.layout.activity_splash)
 
-        binding.button.setOnClickListener {
-            Log.i(TAG, "Button pressed")
+        binding.imageView.setImageResource(R.drawable.recipehub_icon)
+        // You can also log to confirm the ImageView is being accessed
+        Log.i("SplashActivity", "ImageView set up with image.")
 
-            val message = binding.textView.text.toString()
-            val intent = Intent(this, MainActivity :: class.java)
-            // sending the data from the splash activity
-            intent.putExtra("message", message)
-            // start the activity
+        val handlerThread = HandlerThread("SplashHandlerThread", -10)
+        handlerThread.start() // Create a Handler on the new HandlerThread
+        val handler = Handler(handlerThread.looper)
+        handler.postDelayed({
+            // Navigate to MainActivity after the delay
+            val intent = Intent(this@SplashActivity, MainActivity::class.java)
             startActivity(intent)
-            finish()
-        }
+            finish() }, 2000)
     }
 
     override fun onStart()
