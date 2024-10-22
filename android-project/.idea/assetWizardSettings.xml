@@ -79,8 +79,8 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="D:\Sapientia\Android\recipehub_icons.png" />
-                                                <entry key="scalingPercent" value="109" />
+                                                <entry key="imagePath" value="D:\Sapientia\Android\Android_2024\android-project\app\src\main\res\drawable\recipehub_icons1.png" />
+                                                <entry key="scalingPercent" value="261" />
                                                 <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
@@ -113,8 +113,7 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="backgroundAssetType" value="COLOR" />
-                                      <entry key="backgroundColor" value="f2bdfd" />
+                                      <entry key="backgroundColor" value="84f1ea" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -283,6 +282,44 @@
                                 </PersistentState>
                               </value>
                             </entry>
+                          </map>
+                        </option>
+                      </PersistentState>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </PersistentState>
+          </value>
+        </entry>
+        <entry key="vectorWizard">
+          <value>
+            <PersistentState>
+              <option name="children">
+                <map>
+                  <entry key="vectorAssetStep">
+                    <value>
+                      <PersistentState>
+                        <option name="children">
+                          <map>
+                            <entry key="clipartAsset">
+                              <value>
+                                <PersistentState>
+                                  <option name="values">
+                                    <map>
+                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/bakery_dining/baseline_bakery_dining_24.xml" />
+                                    </map>
+                                  </option>
+                                </PersistentState>
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
+                        <option name="values">
+                          <map>
+                            <entry key="color" value="afa4ff" />
+                            <entry key="outputName" value="bakery" />
+                            <entry key="sourceFile" value="D:\Sapientia\Android\Android_2024\android-project" />
                           </map>
                         </option>
                       </PersistentState>

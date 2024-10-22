@@ -8,17 +8,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SplashActivity">
+    tools:context=".activities.SplashActivity">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="331dp"
-        android:layout_height="523dp"
+        android:layout_width="561dp"
+        android:layout_height="849dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/recipehub_icon"
-        tools:ignore="MissingConstraints" />
+        app:srcCompat="@drawable/recipehub_icons1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

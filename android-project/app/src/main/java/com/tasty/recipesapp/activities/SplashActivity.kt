@@ -1,4 +1,4 @@
-package com.tasty.recipesapp
+package com.tasty.recipesapp.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -19,7 +19,7 @@ class SplashActivity : AppCompatActivity()
         setContentView(binding.root)
         // setContentView(R.layout.activity_splash)
 
-        binding.imageView.setImageResource(R.drawable.recipehub_icon)
+        //binding.imageView.setImageResource(R.drawable.recipehub_icon)
         // You can also log to confirm the ImageView is being accessed
         Log.i("SplashActivity", "ImageView set up with image.")
 
