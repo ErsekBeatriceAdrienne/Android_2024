@@ -30,15 +30,23 @@ class MainActivity : AppCompatActivity()
                     true
                 }
                 R.id.recipesFragment -> {
-                    navController.navigate(R.id.recipeFragment) // Use correct ID
+                    navController.navigate(R.id.recipeFragment)
                     true
                 }
                 R.id.profileFragment -> {
                     navController.navigate(R.id.profileFragment)
                     true
                 }
+                R.id.favoritesFragment -> {
+                    navController.navigate(R.id.favoritesFragment)
+                    true
+                }
                 else -> false
             }
+        }
+
+        binding.fabAdd.setOnClickListener {
+            navController.navigate(R.id.favoritesFragment)
         }
 
         // Set default selection on startup

@@ -2,4 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="selected_icon_color">#111111</color> <!-- Example color for selected icon (orange) -->
+
+    <!-- Define your color for unselected icon state -->
+    <color name="unselected_icon_color">#808080</color>
 </resources>

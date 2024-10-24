@@ -30,5 +30,10 @@
         android:label="fragment_recipe_detail"
         tools:layout="@layout/fragment_recipe_detail" >
     </fragment>
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="com.tasty.recipesapp.ui.favorites.FavoritesFragment"
+        android:label="fragment_favorites"
+        tools:layout="@layout/fragment_favorites" />
 
 </navigation>
