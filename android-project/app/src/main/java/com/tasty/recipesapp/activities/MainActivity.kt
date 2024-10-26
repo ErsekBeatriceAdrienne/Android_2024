@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity()
         }
 
         binding.fabAdd.setOnClickListener {
-            navController.navigate(R.id.favoritesFragment)
+            navController.navigate(R.id.addNewRecipeFragment)
         }
 
         // Set default selection on startup

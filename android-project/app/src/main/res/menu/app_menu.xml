@@ -3,20 +3,21 @@
     <item
         android:id="@+id/homeFragment"
         android:title="Home"
-        android:icon="@drawable/home" />
+        android:icon="@drawable/home"
+        />
     <item
         android:id="@+id/recipesFragment"
         android:title="Recipes"
-        android:icon="@drawable/bakery" />
+        android:icon="@drawable/bakery"
+        />
     <item
-        android:id="@+id/add_item"
+        android:id="@+id/addNewRecipeFragment"
         android:title="Plus"
-        app:showAsAction="always"
-        android:iconTint="@color/black"/>
+        />
     <item
         android:id="@+id/favoritesFragment"
         android:title="Favorites"
-        android:icon="@drawable/person"
+        android:icon="@drawable/fav"
         />
     <item
         android:id="@+id/profileFragment"

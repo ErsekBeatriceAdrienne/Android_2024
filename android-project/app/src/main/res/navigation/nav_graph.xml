@@ -35,5 +35,10 @@
         android:name="com.tasty.recipesapp.ui.favorites.FavoritesFragment"
         android:label="fragment_favorites"
         tools:layout="@layout/fragment_favorites" />
+    <fragment
+        android:id="@+id/addNewRecipeFragment"
+        android:name="com.tasty.recipesapp.ui.addrecipe.AddNewRecipeFragment"
+        android:label="fragment_add_new_recipe"
+        tools:layout="@layout/fragment_add_new_recipe" />
 
 </navigation>
