@@ -13,36 +13,6 @@
         android:theme="@style/Theme.RecipesApp"
         tools:targetApi="31">
         <activity
-            android:name=".ui.recipe.InstructionAdapter"
-            android:exported="false" />
-        <activity
-            android:name=".viewmodels.RecipeViewModelFactory"
-            android:exported="false" />
-        <activity
-            android:name=".viewmodels.RecipeListViewModel"
-            android:exported="false" />
-        <activity
-            android:name=".models.RecipeModel"
-            android:exported="false" />
-        <activity
-            android:name=".mapping.InstructionMapping"
-            android:exported="false" />
-        <activity
-            android:name=".repository.Mappings"
-            android:exported="false" />
-        <activity
-            android:name=".dtos.RecipeDTO"
-            android:exported="false" />
-        <activity
-            android:name=".repository.RecipeRepository"
-            android:exported="false" />
-        <activity
-            android:name=".models.InstructionModel"
-            android:exported="false" />
-        <activity
-            android:name=".dtos.InstructionDTO"
-            android:exported="false" />
-        <activity
             android:name=".activities.SplashActivity"
             android:exported="true">
             <intent-filter>

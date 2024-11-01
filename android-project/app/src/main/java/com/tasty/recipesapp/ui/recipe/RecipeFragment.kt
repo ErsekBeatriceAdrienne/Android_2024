@@ -1,64 +1,42 @@
 package com.tasty.recipesapp.ui.recipe
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.tasty.recipesapp.R
+import com.tasty.recipesapp.adapters.InstructionsAdapter
+import com.tasty.recipesapp.databinding.FragmentRecipeBinding
+import com.tasty.recipesapp.models.RecipeViewModel
+import com.tasty.recipesapp.models.RecipeViewModelFactory
 import com.tasty.recipesapp.repository.RecipeRepository
-import com.tasty.recipesapp.viewmodels.RecipeListViewModel
-import com.tasty.recipesapp.viewmodels.RecipeViewModelFactory
 
 class RecipeFragment : Fragment() {
-
-    private lateinit var viewModel: RecipeListViewModel
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: InstructionAdapter // Create this adapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private lateinit var recipeViewModel: RecipeViewModel
+    private lateinit var binding: FragmentRecipeBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_recipe, container, false)
-    }
+        binding = FragmentRecipeBinding.inflate(inflater, container, false)
+        val recipeRepository = RecipeRepository(requireContext())
+        val viewModelFactory = RecipeViewModelFactory(recipeRepository)
+        recipeViewModel = ViewModelProvider(this, viewModelFactory).get(RecipeViewModel::class.java)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        // Bind the ViewModel
+        binding.viewModel = recipeViewModel
+        binding.lifecycleOwner = viewLifecycleOwner
 
-        recyclerView = view.findViewById(R.id.recycler_view_instructions)
+        // Set up the RecyclerView layout manager and adapter
+        binding.recyclerViewInstructions.layoutManager = LinearLayoutManager(requireContext())
+        recipeViewModel.instructions.observe(viewLifecycleOwner) { instructions ->
+            val adapter = InstructionsAdapter(instructions)
+            binding.recyclerViewInstructions.adapter = adapter
+        }
 
-        // Set the LayoutManager programmatically
-        recyclerView.layoutManager = LinearLayoutManager(context)
-
-        val repository = RecipeRepository()
-        val factory = RecipeViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, factory).get(RecipeListViewModel::class.java)
-
-        // Observe the instructions LiveData
-        viewModel.instructions.observe(viewLifecycleOwner, Observer { instructions ->
-            // Update the adapter with the instruction list
-            adapter = InstructionAdapter(instructions) // Create this adapter class
-            recyclerView.adapter = adapter
-
-            // Log the instruction data
-            for (instruction in instructions) {
-                Log.d("InstructionData", "Instruction ID: ${instruction.id}")
-                Log.d("InstructionData", "Display Text: ${instruction.displayText}")
-            }
-        })
-
-        // Fetch the instructions
-        viewModel.fetchInstructions()
+        return binding.root
     }
 }
