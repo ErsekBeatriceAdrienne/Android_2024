@@ -12,8 +12,9 @@
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewInstructions"
+            android:id="@+id/recyclerViewRecipes"
             android:layout_width="match_parent"
+            android:paddingBottom="56dp"
             android:layout_height="match_parent"/>
     </RelativeLayout>
 </layout>

@@ -5,10 +5,17 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="390dp"
+        android:layout_height="406dp"
+        android:layout_gravity="center"
+        android:src="@drawable/recipehub_icon" />
+
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Home" />
+        android:layout_width="87dp"
+        android:layout_height="wrap_content"
+        android:text="Home"
+        android:textSize="24sp" />
 
 </FrameLayout>

@@ -1,17 +1,24 @@
 package com.tasty.recipesapp.repository
 
 import android.content.Context
-import com.tasty.recipesapp.models.InstructionModel
 import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
+import com.google.gson.reflect.TypeToken
+import android.util.Log
+import com.tasty.recipesapp.models.RecipeModel
 
 class RecipeRepository(private val context: Context) {
     private val gson = Gson()
 
-    fun getInstructions(): List<InstructionModel> {
-        val jsonString = context.assets.open("instructions.json").bufferedReader().use { it.readText() }
-        val instructionListType = object : TypeToken<List<InstructionModel>>() {}.type
-        return gson.fromJson(jsonString, instructionListType)
+    fun getRecipes(): List<RecipeModel> {
+        return try {
+            val jsonString = context.assets.open("recipes.json").bufferedReader().use { it.readText() }
+            val recipeListType = object : TypeToken<List<RecipeModel>>() {}.type
+            gson.fromJson(jsonString, recipeListType)
+        } catch (e: Exception) {
+            Log.e("RecipeRepository", "Error loading recipes.json", e)
+            emptyList()
+        }
     }
 }
+

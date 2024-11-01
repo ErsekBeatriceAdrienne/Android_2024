@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="recipe"
+            type="com.tasty.recipesapp.models.RecipeModel" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="2dp"
+        android:elevation="4dp"
+        android:layout_marginBottom="56dp"
+        app:cardBackgroundColor="@color/selected_icon_color"
+        app:cardCornerRadius="14dp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true"
+        android:padding="18dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <!-- Recipe Name -->
+            <TextView
+                android:id="@+id/textViewName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{recipe.name}"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <!-- Recipe Description -->
+            <TextView
+                android:id="@+id/textViewDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{recipe.description}"
+                android:textSize="15sp"
+                android:textColor="#666666"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp" />
+
+            <!-- Recipe Keywords -->
+            <TextView
+                android:id="@+id/textViewKeywords"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{" - Keywords: " + recipe.keywords}'
+                android:textSize="12sp"
+                android:textColor="#888888"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp" />
+
+            <!-- Number of Servings -->
+            <TextView
+                android:id="@+id/textViewServings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{" - Serving size: " + recipe.numServings}'
+                android:textSize="12sp"
+                android:textColor="#888888"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="4dp" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</layout>
