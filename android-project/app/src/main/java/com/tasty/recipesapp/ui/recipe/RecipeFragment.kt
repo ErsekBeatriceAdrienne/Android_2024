@@ -16,27 +16,35 @@ import com.tasty.recipesapp.repository.RecipeRepository
 
 class RecipeFragment : Fragment() {
 
+    private lateinit var recipeRepository: RecipeRepository
     private lateinit var binding: FragmentRecipeBinding
     private lateinit var recipeViewModel: RecipeViewModel
+    private lateinit var recipesAdapter: RecipeAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View?
+    {
         binding = FragmentRecipeBinding.inflate(inflater, container, false)
 
-        val recipeRepository = RecipeRepository(requireContext())
+        recipeRepository = RecipeRepository(requireContext())
         val viewModelFactory = RecipeViewModelFactory(recipeRepository)
         recipeViewModel = ViewModelProvider(this, viewModelFactory).get(RecipeViewModel::class.java)
+
+        // Favorites
+        val recipes = recipeRepository.getRecipes()
+
+        recipesAdapter = RecipeAdapter(recipes, recipeRepository)
+        binding.recyclerViewRecipes.adapter = recipesAdapter
 
         // Bind the ViewModel
         binding.viewModel = recipeViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-
         binding.recyclerViewRecipes.layoutManager = LinearLayoutManager(requireContext())
         recipeViewModel.recipes.observe(viewLifecycleOwner) { recipes ->
-            val adapter = RecipeAdapter(recipes)
+            val adapter = RecipeAdapter(recipes, recipeRepository)
             binding.recyclerViewRecipes.adapter = adapter
         }
 

@@ -73,6 +73,17 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="4dp" />
 
+            <!-- Heart Icon for Favorite -->
+            <ImageButton
+                android:id="@+id/buttonFavorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/heart_unfilled"
+                android:contentDescription="Favorite button"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:layout_gravity="end"
+                android:layout_marginTop="8dp" />
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 

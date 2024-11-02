@@ -3,11 +3,12 @@ package com.tasty.recipesapp.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.tasty.recipesapp.R
 import com.tasty.recipesapp.databinding.ItemRecipeBinding
 import com.tasty.recipesapp.models.RecipeModel
+import com.tasty.recipesapp.repository.RecipeRepository
 
-
-class RecipeAdapter(private val recipes: List<RecipeModel>) :
+class RecipeAdapter(private var recipes: List<RecipeModel>, private val recipeRepository: RecipeRepository) :
     RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
@@ -21,10 +22,31 @@ class RecipeAdapter(private val recipes: List<RecipeModel>) :
 
     override fun getItemCount(): Int = recipes.size
 
+    fun updateRecipes(newRecipes: List<RecipeModel>) {
+        recipes = newRecipes
+        notifyDataSetChanged()
+    }
+
     inner class RecipeViewHolder(private val binding: ItemRecipeBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(recipe: RecipeModel) {
             binding.recipe = recipe
+
+            val isFavorite = recipeRepository.isFavorite(recipe.recipeID.toString())
+            binding.buttonFavorite.setImageResource(
+                if (isFavorite) R.drawable.heart_filled else R.drawable.heart_unfilled
+            )
+
+            binding.buttonFavorite.setOnClickListener {
+                if (isFavorite) {
+                    recipeRepository.removeFavorite(recipe.recipeID.toString())
+                    binding.buttonFavorite.setImageResource(R.drawable.heart_unfilled)
+                } else {
+                    recipeRepository.saveFavorite(recipe.recipeID.toString())
+                    binding.buttonFavorite.setImageResource(R.drawable.heart_filled)
+                }
+            }
+
             binding.executePendingBindings()
         }
     }
