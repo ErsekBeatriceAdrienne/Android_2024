@@ -48,6 +48,27 @@ class RecipeFragment : Fragment() {
             binding.recyclerViewRecipes.adapter = adapter
         }
 
+        recipeViewModel.recipes.observe(viewLifecycleOwner) { recipes ->
+            recipesAdapter.updateRecipes(recipes)
+        }
+
+        binding.buttonRecipeOfTheDay.setOnClickListener {
+            recipeViewModel.getRandomRecipe()
+
+            binding.cardViewRandomRecipe.visibility = View.VISIBLE
+            binding.textViewRandomRecipe.visibility = View.VISIBLE
+            binding.textViewRandomRecipeDescription.visibility = View.VISIBLE
+
+            recipeViewModel.randomRecipe.observe(viewLifecycleOwner) { recipe ->
+                binding.textViewRandomRecipe.text = recipe?.name ?: "No recipe found!"
+                binding.textViewRandomRecipeDescription.text =  " - ${recipe?.description}" ?: ""
+            }
+        }
+
+        recipeViewModel.randomRecipe.observe(viewLifecycleOwner) { recipe ->
+            binding.textViewRandomRecipe.text = recipe?.name ?: "No recipe found!"
+        }
+
         return binding.root
     }
 }

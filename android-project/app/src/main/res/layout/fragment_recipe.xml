@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -11,10 +12,76 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- Recipes Title -->
+        <TextView
+            android:id="@+id/textViewRecipesTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Recipes"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_alignParentTop="true"
+            android:layout_margin="16dp"
+            android:textColor="@color/selected_icon_color" />
+
+        <!-- CardView for Random Recipe -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewRandomRecipe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewRecipesTitle"
+            android:layout_margin="16dp"
+            android:backgroundTint="@color/selected_icon_color"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            android:visibility="gone" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/textViewRandomRecipe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/black"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/textViewRandomRecipeDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="#666666"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewRecipes"
             android:layout_width="match_parent"
+            android:layout_below="@id/buttonRecipeOfTheDay"
             android:paddingBottom="56dp"
             android:layout_height="match_parent"/>
+
+        <!-- Recipe of the Day Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonRecipeOfTheDay"
+            android:layout_width="374dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cardViewRandomRecipe"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="17dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="Recipe of the Day" />
     </RelativeLayout>
 </layout>

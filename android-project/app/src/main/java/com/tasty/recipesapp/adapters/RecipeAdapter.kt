@@ -32,18 +32,19 @@ class RecipeAdapter(private var recipes: List<RecipeModel>, private val recipeRe
         fun bind(recipe: RecipeModel) {
             binding.recipe = recipe
 
-            val isFavorite = recipeRepository.isFavorite(recipe.recipeID.toString())
+            var isFavorite = recipeRepository.isFavorite(recipe.recipeID.toString())
             binding.buttonFavorite.setImageResource(
                 if (isFavorite) R.drawable.heart_filled else R.drawable.heart_unfilled
             )
 
             binding.buttonFavorite.setOnClickListener {
+                isFavorite = !isFavorite
                 if (isFavorite) {
-                    recipeRepository.removeFavorite(recipe.recipeID.toString())
-                    binding.buttonFavorite.setImageResource(R.drawable.heart_unfilled)
-                } else {
                     recipeRepository.saveFavorite(recipe.recipeID.toString())
                     binding.buttonFavorite.setImageResource(R.drawable.heart_filled)
+                } else {
+                    recipeRepository.removeFavorite(recipe.recipeID.toString())
+                    binding.buttonFavorite.setImageResource(R.drawable.heart_unfilled)
                 }
             }
 

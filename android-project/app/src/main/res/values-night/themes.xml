@@ -5,4 +5,17 @@
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
+
+    <style name="Theme.RecipesApp" parent="Base.Theme.RecipesApp"/>
+
+    <!-- Lekerekített gomb stílus -->
+    <style name="RoundedButton">
+        <item name="shapeAppearance">@style/ShapeAppearance.Material3.Corner16dp</item> <!-- Lekerekített sarkok -->
+        <item name="backgroundTint">@color/selected_icon_color</item> <!-- Gomb háttérszíne -->
+    </style>
+
+    <!-- Lekerekített sarok stílus -->
+    <style name="ShapeAppearance.Material3.Corner16dp" parent="">
+        <item name="cornerSize">16dp</item> <!-- Sarok méret -->
+    </style>
 </resources>
