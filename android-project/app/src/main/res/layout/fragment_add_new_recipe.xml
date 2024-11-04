@@ -128,7 +128,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="56dp"
                     android:layout_marginTop="8dp"
-                    android:text="Add Recipe" />
+                    android:text="Add" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

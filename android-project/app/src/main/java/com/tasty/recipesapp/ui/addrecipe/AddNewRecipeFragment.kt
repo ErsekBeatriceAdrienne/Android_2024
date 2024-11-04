@@ -33,6 +33,7 @@ class AddNewRecipeFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         profileRepository = ProfileRepository(requireContext())
+        recipeRepository = RecipeRepository(requireContext())
     }
 
     override fun onCreateView(
@@ -61,9 +62,17 @@ class AddNewRecipeFragment : Fragment() {
         return view
     }
 
-    private fun addRecipe() {
+    private fun addRecipe()
+    {
         val title = recipeTitleEditText.text.toString()
         val description = recipeDescriptionEditText.text.toString()
+
+        if (title.isEmpty() || description.isEmpty())
+        {
+            Toast.makeText(requireContext(), "Title and description are required!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val thumbnailUrl = thumbnailUrlEditText.text.toString()
         val keywords = keywordsEditText.text.toString()
         val isPublic = isPublicEditText.text.toString().toBoolean()
@@ -74,8 +83,15 @@ class AddNewRecipeFragment : Fragment() {
         val components = componentsEditText.text.toString().split(",").map { it.trim() }
         val instructions = instructionsEditText.text.toString().split(",").map { it.trim() }
 
+        val existingRecipes = recipeRepository.getRecipes().toMutableList()
+        val newRecipeId = if (existingRecipes.isNotEmpty())
+        {
+            existingRecipes.maxOf { it.recipeID } + 1
+        }
+        else 1
+
         val newRecipe = RecipeModel(
-            recipeID = recipeRepository.getRecipes().size + 1,
+            recipeID = newRecipeId,
             name = title,
             description = description,
             thumbnailUrl = thumbnailUrl,
@@ -89,9 +105,12 @@ class AddNewRecipeFragment : Fragment() {
             instructions = instructions
         )
 
-        profileRepository.addRecipe(newRecipe)
+        val updatedRecipes = existingRecipes.toMutableList()
+        updatedRecipes.add(newRecipe)
+        recipeRepository.saveRecipes(updatedRecipes)
 
         Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show()
-
     }
+
+
 }

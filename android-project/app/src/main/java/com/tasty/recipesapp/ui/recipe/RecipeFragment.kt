@@ -5,21 +5,24 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.tasty.recipesapp.R
 import com.tasty.recipesapp.adapters.RecipeAdapter
 import com.tasty.recipesapp.databinding.FragmentRecipeBinding
+import com.tasty.recipesapp.models.RecipeModel
 import com.tasty.recipesapp.models.RecipeViewModel
 import com.tasty.recipesapp.models.RecipeViewModelFactory
 import com.tasty.recipesapp.repository.RecipeRepository
 
-
-class RecipeFragment : Fragment() {
-
+class RecipeFragment : Fragment()
+{
     private lateinit var recipeRepository: RecipeRepository
     private lateinit var binding: FragmentRecipeBinding
     private lateinit var recipeViewModel: RecipeViewModel
     private lateinit var recipesAdapter: RecipeAdapter
+    private lateinit var recipes: MutableList<RecipeModel>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,10 +35,11 @@ class RecipeFragment : Fragment() {
         val viewModelFactory = RecipeViewModelFactory(recipeRepository)
         recipeViewModel = ViewModelProvider(this, viewModelFactory).get(RecipeViewModel::class.java)
 
-        // Favorites
-        val recipes = recipeRepository.getRecipes()
-
-        recipesAdapter = RecipeAdapter(recipes, recipeRepository)
+        // Initialize the recipes and adapter
+        recipes = recipeRepository.getRecipes().toMutableList()
+        recipesAdapter = RecipeAdapter(recipes, recipeRepository) { recipe ->
+            showDeleteConfirmationDialog(recipe)
+        }
         binding.recyclerViewRecipes.adapter = recipesAdapter
 
         // Bind the ViewModel
@@ -43,13 +47,9 @@ class RecipeFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
 
         binding.recyclerViewRecipes.layoutManager = LinearLayoutManager(requireContext())
-        recipeViewModel.recipes.observe(viewLifecycleOwner) { recipes ->
-            val adapter = RecipeAdapter(recipes, recipeRepository)
-            binding.recyclerViewRecipes.adapter = adapter
-        }
 
-        recipeViewModel.recipes.observe(viewLifecycleOwner) { recipes ->
-            recipesAdapter.updateRecipes(recipes)
+        recipeViewModel.recipes.observe(viewLifecycleOwner) { updatedRecipes ->
+            recipesAdapter.updateRecipes(updatedRecipes.toMutableList())
         }
 
         binding.buttonRecipeOfTheDay.setOnClickListener {
@@ -61,14 +61,37 @@ class RecipeFragment : Fragment() {
 
             recipeViewModel.randomRecipe.observe(viewLifecycleOwner) { recipe ->
                 binding.textViewRandomRecipe.text = recipe?.name ?: "No recipe found!"
-                binding.textViewRandomRecipeDescription.text =  " - ${recipe?.description}" ?: ""
+                binding.textViewRandomRecipeDescription.text = " - ${recipe?.description}" ?: ""
             }
         }
 
-        recipeViewModel.randomRecipe.observe(viewLifecycleOwner) { recipe ->
-            binding.textViewRandomRecipe.text = recipe?.name ?: "No recipe found!"
+        return binding.root
+    }
+
+    private fun showDeleteConfirmationDialog(recipe: RecipeModel) {
+        val builder = AlertDialog.Builder(requireContext())
+            .setTitle("Delete Recipe")
+            .setMessage("Are you sure you want to delete the recipe '${recipe.name}'?")
+            .setIcon(R.drawable.delete)
+            .setPositiveButton("Yes") { _, _ -> deleteRecipe(recipe) }
+            .setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
+            .setCancelable(true) // Allow dismissing the dialog by tapping outside
+
+        // Create and customize the AlertDialog
+        val dialog = builder.create()
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(requireContext().getColor(R.color.purple)) // Change color of positive button
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(requireContext().getColor(R.color.purple)) // Change color of negative button
         }
 
-        return binding.root
+        dialog.show()
+    }
+
+
+    private fun deleteRecipe(recipe: RecipeModel)
+    {
+        recipeRepository.removeRecipe(recipe)
+        recipes = recipeRepository.getRecipes().toMutableList()
+        recipesAdapter.updateRecipes(recipes)
     }
 }

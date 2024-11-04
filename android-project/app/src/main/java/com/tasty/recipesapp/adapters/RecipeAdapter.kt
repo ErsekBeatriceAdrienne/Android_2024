@@ -8,8 +8,12 @@ import com.tasty.recipesapp.databinding.ItemRecipeBinding
 import com.tasty.recipesapp.models.RecipeModel
 import com.tasty.recipesapp.repository.RecipeRepository
 
-class RecipeAdapter(private var recipes: List<RecipeModel>, private val recipeRepository: RecipeRepository) :
-    RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>() {
+class RecipeAdapter(
+    private var recipes: MutableList<RecipeModel>,
+    private val recipeRepository: RecipeRepository,
+    private val onRecipeLongClick: (RecipeModel) -> Unit
+) : RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>()
+{
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
         val binding = ItemRecipeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -22,16 +26,19 @@ class RecipeAdapter(private var recipes: List<RecipeModel>, private val recipeRe
 
     override fun getItemCount(): Int = recipes.size
 
-    fun updateRecipes(newRecipes: List<RecipeModel>) {
+    fun updateRecipes(newRecipes: MutableList<RecipeModel>)
+    {
         recipes = newRecipes
         notifyDataSetChanged()
     }
 
     inner class RecipeViewHolder(private val binding: ItemRecipeBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root)
+    {
         fun bind(recipe: RecipeModel) {
             binding.recipe = recipe
 
+            // Set favorite button state
             var isFavorite = recipeRepository.isFavorite(recipe.recipeID.toString())
             binding.buttonFavorite.setImageResource(
                 if (isFavorite) R.drawable.heart_filled else R.drawable.heart_unfilled
@@ -46,6 +53,12 @@ class RecipeAdapter(private var recipes: List<RecipeModel>, private val recipeRe
                     recipeRepository.removeFavorite(recipe.recipeID.toString())
                     binding.buttonFavorite.setImageResource(R.drawable.heart_unfilled)
                 }
+            }
+
+            // Set long click listener to delete the recipe
+            binding.root.setOnLongClickListener {
+                onRecipeLongClick(recipe)
+                true
             }
 
             binding.executePendingBindings()

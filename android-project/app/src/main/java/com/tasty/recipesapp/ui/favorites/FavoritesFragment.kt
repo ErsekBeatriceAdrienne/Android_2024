@@ -42,13 +42,16 @@ class FavoritesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         // Adapter setup
-        favoritesAdapter = RecipeAdapter(emptyList(), recipeViewModel.recipeRepository)
+        favoritesAdapter = RecipeAdapter(mutableListOf(), recipeViewModel.recipeRepository) { recipe ->
+            // Handle long-click here, e.g., show delete confirmation
+        }
+
         binding.recyclerViewFavorites.layoutManager = LinearLayoutManager(context)
         binding.recyclerViewFavorites.adapter = favoritesAdapter
 
         // Observe favorite recipes
-        recipeViewModel.favoriteRecipes.observe(viewLifecycleOwner, Observer { recipes ->
-            favoritesAdapter.updateRecipes(recipes)
-        })
+        recipeViewModel.recipes.observe(viewLifecycleOwner) { updatedRecipes ->
+            favoritesAdapter.updateRecipes(updatedRecipes.toMutableList()) // Ensure this is a MutableList
+        }
     }
 }
