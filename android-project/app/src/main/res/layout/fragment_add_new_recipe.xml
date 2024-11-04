@@ -13,76 +13,123 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <EditText
-            android:id="@+id/recipeTitleEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Recipe Title" />
-
-        <EditText
-            android:id="@+id/recipeDescriptionEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Description" />
-
-        <EditText
-            android:id="@+id/thumbnailUrlEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Thumbnail URL" />
-
-        <EditText
-            android:id="@+id/keywordsEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Keywords (comma separated)" />
-
-        <EditText
-            android:id="@+id/isPublicEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Is Public (true/false)" />
-
-        <EditText
-            android:id="@+id/userEmailEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="User Email" />
-
-        <EditText
-            android:id="@+id/originalVideoUrlEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Original Video URL" />
-
-        <EditText
-            android:id="@+id/countryEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Country" />
-
-        <EditText
-            android:id="@+id/numServingsEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Number of Servings" />
-
-        <EditText
-            android:id="@+id/componentsEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Components (comma separated)" />
-
-        <EditText
-            android:id="@+id/instructionsEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Instructions (comma separated)" />
-
-        <Button
-            android:id="@+id/addRecipeButton"
+        <!-- Recipes Title (Fixed at the top) -->
+        <TextView
+            android:id="@+id/textViewRecipesTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add Recipe" />
+            android:text="Add recipe"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"
+            android:textColor="@color/selected_icon_color" />
+
+        <!-- Scrollable section for form fields -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="60dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/recipeTitleEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="Recipe Title"
+                    android:background="@drawable/rounded_edittext_background" />
+
+                <EditText
+                    android:id="@+id/recipeDescriptionEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="Description"
+                    android:background="@drawable/rounded_edittext_background" />
+
+                <EditText
+                    android:id="@+id/thumbnailUrlEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="Thumbnail URL"
+                    android:background="@drawable/rounded_edittext_background" />
+
+                <EditText
+                    android:id="@+id/keywordsEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="Keywords (comma separated)"
+                    android:background="@drawable/rounded_edittext_background" />
+
+                <EditText
+                    android:id="@+id/isPublicEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="Is Public (true/false)"
+                    android:background="@drawable/rounded_edittext_background" />
+
+                <EditText
+                    android:id="@+id/userEmailEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="User Email"
+                    android:background="@drawable/rounded_edittext_background" />
+
+                <EditText
+                    android:id="@+id/originalVideoUrlEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="Original Video URL"
+                    android:background="@drawable/rounded_edittext_background" />
+
+                <EditText
+                    android:id="@+id/countryEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="Country"
+                    android:background="@drawable/rounded_edittext_background" />
+
+                <EditText
+                    android:id="@+id/numServingsEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="Number of Servings"
+                    android:background="@drawable/rounded_edittext_background" />
+
+                <EditText
+                    android:id="@+id/componentsEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="Components (comma separated)"
+                    android:background="@drawable/rounded_edittext_background" />
+
+                <EditText
+                    android:id="@+id/instructionsEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="Instructions (comma separated)"
+                    android:background="@drawable/rounded_edittext_background" />
+
+                <Button
+                    android:id="@+id/addRecipeButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Add Recipe" />
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 </layout>

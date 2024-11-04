@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import com.tasty.recipesapp.R
 import com.tasty.recipesapp.models.RecipeModel
 import com.tasty.recipesapp.repository.ProfileRepository
+import com.tasty.recipesapp.repository.RecipeRepository
 
 class AddNewRecipeFragment : Fragment() {
 
@@ -27,6 +28,7 @@ class AddNewRecipeFragment : Fragment() {
     private lateinit var instructionsEditText: EditText
     private lateinit var addRecipeButton: Button
     private lateinit var profileRepository: ProfileRepository
+    private lateinit var recipeRepository: RecipeRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,7 +75,7 @@ class AddNewRecipeFragment : Fragment() {
         val instructions = instructionsEditText.text.toString().split(",").map { it.trim() }
 
         val newRecipe = RecipeModel(
-            recipeID = 0, // Generate a new ID or handle it accordingly
+            recipeID = recipeRepository.getRecipes().size + 1,
             name = title,
             description = description,
             thumbnailUrl = thumbnailUrl,
@@ -89,9 +91,7 @@ class AddNewRecipeFragment : Fragment() {
 
         profileRepository.addRecipe(newRecipe)
 
-        // Visszajelzés a felhasználónak
-        Toast.makeText(requireContext(), "Recipe added successfully!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show()
 
-        // Lehetőség visszanavigálni a recept lista fragmentre
     }
 }
