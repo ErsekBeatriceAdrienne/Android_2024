@@ -1,14 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.profile.ProfileFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+        <variable
+            name="viewModel"
+            type="com.tasty.recipesapp.models.ProfileRecipesViewModel" />
+    </data>
+
+    <!-- Profile Content -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Profile" />
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="16dp">
 
-</FrameLayout>
+        <!-- Profile Image -->
+        <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/profile_pic"
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="16dp"
+            android:contentDescription="Profile Image"
+            android:background="@drawable/circular_background"
+            android:clipToOutline="true"
+            android:layout_gravity="center" />
+
+        <!-- Profile Name -->
+        <TextView
+            android:id="@+id/profileName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Érsek Beatrice-Adrienne"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"
+            android:gravity="center" />
+
+        <!-- Profile Details -->
+        <TextView
+            android:id="@+id/profileDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sapientia EMTE university"
+            android:textSize="16sp"
+            android:textColor="@android:color/darker_gray"
+            android:layout_marginBottom="16dp"
+            android:gravity="center" />
+
+        <!-- Recipe Title -->
+        <TextView
+            android:id="@+id/favoriteRecipeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="My All time favorite recipe"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- RecyclerView for Favorite Recipes -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/favoriteRecipesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+</layout>

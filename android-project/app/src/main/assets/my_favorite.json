@@ -1,0 +1,16 @@
+[
+  {
+    "recipeID": 1,
+    "name": "Gingerbread",
+    "description": "Soft and moist gingerbread cookie recipe",
+    "thumbnailUrl": "",
+    "keywords": "ginger, bread, man",
+    "isPublic": true,
+    "userEmail": "Unknown",
+    "originalVideoUrl": "",
+    "country": "US",
+    "numServings": 17,
+    "components": [],
+    "instructions": []
+  }
+]

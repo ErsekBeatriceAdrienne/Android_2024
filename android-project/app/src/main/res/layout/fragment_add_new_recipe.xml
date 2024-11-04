@@ -1,14 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.addrecipe.AddNewRecipeFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+        <variable
+            name="viewModel"
+            type="com.tasty.recipesapp.models.ProfileRecipesViewModel" />
+    </data>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Add new recipe" />
+        android:orientation="vertical"
+        android:padding="16dp">
 
-</FrameLayout>
+        <EditText
+            android:id="@+id/recipeTitleEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Recipe Title" />
+
+        <EditText
+            android:id="@+id/recipeDescriptionEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Description" />
+
+        <EditText
+            android:id="@+id/thumbnailUrlEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Thumbnail URL" />
+
+        <EditText
+            android:id="@+id/keywordsEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Keywords (comma separated)" />
+
+        <EditText
+            android:id="@+id/isPublicEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Is Public (true/false)" />
+
+        <EditText
+            android:id="@+id/userEmailEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="User Email" />
+
+        <EditText
+            android:id="@+id/originalVideoUrlEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Original Video URL" />
+
+        <EditText
+            android:id="@+id/countryEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Country" />
+
+        <EditText
+            android:id="@+id/numServingsEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Number of Servings" />
+
+        <EditText
+            android:id="@+id/componentsEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Components (comma separated)" />
+
+        <EditText
+            android:id="@+id/instructionsEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Instructions (comma separated)" />
+
+        <Button
+            android:id="@+id/addRecipeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Recipe" />
+    </LinearLayout>
+</layout>
