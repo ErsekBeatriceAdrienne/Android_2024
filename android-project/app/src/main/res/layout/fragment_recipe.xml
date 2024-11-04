@@ -24,6 +24,34 @@
             android:layout_margin="16dp"
             android:textColor="@color/selected_icon_color" />
 
+        <!-- Recipe of the Day Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonRecipeOfTheDay"
+            android:layout_width="374dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/editTextSearch"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="17dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="Recipe of the Day" />
+
+        <!-- Search Field for Recipes -->
+        <EditText
+            android:id="@+id/editTextSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cardViewRandomRecipe"
+            android:layout_margin="16dp"
+            android:hint="Search Recipes"
+            android:padding="8dp"
+            android:background="@drawable/rounded_edittext_background" />
+
+
         <!-- CardView for Random Recipe -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardViewRandomRecipe"
@@ -67,21 +95,5 @@
             android:layout_below="@id/buttonRecipeOfTheDay"
             android:paddingBottom="56dp"
             android:layout_height="match_parent"/>
-
-        <!-- Recipe of the Day Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttonRecipeOfTheDay"
-            android:layout_width="374dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/cardViewRandomRecipe"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="17dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            android:text="Recipe of the Day" />
     </RelativeLayout>
 </layout>

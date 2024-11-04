@@ -13,8 +13,8 @@ import com.tasty.recipesapp.models.RecipeModel
 import com.tasty.recipesapp.repository.ProfileRepository
 import com.tasty.recipesapp.repository.RecipeRepository
 
-class AddNewRecipeFragment : Fragment() {
-
+class AddNewRecipeFragment : Fragment()
+{
     private lateinit var recipeTitleEditText: EditText
     private lateinit var recipeDescriptionEditText: EditText
     private lateinit var thumbnailUrlEditText: EditText

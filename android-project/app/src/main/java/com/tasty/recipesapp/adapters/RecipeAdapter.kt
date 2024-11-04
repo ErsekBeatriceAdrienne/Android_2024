@@ -14,8 +14,8 @@ class RecipeAdapter(
     private val onRecipeLongClick: (RecipeModel) -> Unit
 ) : RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>()
 {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder
+    {
         val binding = ItemRecipeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return RecipeViewHolder(binding)
     }
