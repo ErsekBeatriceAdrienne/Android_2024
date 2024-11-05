@@ -123,6 +123,14 @@
                     android:hint="Instructions (comma separated)"
                     android:background="@drawable/rounded_edittext_background" />
 
+                <EditText
+                    android:id="@+id/nutritionEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="8dp"
+                    android:hint="Nutrition (comma separated)"
+                    android:background="@drawable/rounded_edittext_background" />
+
                 <Button
                     android:id="@+id/addRecipeButton"
                     android:layout_width="wrap_content"

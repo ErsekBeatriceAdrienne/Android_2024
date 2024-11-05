@@ -11,12 +11,13 @@ import com.tasty.recipesapp.repository.RecipeRepository
 class RecipeAdapter(
     private var recipes: MutableList<RecipeModel>,
     private val recipeRepository: RecipeRepository,
-    private val onRecipeLongClick: (RecipeModel) -> Unit
+    private val onRecipeLongClick: (RecipeModel) -> Unit,
 ) : RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>()
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder
     {
         val binding = ItemRecipeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+
         return RecipeViewHolder(binding)
     }
 
@@ -35,7 +36,8 @@ class RecipeAdapter(
     inner class RecipeViewHolder(private val binding: ItemRecipeBinding) :
         RecyclerView.ViewHolder(binding.root)
     {
-        fun bind(recipe: RecipeModel) {
+        fun bind(recipe: RecipeModel)
+        {
             binding.recipe = recipe
 
             // Set favorite button state

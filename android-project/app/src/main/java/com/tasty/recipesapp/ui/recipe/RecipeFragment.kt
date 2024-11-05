@@ -35,17 +35,22 @@ class RecipeFragment : Fragment()
     {
         binding = FragmentRecipeBinding.inflate(inflater, container, false)
 
-        // Initialize the search field
-        searchEditText = binding.editTextSearch
-        // Filter recipes based on search input
-        searchEditText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                filterRecipes(s.toString())
-            }
-            override fun afterTextChanged(s: Editable?) {}
-        })
+        initialize()
+        searchRecipe()
 
+        recipeViewModel.recipes.observe(viewLifecycleOwner) { updatedRecipes ->
+            recipesAdapter.updateRecipes(updatedRecipes.toMutableList())
+        }
+
+        binding.buttonRecipeOfTheDay.setOnClickListener {
+            get_recipe_of_the_day();
+        }
+
+        return binding.root
+    }
+
+    private fun initialize()
+    {
         recipeRepository = RecipeRepository(requireContext())
         val viewModelFactory = RecipeViewModelFactory(recipeRepository)
         recipeViewModel = ViewModelProvider(this, viewModelFactory).get(RecipeViewModel::class.java)
@@ -55,32 +60,15 @@ class RecipeFragment : Fragment()
         recipesAdapter = RecipeAdapter(recipes, recipeRepository) { recipe ->
             showDeleteConfirmationDialog(recipe)
         }
+
+        binding.recyclerViewRecipes.layoutManager = LinearLayoutManager(requireContext())
+
         binding.recyclerViewRecipes.adapter = recipesAdapter
 
         // Bind the ViewModel
         binding.viewModel = recipeViewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        binding.recyclerViewRecipes.layoutManager = LinearLayoutManager(requireContext())
-
-        recipeViewModel.recipes.observe(viewLifecycleOwner) { updatedRecipes ->
-            recipesAdapter.updateRecipes(updatedRecipes.toMutableList())
-        }
-
-        binding.buttonRecipeOfTheDay.setOnClickListener {
-            recipeViewModel.getRandomRecipe()
-
-            binding.cardViewRandomRecipe.visibility = View.VISIBLE
-            binding.textViewRandomRecipe.visibility = View.VISIBLE
-            binding.textViewRandomRecipeDescription.visibility = View.VISIBLE
-
-            recipeViewModel.randomRecipe.observe(viewLifecycleOwner) { recipe ->
-                binding.textViewRandomRecipe.text = recipe?.name ?: "No recipe found!"
-                binding.textViewRandomRecipeDescription.text = " - ${recipe?.description}" ?: ""
-            }
-        }
-
-        return binding.root
     }
 
     private fun showDeleteConfirmationDialog(recipe: RecipeModel)
@@ -103,6 +91,34 @@ class RecipeFragment : Fragment()
         dialog.show()
     }
 
+    private fun get_recipe_of_the_day()
+    {
+        recipeViewModel.getRandomRecipe()
+
+        binding.cardViewRandomRecipe.visibility = View.VISIBLE
+        binding.textViewRandomRecipe.visibility = View.VISIBLE
+        binding.textViewRandomRecipeDescription.visibility = View.VISIBLE
+
+        recipeViewModel.randomRecipe.observe(viewLifecycleOwner) { recipe ->
+            binding.textViewRandomRecipe.text = recipe?.name ?: "No recipe found!"
+            binding.textViewRandomRecipeDescription.text = " - ${recipe?.description}" ?: ""
+        }
+    }
+
+    private fun searchRecipe()
+    {
+        // Initialize the search field
+        searchEditText = binding.editTextSearch
+        // Filter recipes based on search input
+        searchEditText.addTextChangedListener(object : TextWatcher
+        {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                filterRecipes(s.toString())
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
 
     private fun deleteRecipe(recipe: RecipeModel)
     {

@@ -29,6 +29,9 @@
         android:name="com.tasty.recipesapp.ui.recipe.RecipeDetailFragment"
         android:label="fragment_recipe_detail"
         tools:layout="@layout/fragment_recipe_detail" >
+        <argument
+            android:name="recipeId"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/favoritesFragment"

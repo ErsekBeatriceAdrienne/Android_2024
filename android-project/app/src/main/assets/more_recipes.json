@@ -1,0 +1,115 @@
+{
+  "recipeID": 1,
+  "name": "One-Pot Lemon Garlic Shrimp Pasta",
+  "description": "This easy 30-minute pasta recipe transforms ingredients that you already have in your kitchen into a posh, seafood dish you’ll want to serve at your next dinner party. And since the whole dish is made in a single pot, clean-up is easy. Don’t be surprised if this becomes your favorite quick go-to.",
+  "thumbnailUrl": "https://img.buzzfeed.com/video-api-prod/assets/9ee2dadcbfcb4095872e6cdbaa24ff14/Thumb_A_FB.jpg",
+  "keywords": "pasta, shrimp, lemon, garlic",
+  "isPublic": false,
+  "userEmail": "someone@gmail.com",
+  "originalVideoUrl": "https://s3.amazonaws.com/video-api-prod/assets/3de913d586424e189521e13eeee0222d/BFV10181_One-Pot_Lemon_Garlic_Shrimp_Pasta_FB1080SQ.mp4",
+  "country": "US",
+  "numServings": 4,
+  "components": [
+    {
+      "rawText": "8 oz linguine",
+      "extraComment": "",
+      "ingredient": {
+        "name": "linguine"
+      },
+      "measurement": {
+        "quantity": "8",
+        "unit": {
+          "name": "ounce",
+          "displaySingular": "oz",
+          "displayPlural": "oz",
+          "abbreviation": "oz"
+        }
+      },
+      "position": 1
+    },
+    {
+      "rawText": "2 Tbsp. olive oil",
+      "extraComment": "",
+      "ingredient": {
+        "name": "olive oil"
+      },
+      "measurement": {
+        "quantity": "2",
+        "unit": {
+          "name": "tablespoon",
+          "displaySingular": "tablespoon",
+          "displayPlural": "tablespoons",
+          "abbreviation": "tbsp"
+        }
+      },
+      "position": 2
+    },
+    {
+      "rawText": "8 Tbsp. (1 stick) unsalted butter",
+      "extraComment": "1 stick",
+      "ingredient": {
+        "name": "unsalted butter"
+      },
+      "measurement": {
+        "quantity": "8",
+        "unit": {
+          "name": "tablespoon",
+          "displaySingular": "tablespoon",
+          "displayPlural": "tablespoons",
+          "abbreviation": "tbsp"
+        }
+      },
+      "position": 3
+    }
+  ],
+  "instructions": [
+    {
+      "instructionID": 11,
+      "displayText": "In a large pot, boil water and add pasta. Cook (stirring frequently) until al dente.",
+      "position": 1
+    },
+    {
+      "instructionID": 12,
+      "displayText": "Drain and set pasta aside.",
+      "position": 2
+    },
+    {
+      "instructionID": 13,
+      "displayText": "In the same pan, heat olive oil and 2 tablespoons of butter. Add garlic and crushed red pepper, cook until fragrant.",
+      "position": 3
+    },
+    {
+      "instructionID": 14,
+      "displayText": "Toss in shrimp, salt and pepper to taste, and stir until shrimp start to turn pink, but are not fully cooked.",
+      "position": 4
+    },
+    {
+      "instructionID": 15,
+      "displayText": "Add oregano and spinach, cook until wilted.",
+      "position": 5
+    },
+    {
+      "instructionID": 16,
+      "displayText": "Return cooked pasta to the pot, add remaining butter, parmesan, and parsley. Stir until well mixed and the butter is melted.",
+      "position": 6
+    },
+    {
+      "instructionID": 17,
+      "displayText": "When the shrimp are cooked, add lemon juice, mix once more, then serve while hot.",
+      "position": 7
+    },
+    {
+      "instructionID": 18,
+      "displayText": "Enjoy!",
+      "position": 8
+    }
+  ],
+  "nutrition": {
+    "calories": 567,
+    "protein": 31,
+    "fat": 28,
+    "carbohydrates": 44,
+    "sugar": 1,
+    "fiber": 2
+  }
+}

@@ -26,11 +26,13 @@ class AddNewRecipeFragment : Fragment()
     private lateinit var numServingsEditText: EditText
     private lateinit var componentsEditText: EditText
     private lateinit var instructionsEditText: EditText
+    private lateinit var nutritionEditText: EditText
     private lateinit var addRecipeButton: Button
     private lateinit var profileRepository: ProfileRepository
     private lateinit var recipeRepository: RecipeRepository
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
         profileRepository = ProfileRepository(requireContext())
         recipeRepository = RecipeRepository(requireContext())
@@ -53,6 +55,7 @@ class AddNewRecipeFragment : Fragment()
         numServingsEditText = view.findViewById(R.id.numServingsEditText)
         componentsEditText = view.findViewById(R.id.componentsEditText)
         instructionsEditText = view.findViewById(R.id.instructionsEditText)
+        nutritionEditText = view.findViewById(R.id.nutritionEditText)
         addRecipeButton = view.findViewById(R.id.addRecipeButton)
 
         addRecipeButton.setOnClickListener {
@@ -82,6 +85,7 @@ class AddNewRecipeFragment : Fragment()
         val numServings = numServingsEditText.text.toString().toIntOrNull() ?: 0
         val components = componentsEditText.text.toString().split(",").map { it.trim() }
         val instructions = instructionsEditText.text.toString().split(",").map { it.trim() }
+        val nutrition = nutritionEditText.text.toString().split(",").map { it.trim() }
 
         val existingRecipes = recipeRepository.getRecipes().toMutableList()
         val newRecipeId = if (existingRecipes.isNotEmpty())
@@ -102,7 +106,8 @@ class AddNewRecipeFragment : Fragment()
             country = country,
             numServings = numServings,
             components = components,
-            instructions = instructions
+            instructions = instructions,
+            nutrition = nutrition
         )
 
         val updatedRecipes = existingRecipes.toMutableList()
@@ -111,6 +116,4 @@ class AddNewRecipeFragment : Fragment()
 
         Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show()
     }
-
-
 }

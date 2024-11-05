@@ -51,38 +51,27 @@
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp" />
 
-            <!-- Recipe Keywords -->
-            <TextView
-                android:id="@+id/textViewKeywords"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text='@{" - Keywords: " + recipe.keywords}'
-                android:textSize="12sp"
-                android:textColor="#888888"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="2dp" />
-
-            <!-- Number of Servings -->
-            <TextView
-                android:id="@+id/textViewServings"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text='@{" - Serving size: " + recipe.numServings}'
-                android:textSize="12sp"
-                android:textColor="#888888"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="4dp" />
-
             <!-- Heart Icon for Favorite -->
             <ImageButton
                 android:id="@+id/buttonFavorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/heart_unfilled"
-                android:contentDescription="Favorite button"
+                android:contentDescription="@string/favorite_button"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:layout_gravity="end"
                 android:layout_marginTop="8dp" />
+
+            <!-- More Details Button -->
+            <Button
+                android:id="@+id/buttonMoreDetails"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/details"
+                android:textSize="14sp"
+                android:background="@color/black"
+                android:textColor="@color/black"
+                android:layout_marginStart="8dp" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
