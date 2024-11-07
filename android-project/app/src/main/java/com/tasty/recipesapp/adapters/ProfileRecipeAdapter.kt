@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.tasty.recipesapp.databinding.ItemRecipeBinding
-import com.tasty.recipesapp.models.RecipeModel
+import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.repository.ProfileRepository
 
 class ProfileRecipeAdapter(private var recipes: List<RecipeModel>, private val profileRepository: ProfileRepository) :

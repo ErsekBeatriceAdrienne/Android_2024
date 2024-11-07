@@ -3,7 +3,7 @@
     <data>
         <variable
             name="instruction"
-            type="com.tasty.recipesapp.models.InstructionModel" />
+            type="com.tasty.recipesapp.models.recipe.recipemodels.InstructionModel" />
     </data>
 
     <LinearLayout

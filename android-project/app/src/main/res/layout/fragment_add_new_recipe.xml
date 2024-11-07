@@ -4,7 +4,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.tasty.recipesapp.models.ProfileRecipesViewModel" />
+            type="com.tasty.recipesapp.models.profile.ProfileRecipesViewModel" />
     </data>
 
     <LinearLayout

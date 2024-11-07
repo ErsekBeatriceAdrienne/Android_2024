@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.tasty.recipesapp.R
 import com.tasty.recipesapp.databinding.ItemRecipeBinding
-import com.tasty.recipesapp.models.RecipeModel
+import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.repository.RecipeRepository
 
 class RecipeAdapter(
@@ -21,7 +21,8 @@ class RecipeAdapter(
         return RecipeViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecipeViewHolder, position: Int)
+    {
         holder.bind(recipes[position])
     }
 

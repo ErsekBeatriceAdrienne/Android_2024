@@ -7,12 +7,11 @@ import com.google.gson.reflect.TypeToken
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.tasty.recipesapp.models.RecipeModel
+import com.tasty.recipesapp.models.recipe.RecipeModel
 
 class RecipeRepository(private val context: Context)
 {
     private val gson = Gson()
-    // Favorites
     private val preferences = context.getSharedPreferences("favorite_recipes", Context.MODE_PRIVATE)
     private val recipeFileName = "recipes.json"
     private val _favoriteRecipesLiveData = MutableLiveData<List<RecipeModel>>()

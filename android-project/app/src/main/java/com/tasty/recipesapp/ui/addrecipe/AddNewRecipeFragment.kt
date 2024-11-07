@@ -9,7 +9,13 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.tasty.recipesapp.R
-import com.tasty.recipesapp.models.RecipeModel
+import com.tasty.recipesapp.models.recipe.RecipeModel
+import com.tasty.recipesapp.models.recipe.recipemodels.ComponentModel
+import com.tasty.recipesapp.models.recipe.recipemodels.IngredientModel
+import com.tasty.recipesapp.models.recipe.recipemodels.InstructionModel
+import com.tasty.recipesapp.models.recipe.recipemodels.MeasurementModel
+import com.tasty.recipesapp.models.recipe.recipemodels.NutritionModel
+import com.tasty.recipesapp.models.recipe.recipemodels.UnitModel
 import com.tasty.recipesapp.repository.ProfileRepository
 import com.tasty.recipesapp.repository.RecipeRepository
 
@@ -41,7 +47,8 @@ class AddNewRecipeFragment : Fragment()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View?
+    {
         val view = inflater.inflate(R.layout.fragment_add_new_recipe, container, false)
 
         recipeTitleEditText = view.findViewById(R.id.recipeTitleEditText)
@@ -83,16 +90,85 @@ class AddNewRecipeFragment : Fragment()
         val originalVideoUrl = originalVideoUrlEditText.text.toString()
         val country = countryEditText.text.toString()
         val numServings = numServingsEditText.text.toString().toIntOrNull() ?: 0
-        val components = componentsEditText.text.toString().split(",").map { it.trim() }
-        val instructions = instructionsEditText.text.toString().split(",").map { it.trim() }
-        val nutrition = nutritionEditText.text.toString().split(",").map { it.trim() }
+        // Convert components
+        val components = componentsEditText.text.toString()
+            .split(",")
+            .mapIndexed { index, text ->
+                val parts = text.trim().split(":") // Assuming "ingredient:measurement" format
+                if (parts.size == 2) {
+                    val ingredient = IngredientModel(name = parts[0].trim())
+                    val measurementParts = parts[1].trim().split(" ") // Assuming "quantity unit" format
+                    val measurement = if (measurementParts.size >= 2) {
+                        val quantity = measurementParts[0]
+                        val unit = UnitModel(
+                            name = measurementParts[1], // Simplified, adjust as necessary
+                            displaySingular = measurementParts[1],
+                            displayPlural = measurementParts[1] + "s",  // Adding plural form (can adjust)
+                            abbreviation = measurementParts[1].take(2) // Simplified abbreviation
+                        )
+                        MeasurementModel(quantity = quantity, unit = unit)
+                    } else {
+                        // Handle cases where measurement is missing or malformed
+                        MeasurementModel(quantity = "", unit = UnitModel("", "", "", ""))
+                    }
+
+                    ComponentModel(
+                        rawText = text.trim(),
+                        ingredient = ingredient,
+                        measurement = measurement,
+                        position = index + 1 // Position starts from 1
+                    )
+                } else {
+                    val ingredient = IngredientModel(name = parts[0].trim())
+                    val measurement = MeasurementModel(quantity = "", unit = UnitModel("", "", "", ""))
+
+                    ComponentModel(
+                        rawText = text.trim(),
+                        ingredient = ingredient,
+                        measurement = measurement,
+                        position = index + 1
+                    )
+                }
+            }
+
+        // Convert instructions
+        val instructions = instructionsEditText.text.toString()
+            .split(",")
+            .mapIndexed { index, instruction ->
+                InstructionModel(
+                    instructionID = index + 1, // You can use a simple index or fetch an ID if needed
+                    displayText = instruction.trim(),
+                    position = index + 1
+                )
+            }
+
+        // Convert nutrition
+        val nutrition = nutritionEditText.text.toString()
+            .split(",")
+            .mapNotNull {
+                val parts = it.trim().split(":")
+                if (parts.size == 2) {
+                    val nutrient = parts[0].trim()
+                    val amount = parts[1].trim().toIntOrNull() ?: 0
+                    when (nutrient.lowercase()) {
+                        "calories" -> NutritionModel(calories = amount, protein = 0, fat = 0, carbohydrates = 0, sugar = 0, fiber = 0)
+                        "protein" -> NutritionModel(calories = 0, protein = amount, fat = 0, carbohydrates = 0, sugar = 0, fiber = 0)
+                        "fat" -> NutritionModel(calories = 0, protein = 0, fat = amount, carbohydrates = 0, sugar = 0, fiber = 0)
+                        "carbohydrates" -> NutritionModel(calories = 0, protein = 0, fat = 0, carbohydrates = amount, sugar = 0, fiber = 0)
+                        "sugar" -> NutritionModel(calories = 0, protein = 0, fat = 0, carbohydrates = 0, sugar = amount, fiber = 0)
+                        "fiber" -> NutritionModel(calories = 0, protein = 0, fat = 0, carbohydrates = 0, sugar = 0, fiber = amount)
+                        else -> null
+                    }
+                } else {
+                    null
+                }
+            }.firstOrNull() ?: NutritionModel(calories = 0, protein = 0, fat = 0, carbohydrates = 0, sugar = 0, fiber = 0)
+
 
         val existingRecipes = recipeRepository.getRecipes().toMutableList()
-        val newRecipeId = if (existingRecipes.isNotEmpty())
-        {
+        val newRecipeId = if (existingRecipes.isNotEmpty()) {
             existingRecipes.maxOf { it.recipeID } + 1
-        }
-        else 1
+        } else 1
 
         val newRecipe = RecipeModel(
             recipeID = newRecipeId,

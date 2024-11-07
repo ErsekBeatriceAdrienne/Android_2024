@@ -4,7 +4,7 @@ import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import android.util.Log
-import com.tasty.recipesapp.models.RecipeModel
+import com.tasty.recipesapp.models.recipe.RecipeModel
 import java.io.File
 import java.io.FileOutputStream
 

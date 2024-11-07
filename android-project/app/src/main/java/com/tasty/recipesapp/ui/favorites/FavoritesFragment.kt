@@ -9,8 +9,8 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tasty.recipesapp.adapters.RecipeAdapter
 import com.tasty.recipesapp.databinding.FragmentFavoritesBinding
-import com.tasty.recipesapp.models.RecipeViewModel
-import com.tasty.recipesapp.models.RecipeViewModelFactory
+import com.tasty.recipesapp.models.recipe.RecipeViewModel
+import com.tasty.recipesapp.models.recipe.RecipeViewModelFactory
 import com.tasty.recipesapp.repository.RecipeRepository
 
 class FavoritesFragment : Fragment()

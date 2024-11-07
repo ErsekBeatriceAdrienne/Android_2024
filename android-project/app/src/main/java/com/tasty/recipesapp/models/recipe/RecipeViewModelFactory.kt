@@ -1,4 +1,4 @@
-package com.tasty.recipesapp.models
+package com.tasty.recipesapp.models.recipe
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

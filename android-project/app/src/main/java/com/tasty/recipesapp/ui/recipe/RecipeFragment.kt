@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.tasty.recipesapp.R
 import com.tasty.recipesapp.adapters.RecipeAdapter
 import com.tasty.recipesapp.databinding.FragmentRecipeBinding
-import com.tasty.recipesapp.models.RecipeModel
-import com.tasty.recipesapp.models.RecipeViewModel
-import com.tasty.recipesapp.models.RecipeViewModelFactory
+import com.tasty.recipesapp.models.recipe.RecipeModel
+import com.tasty.recipesapp.models.recipe.RecipeViewModel
+import com.tasty.recipesapp.models.recipe.RecipeViewModelFactory
 import com.tasty.recipesapp.repository.RecipeRepository
 
 class RecipeFragment : Fragment()

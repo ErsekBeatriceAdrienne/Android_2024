@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.tasty.recipesapp.databinding.ItemInstructionBinding
-import com.tasty.recipesapp.models.InstructionModel
+import com.tasty.recipesapp.models.recipe.recipemodels.InstructionModel
 
 class InstructionsAdapter(private val instructions: List<InstructionModel>) :
     RecyclerView.Adapter<InstructionsAdapter.InstructionViewHolder>() {
