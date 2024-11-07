@@ -12,6 +12,5 @@ data class RecipeDTO(
     val country: String,
     val numServings: Int,
     val components: List<String>,
-    val instructions: List<String>,
-    val nutrition: List<String>
+    val instructions: List<String>
 )
