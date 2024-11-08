@@ -307,7 +307,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/delete/baseline_delete_24.xml" />
+                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/cookie/baseline_cookie_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -318,7 +318,7 @@
                         <option name="values">
                           <map>
                             <entry key="color" value="afa4ff" />
-                            <entry key="outputName" value="delete" />
+                            <entry key="outputName" value="ic_placeholder" />
                             <entry key="sourceFile" value="D:\Sapientia\Android\Android_2024\android-project" />
                           </map>
                         </option>

@@ -3,7 +3,6 @@ package com.tasty.recipesapp.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.findFragment
-import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.tasty.recipesapp.R
