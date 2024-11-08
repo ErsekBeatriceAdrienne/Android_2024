@@ -2,28 +2,33 @@ package com.tasty.recipesapp.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.findFragment
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.tasty.recipesapp.R
 import com.tasty.recipesapp.databinding.ItemRecipeBinding
 import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.repository.RecipeRepository
+import com.tasty.recipesapp.ui.recipe.RecipeFragmentDirections
+
 
 class RecipeAdapter(
     private var recipes: MutableList<RecipeModel>,
     private val recipeRepository: RecipeRepository,
-    private val onRecipeLongClick: (RecipeModel) -> Unit,
+    private val onRecipeLongClick: (RecipeModel) -> Unit
 ) : RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>()
 {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder
     {
         val binding = ItemRecipeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-
         return RecipeViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int)
     {
-        holder.bind(recipes[position])
+        val recipe = recipes[position]
+        holder.bind(recipe)
     }
 
     override fun getItemCount(): Int = recipes.size
@@ -63,6 +68,13 @@ class RecipeAdapter(
                 onRecipeLongClick(recipe)
                 true
             }
+
+            binding.buttonMoreDetails.setOnClickListener {
+                val action = RecipeFragmentDirections.actionRecipeFragmentToRecipeDetailFragment(recipe.recipeID.toString())
+                val navController = findNavController(binding.root.findFragment())
+                navController.navigate(action)
+            }
+
 
             binding.executePendingBindings()
         }

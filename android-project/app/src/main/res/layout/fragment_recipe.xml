@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -51,7 +50,6 @@
             android:padding="8dp"
             android:background="@drawable/rounded_edittext_background" />
 
-
         <!-- CardView for Random Recipe -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cardViewRandomRecipe"
@@ -62,7 +60,7 @@
             android:backgroundTint="@color/selected_icon_color"
             app:cardCornerRadius="16dp"
             app:cardElevation="4dp"
-            android:visibility="gone" >
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -89,11 +87,21 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
+        <!-- RecyclerView for Recipes -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewRecipes"
             android:layout_width="match_parent"
             android:layout_below="@id/buttonRecipeOfTheDay"
-            android:paddingBottom="56dp"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:paddingBottom="56dp" />
+
+        <!-- FrameLayout for Fragment -->
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/recyclerViewRecipes"
+            android:visibility="gone" />
+
     </RelativeLayout>
 </layout>

@@ -40,9 +40,11 @@ class FavoritesFragment : Fragment()
     {
         super.onViewCreated(view, savedInstanceState)
 
-        favoritesAdapter = RecipeAdapter(mutableListOf(), recipeRepository) { recipe ->
-            // Handle long-click for favorite recipes if needed
-        }
+        favoritesAdapter = RecipeAdapter(mutableListOf(), recipeRepository,
+            onRecipeLongClick = { recipe ->
+                // Handle long-click for favorite recipes if needed
+            }
+        )
 
         binding.recyclerViewFavorites.layoutManager = LinearLayoutManager(context)
         binding.recyclerViewFavorites.adapter = favoritesAdapter

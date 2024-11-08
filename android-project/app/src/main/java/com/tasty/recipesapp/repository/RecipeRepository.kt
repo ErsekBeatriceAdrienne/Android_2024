@@ -45,8 +45,6 @@ class RecipeRepository(private val context: Context)
         return getRecipes().filter { isFavorite(it.recipeID.toString()) }
     }
 
-    ///////     HIBA!!!!!!!!!!!!!!!!!!!
-    // Method to save the list of recipes to recipes.json
     fun saveRecipes(recipes: List<RecipeModel>) {
         val jsonString = gson.toJson(recipes)
         try {
@@ -77,6 +75,10 @@ class RecipeRepository(private val context: Context)
     private fun updateFavoriteRecipes() {
         val favoriteRecipes = getRecipes().filter { isFavorite(it.recipeID.toString()) }
         _favoriteRecipesLiveData.postValue(favoriteRecipes)
+    }
+
+    fun getRecipeById(recipeId: String): RecipeModel? {
+        return getRecipes().find { it.recipeID.toString() == recipeId }
     }
 
 }
