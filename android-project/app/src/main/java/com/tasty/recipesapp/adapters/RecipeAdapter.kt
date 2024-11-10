@@ -2,6 +2,7 @@ package com.tasty.recipesapp.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.findFragment
 import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.RecyclerView
@@ -10,7 +11,7 @@ import com.tasty.recipesapp.databinding.ItemRecipeBinding
 import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.repository.RecipeRepository
 import com.tasty.recipesapp.ui.recipe.RecipeFragmentDirections
-
+import com.tasty.recipesapp.ui.favorites.FavoritesFragmentDirections
 
 class RecipeAdapter(
     private var recipes: MutableList<RecipeModel>,
@@ -69,9 +70,20 @@ class RecipeAdapter(
             }
 
             binding.buttonMoreDetails.setOnClickListener {
-                val action = RecipeFragmentDirections.actionRecipeFragmentToRecipeDetailFragment(recipe.recipeID.toString())
-                val navController = findNavController(binding.root.findFragment())
-                navController.navigate(action)
+                val currentFragment = binding.root.findFragment<Fragment>()
+                val navController = findNavController(currentFragment)
+
+                val action = when (currentFragment) {
+                    is com.tasty.recipesapp.ui.recipe.RecipeFragment -> {
+                        RecipeFragmentDirections.actionRecipeFragmentToRecipeDetailFragment(recipe.recipeID.toString())
+                    }
+                    is com.tasty.recipesapp.ui.favorites.FavoritesFragment -> {
+                        FavoritesFragmentDirections.actionFavoritesFragmentToRecipeDetailsFragment(recipe.recipeID.toString())
+                    }
+                    else -> null
+                }
+
+                action?.let { navController.navigate(it) }
             }
 
 

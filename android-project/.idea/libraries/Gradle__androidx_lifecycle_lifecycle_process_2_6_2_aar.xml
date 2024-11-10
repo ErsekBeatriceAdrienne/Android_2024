@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.lifecycle:lifecycle-process:2.6.2@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/5e2baf698b1afef5148a6c6726d857e3/transformed/lifecycle-process-2.6.2/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/8.9/transforms/5e2baf698b1afef5148a6c6726d857e3/transformed/lifecycle-process-2.6.2/AndroidManifest.xml" />
-      <root url="jar://$USER_HOME$/.gradle/caches/8.9/transforms/5e2baf698b1afef5148a6c6726d857e3/transformed/lifecycle-process-2.6.2/jars/classes.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/5e2baf698b1afef5148a6c6726d857e3/transformed/lifecycle-process-2.6.2/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/5e2baf698b1afef5148a6c6726d857e3/transformed/lifecycle-process-2.6.2/res" />
+      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/5e2baf698b1afef5148a6c6726d857e3/transformed/lifecycle-process-2.6.2/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-process/2.6.2/dd039c5f2bbb7b39abdef48c2144039069b7bd7/lifecycle-process-2.6.2-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../jdk-17/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-process/2.6.2/dd039c5f2bbb7b39abdef48c2144039069b7bd7/lifecycle-process-2.6.2-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

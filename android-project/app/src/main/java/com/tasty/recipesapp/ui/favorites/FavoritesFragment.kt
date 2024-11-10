@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tasty.recipesapp.adapters.RecipeAdapter
 import com.tasty.recipesapp.databinding.FragmentFavoritesBinding
+import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.models.recipe.RecipeViewModel
 import com.tasty.recipesapp.models.recipe.RecipeViewModelFactory
 import com.tasty.recipesapp.repository.RecipeRepository
@@ -39,6 +40,7 @@ class FavoritesFragment : Fragment()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
+        val favoriteRecipes = getFavoriteRecipes()
 
         favoritesAdapter = RecipeAdapter(mutableListOf(), recipeRepository,
             onRecipeLongClick = { recipe ->
@@ -53,5 +55,9 @@ class FavoritesFragment : Fragment()
         recipeViewModel.favoriteRecipes.observe(viewLifecycleOwner) { favoriteRecipes ->
             favoritesAdapter.updateRecipes(favoriteRecipes.toMutableList())
         }
+    }
+
+    private fun getFavoriteRecipes(): List<RecipeModel> {
+        return recipeRepository.getFavorites()
     }
 }

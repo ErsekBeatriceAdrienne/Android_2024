@@ -2,7 +2,7 @@
   <library name="Gradle: com.google.firebase:firebase-crashlytics-buildtools:3.0.2" type="java-imported" external-system-id="GRADLE">
     <properties groupId="com.google.firebase" artifactId="firebase-crashlytics-buildtools" version="3.0.2" />
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.firebase/firebase-crashlytics-buildtools/3.0.2/bf4fd481d6d33a465600cc0472028e35cb543ef6/firebase-crashlytics-buildtools-3.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../jdk-17/caches/modules-2/files-2.1/com.google.firebase/firebase-crashlytics-buildtools/3.0.2/bf4fd481d6d33a465600cc0472028e35cb543ef6/firebase-crashlytics-buildtools-3.0.2.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
