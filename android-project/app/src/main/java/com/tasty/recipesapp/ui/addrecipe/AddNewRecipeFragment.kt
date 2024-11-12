@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.tasty.recipesapp.R
+import com.tasty.recipesapp.database.dao.RecipeDao
 import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.models.recipe.recipemodels.ComponentModel
 import com.tasty.recipesapp.models.recipe.recipemodels.IngredientModel
@@ -16,7 +17,7 @@ import com.tasty.recipesapp.models.recipe.recipemodels.InstructionModel
 import com.tasty.recipesapp.models.recipe.recipemodels.MeasurementModel
 import com.tasty.recipesapp.models.recipe.recipemodels.NutritionModel
 import com.tasty.recipesapp.models.recipe.recipemodels.UnitModel
-import com.tasty.recipesapp.repository.ProfileRepository
+import com.tasty.recipesapp.repository.LocalRepository
 import com.tasty.recipesapp.repository.RecipeRepository
 
 class AddNewRecipeFragment : Fragment()
@@ -34,14 +35,13 @@ class AddNewRecipeFragment : Fragment()
     private lateinit var instructionsEditText: EditText
     private lateinit var nutritionEditText: EditText
     private lateinit var addRecipeButton: Button
-    private lateinit var profileRepository: ProfileRepository
-    private lateinit var recipeRepository: RecipeRepository
+    private lateinit var repository: LocalRepository
+    private lateinit var recipeDao: RecipeDao
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
-        profileRepository = ProfileRepository(requireContext())
-        recipeRepository = RecipeRepository(requireContext())
+        repository = LocalRepository(recipeDao)
     }
 
     override fun onCreateView(
@@ -66,13 +66,13 @@ class AddNewRecipeFragment : Fragment()
         addRecipeButton = view.findViewById(R.id.addRecipeButton)
 
         addRecipeButton.setOnClickListener {
-            addRecipe()
+            //addRecipe()
         }
 
         return view
     }
 
-    private fun addRecipe()
+    private suspend fun addRecipe()
     {
         val title = recipeTitleEditText.text.toString()
         val description = recipeDescriptionEditText.text.toString()
@@ -165,7 +165,7 @@ class AddNewRecipeFragment : Fragment()
             }.firstOrNull() ?: NutritionModel(calories = 0, protein = 0, fat = 0, carbohydrates = 0, sugar = 0, fiber = 0)
 
 
-        val existingRecipes = recipeRepository.getRecipes().toMutableList()
+        val existingRecipes = repository.getAllRecipes()
         val newRecipeId = if (existingRecipes.isNotEmpty()) {
             existingRecipes.maxOf { it.recipeID } + 1
         } else 1
@@ -188,7 +188,7 @@ class AddNewRecipeFragment : Fragment()
 
         val updatedRecipes = existingRecipes.toMutableList()
         updatedRecipes.add(newRecipe)
-        recipeRepository.saveRecipes(updatedRecipes)
+        //repository.insertRecipe(newRecipe)
 
         Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show()
     }

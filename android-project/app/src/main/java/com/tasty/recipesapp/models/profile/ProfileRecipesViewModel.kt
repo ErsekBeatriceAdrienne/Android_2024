@@ -3,18 +3,38 @@ package com.tasty.recipesapp.models.profile
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.tasty.recipesapp.database.entities.RecipeEntity
 import com.tasty.recipesapp.models.recipe.RecipeModel
-import com.tasty.recipesapp.repository.ProfileRepository
+import com.tasty.recipesapp.repository.LocalRepository
+import kotlinx.coroutines.launch
 
-class ProfileRecipesViewModel(private val recipeRepository: ProfileRepository) : ViewModel() {
+class ProfileRecipesViewModel(private val repository: LocalRepository) : ViewModel() {
+
     private val _recipes = MutableLiveData<List<RecipeModel>>()
     val recipes: LiveData<List<RecipeModel>> get() = _recipes
 
     init {
-        loadRecipes()
+        loadAllRecipes()
     }
 
-    private fun loadRecipes() {
-        _recipes.value = recipeRepository.loadFavoriteRecipes()
+    private fun loadAllRecipes() {
+        viewModelScope.launch {
+            _recipes.value = repository.getAllRecipes()
+        }
+    }
+
+    fun insertRecipe(recipe: RecipeEntity) {
+        viewModelScope.launch {
+            repository.insertRecipe(recipe)
+            loadAllRecipes()
+        }
+    }
+
+    fun deleteRecipe(recipe: RecipeEntity) {
+        viewModelScope.launch {
+            repository.deleteRecipe(recipe)
+            loadAllRecipes()
+        }
     }
 }

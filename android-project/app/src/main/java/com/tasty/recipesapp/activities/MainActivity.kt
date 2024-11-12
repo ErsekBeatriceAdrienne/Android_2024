@@ -52,7 +52,6 @@ class MainActivity : AppCompatActivity()
         // Set default selection on startup
         bottomNavigationView.selectedItemId = R.id.homeFragment
 
-
     }
 
     override fun onStart() {
