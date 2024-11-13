@@ -8,7 +8,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.tasty.recipesapp.R
+import com.tasty.recipesapp.database.RecipeDatabase
 import com.tasty.recipesapp.database.dao.RecipeDao
 import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.models.recipe.recipemodels.ComponentModel
@@ -19,6 +21,7 @@ import com.tasty.recipesapp.models.recipe.recipemodels.NutritionModel
 import com.tasty.recipesapp.models.recipe.recipemodels.UnitModel
 import com.tasty.recipesapp.repository.LocalRepository
 import com.tasty.recipesapp.repository.RecipeRepository
+import kotlinx.coroutines.launch
 
 class AddNewRecipeFragment : Fragment()
 {
@@ -41,6 +44,9 @@ class AddNewRecipeFragment : Fragment()
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
+
+        val db = RecipeDatabase.getDatabase(requireContext())
+        recipeDao = db.recipeDao()
         repository = LocalRepository(recipeDao)
     }
 
@@ -66,7 +72,10 @@ class AddNewRecipeFragment : Fragment()
         addRecipeButton = view.findViewById(R.id.addRecipeButton)
 
         addRecipeButton.setOnClickListener {
-            //addRecipe()
+            // Call the method to add the recipe
+            lifecycleScope.launch {
+                addRecipe()
+            }
         }
 
         return view
@@ -186,9 +195,8 @@ class AddNewRecipeFragment : Fragment()
             nutrition = nutrition
         )
 
-        val updatedRecipes = existingRecipes.toMutableList()
-        updatedRecipes.add(newRecipe)
-        //repository.insertRecipe(newRecipe)
+        // Insert into Room database
+        repository.insertRecipe(newRecipe)
 
         Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show()
     }

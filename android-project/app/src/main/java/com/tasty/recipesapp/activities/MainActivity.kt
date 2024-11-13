@@ -6,15 +6,19 @@ import android.os.Bundle
 import android.util.Log
 import androidx.navigation.fragment.NavHostFragment
 import com.tasty.recipesapp.R
+import com.tasty.recipesapp.database.provider.RepositoryProvider
 import com.tasty.recipesapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity()
 {
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
 
-        val binding = ActivityMainBinding.inflate(layoutInflater)
+        RepositoryProvider.initialize(applicationContext)
+        binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment

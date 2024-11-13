@@ -12,6 +12,8 @@ import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.repository.RecipeRepository
 import com.tasty.recipesapp.ui.recipe.RecipeFragmentDirections
 import com.tasty.recipesapp.ui.favorites.FavoritesFragmentDirections
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class RecipeAdapter(
     private var recipes: MutableList<RecipeModel>,
@@ -54,13 +56,16 @@ class RecipeAdapter(
 
             binding.buttonFavorite.setOnClickListener {
                 isFavorite = !isFavorite
-                if (isFavorite) {
-                    recipeRepository.saveFavorite(recipe.recipeID.toString())
-                    binding.buttonFavorite.setImageResource(R.drawable.heart_filled)
-                } else {
-                    recipeRepository.removeFavorite(recipe.recipeID.toString())
-                    binding.buttonFavorite.setImageResource(R.drawable.heart_unfilled)
+                GlobalScope.launch {
+                    if (isFavorite) {
+                        recipeRepository.saveFavorite(recipe.recipeID.toString())
+                    } else {
+                        recipeRepository.removeFavorite(recipe.recipeID.toString())
+                    }
                 }
+                binding.buttonFavorite.setImageResource(
+                    if (isFavorite) R.drawable.heart_filled else R.drawable.heart_unfilled
+                )
             }
 
             // Set long click listener to delete the recipe

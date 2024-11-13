@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tasty.recipesapp.R
 import com.tasty.recipesapp.adapters.RecipeAdapter
@@ -20,6 +21,7 @@ import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.models.recipe.RecipeViewModel
 import com.tasty.recipesapp.models.recipe.RecipeViewModelFactory
 import com.tasty.recipesapp.repository.RecipeRepository
+import kotlinx.coroutines.launch
 
 class RecipeFragment : Fragment()
 {
@@ -78,7 +80,10 @@ class RecipeFragment : Fragment()
             .setTitle("Delete Recipe")
             .setMessage("Are you sure you want to delete the recipe '${recipe.name}'?")
             .setIcon(R.drawable.delete)
-            .setPositiveButton("Yes") { _, _ -> deleteRecipe(recipe) }
+            .setPositiveButton("Yes") { _, _ ->
+                viewLifecycleOwner.lifecycleScope.launch {
+                    deleteRecipe(recipe)
+                }}
             .setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
             .setCancelable(true) // Allow dismissing the dialog by tapping outside
 
@@ -121,7 +126,7 @@ class RecipeFragment : Fragment()
         })
     }
 
-    private fun deleteRecipe(recipe: RecipeModel)
+    private suspend fun deleteRecipe(recipe: RecipeModel)
     {
         recipeRepository.removeRecipe(recipe)
         recipes = recipeRepository.getRecipes().toMutableList()

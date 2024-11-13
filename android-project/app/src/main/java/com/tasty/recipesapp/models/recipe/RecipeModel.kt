@@ -1,4 +1,6 @@
 package com.tasty.recipesapp.models.recipe
+import com.google.gson.Gson
+import com.tasty.recipesapp.database.entities.RecipeEntity
 import com.tasty.recipesapp.models.recipe.recipemodels.ComponentModel
 import com.tasty.recipesapp.models.recipe.recipemodels.InstructionModel
 import com.tasty.recipesapp.models.recipe.recipemodels.NutritionModel
@@ -18,3 +20,8 @@ data class RecipeModel(
     val instructions: List<InstructionModel>,
     val nutrition: NutritionModel
 )
+
+fun RecipeModel.toEntity(): RecipeEntity {
+    val json = Gson().toJson(this)
+    return RecipeEntity(json = json)
+}
