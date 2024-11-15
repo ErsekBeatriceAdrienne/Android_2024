@@ -63,12 +63,69 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
+        <!-- Recipe of the Day Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonRecipeOfTheDay"
+            android:layout_width="374dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/favoriteRecipeTitle"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="17dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="20dp"
+            android:backgroundTint="@color/unselected_icon_color"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            android:text="Recipe of the Day" />
+
+
+        <!-- CardView for Random Recipe -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewRandomRecipe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewRecipesTitle"
+            android:layout_margin="16dp"
+            android:backgroundTint="@color/selected_icon_color"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/textViewRandomRecipe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@android:color/black"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/textViewRandomRecipeDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="#666666"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+
         <!-- RecyclerView for Favorite Recipes -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/favoriteRecipesRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"
+            android:paddingBottom="56dp"/>
 
     </LinearLayout>
 </layout>

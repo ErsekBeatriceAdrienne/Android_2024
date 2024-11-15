@@ -28,7 +28,7 @@
             <ImageView
                 android:id="@+id/recipeThumbnail"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="150dp"
                 android:scaleType="centerCrop"
                 app:imageUrl="@{recipe.thumbnailUrl}"
                 android:layout_gravity="center"/>
@@ -59,7 +59,7 @@
                     android:text="@{recipe.name}"
                     android:textStyle="bold"
                     android:textSize="15sp"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/white"
                     android:maxLines="1"
                     android:ellipsize="end" />
 
@@ -72,7 +72,7 @@
                     android:textSize="14sp"
                     android:textColor="@android:color/white"
                     android:layout_marginStart="8dp"
-                    android:background="@drawable/button_background"/>
+                    android:backgroundTint="@color/unselected_icon_color"/>
 
                 <!-- Heart Icon for Favorite -->
                 <ImageButton

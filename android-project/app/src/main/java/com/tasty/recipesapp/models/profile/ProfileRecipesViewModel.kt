@@ -13,6 +13,9 @@ class ProfileRecipesViewModel(private val repository: LocalRepository) : ViewMod
     private val _recipes = MutableLiveData<List<RecipeModel>>()
     val recipes: LiveData<List<RecipeModel>> get() = _recipes
 
+    private val _randomRecipe = MutableLiveData<RecipeModel?>()
+    val randomRecipe: LiveData<RecipeModel?> get() = _randomRecipe
+
     init {
         loadAllRecipes()
     }
@@ -35,5 +38,9 @@ class ProfileRecipesViewModel(private val repository: LocalRepository) : ViewMod
             repository.deleteRecipe(recipe)
             loadAllRecipes()
         }
+    }
+
+    fun getRandomRecipe() {
+        _randomRecipe.value = _recipes.value?.shuffled()?.firstOrNull()
     }
 }

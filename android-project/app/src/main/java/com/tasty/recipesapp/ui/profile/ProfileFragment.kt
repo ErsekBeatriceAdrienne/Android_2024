@@ -5,38 +5,72 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tasty.recipesapp.R
 import com.tasty.recipesapp.adapters.ProfileRecipeAdapter
+import com.tasty.recipesapp.database.RecipeDatabase
+import com.tasty.recipesapp.databinding.FragmentProfileBinding
+import com.tasty.recipesapp.models.profile.ProfileRecipesViewModel
+import com.tasty.recipesapp.models.profile.ProfileViewModelFactory
+import com.tasty.recipesapp.repository.LocalRepository
 
 class ProfileFragment : Fragment() {
 
+    private lateinit var binding: FragmentProfileBinding
     private lateinit var profileAdapter: ProfileRecipeAdapter
     private lateinit var recyclerView: RecyclerView
-    //private lateinit var profileRepository: ProfileRepository
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        // Inicializáld a ProfileRepository-t
-        //profileRepository = ProfileRepository(requireContext())
+    // Adatbázis példány lekérése
+    private val database by lazy { RecipeDatabase.getDatabase(requireContext()) } // Hozzáadás
+    private val viewModel: ProfileRecipesViewModel by viewModels {
+        ProfileViewModelFactory(LocalRepository(database.recipeDao())) // Hozzáadás
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_profile, container, false)
+    ): View {
+        binding = FragmentProfileBinding.inflate(inflater, container, false)
 
-        recyclerView = view.findViewById(R.id.favoriteRecipesRecyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        binding.buttonRecipeOfTheDay.setOnClickListener {
+            get_recipe_of_the_day();
+        }
 
-        // Betöltjük a kedvenc recepteket a JSON-ból
-        //val favoriteRecipes = profileRepository.loadFavoriteRecipes()
-
-        //profileAdapter = ProfileRecipeAdapter(favoriteRecipes, profileRepository)
-        recyclerView.adapter = profileAdapter
-
-        return view
+        return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // RecyclerView beállítása
+        binding.favoriteRecipesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        // Adapter inicializálása
+        profileAdapter = ProfileRecipeAdapter(emptyList())
+        binding.favoriteRecipesRecyclerView.adapter = profileAdapter
+
+        // Megfigyelő a receptek betöltésére
+        viewModel.recipes.observe(viewLifecycleOwner, Observer { recipes ->
+            profileAdapter.updateRecipes(recipes)
+        })
+    }
+
+
+    private fun get_recipe_of_the_day()
+    {
+        viewModel.getRandomRecipe()
+
+        binding.cardViewRandomRecipe.visibility = View.VISIBLE
+        binding.textViewRandomRecipe.visibility = View.VISIBLE
+        binding.textViewRandomRecipeDescription.visibility = View.VISIBLE
+
+        viewModel.randomRecipe.observe(viewLifecycleOwner) { recipe ->
+            binding.textViewRandomRecipe.text = recipe?.name ?: "No recipe found!"
+            binding.textViewRandomRecipeDescription.text = " - ${recipe?.description}" ?: ""
+        }
+    }
+
 }

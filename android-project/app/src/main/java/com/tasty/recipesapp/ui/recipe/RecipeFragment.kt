@@ -46,9 +46,6 @@ class RecipeFragment : Fragment()
             recipesAdapter.updateRecipes(updatedRecipes.toMutableList())
         }
 
-        binding.buttonRecipeOfTheDay.setOnClickListener {
-            get_recipe_of_the_day();
-        }
 
         return binding.root
     }
@@ -89,26 +86,8 @@ class RecipeFragment : Fragment()
 
         // Create and customize the AlertDialog
         val dialog = builder.create()
-        dialog.setOnShowListener {
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(requireContext().getColor(R.color.purple))
-            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(requireContext().getColor(R.color.purple))
-        }
 
         dialog.show()
-    }
-
-    private fun get_recipe_of_the_day()
-    {
-        recipeViewModel.getRandomRecipe()
-
-        binding.cardViewRandomRecipe.visibility = View.VISIBLE
-        binding.textViewRandomRecipe.visibility = View.VISIBLE
-        binding.textViewRandomRecipeDescription.visibility = View.VISIBLE
-
-        recipeViewModel.randomRecipe.observe(viewLifecycleOwner) { recipe ->
-            binding.textViewRandomRecipe.text = recipe?.name ?: "No recipe found!"
-            binding.textViewRandomRecipeDescription.text = " - ${recipe?.description}" ?: ""
-        }
     }
 
     private fun searchRecipe()

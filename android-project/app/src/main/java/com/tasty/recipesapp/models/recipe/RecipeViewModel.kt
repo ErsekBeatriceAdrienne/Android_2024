@@ -15,9 +15,6 @@ class RecipeViewModel(private val recipeRepository: RecipeRepository) : ViewMode
     private val _favoriteRecipes = MutableLiveData<List<RecipeModel>>()
     val favoriteRecipes: LiveData<List<RecipeModel>> get() = _favoriteRecipes
 
-    private val _randomRecipe = MutableLiveData<RecipeModel?>()
-    val randomRecipe: LiveData<RecipeModel?> get() = _randomRecipe
-
     init
     {
         viewModelScope.launch {
@@ -47,9 +44,5 @@ class RecipeViewModel(private val recipeRepository: RecipeRepository) : ViewMode
 
     private fun loadFavoriteRecipes() {
         _favoriteRecipes.value = recipeRepository.getFavorites()
-    }
-
-    fun getRandomRecipe() {
-        _randomRecipe.value = _recipes.value?.shuffled()?.firstOrNull()
     }
 }

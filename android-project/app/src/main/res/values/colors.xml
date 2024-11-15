@@ -1,8 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="selected_icon_color">#D6B4FC</color> <!-- Example color for selected icon (orange) -->
-    <color name="purple">#B19CD9</color>
-    <color name="unselected_icon_color">#FF000000</color>
+    <!-- Primary Colors -->
+    <color name="black">#000000</color> <!-- True Black -->
+    <color name="white">#FFFFFF</color> <!-- True White -->
+
+    <!-- Light and Dark Pastel Pink Palette for theme -->
+    <color name="selected_icon_color">#F8BBD0</color> <!-- Pastel pink for selected icon -->
+    <color name="unselected_icon_color">#F48FB1</color> <!-- Soft pink for unselected icon -->
+
+    <!-- Background Colors -->
+    <color name="background_light">#FCE4EC</color> <!-- Very light pink background (light theme) -->
+    <color name="background_dark">#3E2723</color> <!-- Deep brownish-pink background (dark theme) -->
+
+    <!-- Text Colors -->
+    <color name="textPrimary_light">#6A4F4D</color> <!-- Muted brown text (light theme) -->
+    <color name="textPrimary_dark">#FFFFFF</color> <!-- White text (dark theme) -->
+    <color name="textSecondary_light">#9E9E9E</color> <!-- Light gray text (light theme) -->
+    <color name="textSecondary_dark">#BDBDBD</color> <!-- Light gray text (dark theme) -->
+
+    <!-- Accent Colors -->
+    <color name="purple">#B39DDB</color> <!-- Light purple accent color (pastel purple) -->
+
+    <!-- Status Bar Colors -->
+    <color name="statusBar_light">#F06292</color> <!-- Soft pastel pink status bar (light theme) -->
+    <color name="statusBar_dark">#C2185B</color> <!-- Darker pink status bar (dark theme) -->
 </resources>
