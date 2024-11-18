@@ -46,7 +46,6 @@ class RecipeFragment : Fragment()
             recipesAdapter.updateRecipes(updatedRecipes.toMutableList())
         }
 
-
         return binding.root
     }
 
@@ -79,7 +78,7 @@ class RecipeFragment : Fragment()
             .setIcon(R.drawable.delete)
             .setPositiveButton("Yes") { _, _ ->
                 viewLifecycleOwner.lifecycleScope.launch {
-                    deleteRecipe(recipe)
+                    recipeViewModel.deleteRecipe(recipe)
                 }}
             .setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
             .setCancelable(true) // Allow dismissing the dialog by tapping outside

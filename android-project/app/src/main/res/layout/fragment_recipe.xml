@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/textViewRecipesTitle"
             android:layout_margin="16dp"
+            android:textColor="@color/selected_icon_color"
             android:hint="Search Recipes"
             android:padding="8dp"
             android:background="@drawable/rounded_edittext_background" />

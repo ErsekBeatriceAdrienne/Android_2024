@@ -27,5 +27,6 @@ abstract class RecipeDatabase : RoomDatabase()
                 instance
             }
         }
+
     }
 }

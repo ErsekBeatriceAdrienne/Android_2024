@@ -15,6 +15,11 @@ class LocalRepository(private val recipeDao: RecipeDao)
     private val gson = Gson()
 
     suspend fun insertRecipe(recipe: RecipeModel) {
+        val recipeCount = recipeDao.getRecipeCount()
+
+        if (recipeCount == 0) recipe.recipeID = 7
+        else recipe
+
         val recipeEntity = recipe.toEntity()
         recipeDao.insertRecipe(recipeEntity)
     }

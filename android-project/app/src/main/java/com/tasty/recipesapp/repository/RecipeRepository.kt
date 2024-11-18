@@ -19,8 +19,8 @@ class RecipeRepository(private val context: Context)
     private val preferences = context.getSharedPreferences("favorite_recipes", Context.MODE_PRIVATE)
     private val recipeFileName = "recipes.json"
     private val _favoriteRecipesLiveData = MutableLiveData<List<RecipeModel>>()
-    val favoriteRecipesLiveData: LiveData<List<RecipeModel>> get() = _favoriteRecipesLiveData
     private val recipeDao: RecipeDao = RecipeDatabase.getDatabase(context).recipeDao()
+    private val localRepository: LocalRepository = LocalRepository(recipeDao)
 
     // Get recipes from the Room database
     suspend fun getRecipesFromRoom(): LiveData<List<RecipeModel>>
@@ -34,7 +34,7 @@ class RecipeRepository(private val context: Context)
     }
 
     // Mark a recipe as favorite
-    suspend fun saveFavorite(recipeId: String) {
+     fun saveFavorite(recipeId: String) {
         try {
             preferences.edit().putBoolean(recipeId, true).apply()
             updateFavoriteRecipes()
@@ -44,7 +44,7 @@ class RecipeRepository(private val context: Context)
     }
 
     // Remove a recipe from favorites
-    suspend fun removeFavorite(recipeId: String) {
+     fun removeFavorite(recipeId: String) {
         try {
             preferences.edit().putBoolean(recipeId, false).apply()
             updateFavoriteRecipes()
@@ -86,10 +86,16 @@ class RecipeRepository(private val context: Context)
     // Remove recipe from Room database
     suspend fun removeRecipe(recipe: RecipeModel) {
         try {
-            recipeDao.deleteRecipe(recipe.toEntity())
-            updateFavoriteRecipes() // Update favorite recipes after removal
+            // Remove from Room database using LocalRepository
+            localRepository.deleteRecipe(recipe)
+
+            // If the recipe was marked as favorite, also remove from favorites
+            preferences.edit().putBoolean(recipe.recipeID.toString(), false).apply()
+
+            // Update the list of favorite recipes
+            updateFavoriteRecipes()
         } catch (e: Exception) {
-            Log.e("RecipeRepository", "Error removing recipe from Room", e)
+            Log.e("RecipeRepository", "Error removing recipe", e)
         }
     }
 
@@ -101,26 +107,14 @@ class RecipeRepository(private val context: Context)
         return getRecipes().filter { isFavorite(it.recipeID.toString()) }
     }
 
-    fun saveRecipes(recipes: List<RecipeModel>) {
-        val jsonString = gson.toJson(recipes)
-        try {
-            context.openFileOutput(recipeFileName, Context.MODE_PRIVATE).use {
-                it.write(jsonString.toByteArray())
-            }
-        } catch (e: Exception) {
-            Log.e("RecipeRepository", "Error saving $recipeFileName", e)
-        }
-    }
-
-    // Method to toggle the favorite status of a recipe
-    suspend fun toggleFavorite(recipe: RecipeModel) {
-        val isCurrentlyFavorite = preferences.getBoolean(recipe.recipeID.toString(), false)
-        preferences.edit().putBoolean(recipe.recipeID.toString(), !isCurrentlyFavorite).apply()
-        updateFavoriteRecipes()
+    suspend fun getFavoriteRecipesFromRoom(): List<RecipeModel> {
+        val recipeEntities = recipeDao.getAllRecipes()
+        val favoriteRecipes = recipeEntities.filter { isFavorite(it.internalId.toString()) }
+        return convertEntityListToModelList(favoriteRecipes)
     }
 
     // Method to update the LiveData of favorite recipes
-    private suspend fun updateFavoriteRecipes() {
+    private fun updateFavoriteRecipes() {
         val favoriteRecipes = getRecipes().filter { isFavorite(it.recipeID.toString()) }
         _favoriteRecipesLiveData.postValue(favoriteRecipes)
     }

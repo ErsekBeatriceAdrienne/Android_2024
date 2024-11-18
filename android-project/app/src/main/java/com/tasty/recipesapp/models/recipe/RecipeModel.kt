@@ -6,7 +6,7 @@ import com.tasty.recipesapp.models.recipe.recipemodels.InstructionModel
 import com.tasty.recipesapp.models.recipe.recipemodels.NutritionModel
 
 data class RecipeModel(
-    val recipeID: Int,
+    var recipeID: Int,
     val name: String,
     val description: String,
     val thumbnailUrl: String,

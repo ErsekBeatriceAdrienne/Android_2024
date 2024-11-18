@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.findFragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.tasty.recipesapp.R
@@ -56,7 +57,8 @@ class RecipeAdapter(
 
             binding.buttonFavorite.setOnClickListener {
                 isFavorite = !isFavorite
-                GlobalScope.launch {
+                val lifecycleOwner = binding.root.findFragment<Fragment>().viewLifecycleOwner
+                lifecycleOwner.lifecycleScope.launch {
                     if (isFavorite) {
                         recipeRepository.saveFavorite(recipe.recipeID.toString())
                     } else {
@@ -67,6 +69,7 @@ class RecipeAdapter(
                     if (isFavorite) R.drawable.heart_filled else R.drawable.heart_unfilled
                 )
             }
+
 
             // Set long click listener to delete the recipe
             binding.root.setOnLongClickListener {
@@ -87,6 +90,7 @@ class RecipeAdapter(
                     }
                     else -> null
                 }
+
 
                 action?.let { navController.navigate(it) }
             }

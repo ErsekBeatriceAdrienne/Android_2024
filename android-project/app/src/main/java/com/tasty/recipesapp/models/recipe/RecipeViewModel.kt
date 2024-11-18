@@ -24,6 +24,12 @@ class RecipeViewModel(private val recipeRepository: RecipeRepository) : ViewMode
         }
     }
 
+    // Delete recipe from the database
+    suspend fun deleteRecipe(recipe: RecipeModel) {
+        recipeRepository.removeRecipe(recipe)
+        _recipes.value = _recipes.value?.filter { it.recipeID != recipe.recipeID }
+    }
+
     private fun loadRecipes() {
         _recipes.value = recipeRepository.getRecipes()
     }
@@ -36,9 +42,10 @@ class RecipeViewModel(private val recipeRepository: RecipeRepository) : ViewMode
     }
 
     // Load favorite recipes from Room
-    private fun loadFavoriteRecipesFromRoom() {
+    fun loadFavoriteRecipesFromDatabase() {
         viewModelScope.launch {
-            //_favoriteRecipes.value = recipeRepository.getFavoritesFromRoom()
+            val favoriteRecipesFromRoom = recipeRepository.getFavoriteRecipesFromRoom()
+            _favoriteRecipes.value = _favoriteRecipes.value?.plus(favoriteRecipesFromRoom)
         }
     }
 

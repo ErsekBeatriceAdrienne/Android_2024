@@ -51,6 +51,9 @@ class FavoritesFragment : Fragment()
         binding.recyclerViewFavorites.layoutManager = LinearLayoutManager(context)
         binding.recyclerViewFavorites.adapter = favoritesAdapter
 
+        // Kedvenc receptek betöltése az adatbázisból
+        recipeViewModel.loadFavoriteRecipesFromDatabase()
+
         // Observe only the favorite recipes
         recipeViewModel.favoriteRecipes.observe(viewLifecycleOwner) { favoriteRecipes ->
             favoritesAdapter.updateRecipes(favoriteRecipes.toMutableList())

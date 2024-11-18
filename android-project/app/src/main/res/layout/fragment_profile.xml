@@ -37,6 +37,7 @@
             android:text="Érsek Beatrice-Adrienne"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:textColor="@color/unselected_icon_color"
             android:layout_marginBottom="8dp"
             android:gravity="center" />
 

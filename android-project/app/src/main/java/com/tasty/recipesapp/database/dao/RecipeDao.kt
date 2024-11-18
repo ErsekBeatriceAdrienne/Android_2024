@@ -14,6 +14,8 @@ interface RecipeDao
     suspend fun getRecipeById(id: Long): RecipeEntity?
     @Query("SELECT * FROM recipe")
     suspend fun getAllRecipes(): List<RecipeEntity>
+    @Query("SELECT COUNT(*) FROM recipe")
+    suspend fun getRecipeCount(): Int
     @Delete
     suspend fun deleteRecipe(recipe: RecipeEntity)
 }
