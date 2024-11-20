@@ -10,15 +10,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tasty.recipesapp.adapters.RecipeAdapter
 import com.tasty.recipesapp.databinding.FragmentFavoritesBinding
-import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.models.recipe.RecipeViewModel
 import com.tasty.recipesapp.models.recipe.RecipeViewModelFactory
 import com.tasty.recipesapp.repository.LocalRepository
 import com.tasty.recipesapp.RecipeApp
+import com.tasty.recipesapp.models.recipe.RecipeModel
 import kotlinx.coroutines.launch
 
-class FavoritesFragment : Fragment()
-{
+class FavoritesFragment : Fragment() {
     private lateinit var binding: FragmentFavoritesBinding
     private lateinit var favoritesAdapter: RecipeAdapter
     private lateinit var localRepository: LocalRepository
@@ -30,8 +29,7 @@ class FavoritesFragment : Fragment()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View
-    {
+    ): View {
         binding = FragmentFavoritesBinding.inflate(inflater, container, false)
 
         // Initialize the repository
@@ -42,8 +40,7 @@ class FavoritesFragment : Fragment()
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
-    {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewLifecycleOwner.lifecycleScope.launch {
             val favoriteRecipes = getFavoriteRecipes()
@@ -59,6 +56,15 @@ class FavoritesFragment : Fragment()
             // Observe only the favorite recipes
             recipeViewModel.favoriteRecipes.observe(viewLifecycleOwner) { favoriteRecipes ->
                 favoritesAdapter.updateRecipes(favoriteRecipes.toMutableList())
+            }
+
+            // Set the listener for toggling the favorite status
+            favoritesAdapter.onFavoriteClickListener = { recipe ->
+                if (recipe.isFavorite) {
+                    recipeViewModel.addFavorite(recipe)
+                } else {
+                    recipeViewModel.removeFavorite(recipe)
+                }
             }
         }
     }

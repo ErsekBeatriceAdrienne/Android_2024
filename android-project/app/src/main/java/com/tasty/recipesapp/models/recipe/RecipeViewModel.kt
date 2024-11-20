@@ -25,7 +25,13 @@ class RecipeViewModel(private val localRepository: LocalRepository) : ViewModel(
     private fun loadRecipes() {
         viewModelScope.launch {
             val recipesFromRoom = localRepository.getAllRecipes()
-            _recipes.postValue(recipesFromRoom)
+            val favoriteRecipesFromRoom = localRepository.getFavorites()
+
+            // Merge recipes with their favorite status
+            val updatedRecipes = recipesFromRoom.map { recipe ->
+                recipe.copy(isFavorite = favoriteRecipesFromRoom.any { it.recipeID == recipe.recipeID })
+            }
+            _recipes.postValue(updatedRecipes)
         }
     }
 
@@ -34,6 +40,13 @@ class RecipeViewModel(private val localRepository: LocalRepository) : ViewModel(
         viewModelScope.launch {
             val favoriteRecipesFromRoom = localRepository.getFavorites()
             _favoriteRecipes.postValue(favoriteRecipesFromRoom)
+        }
+    }
+
+    fun toggleFavorite(recipe: RecipeModel) {
+        viewModelScope.launch {
+            if (isFavorite(recipe.recipeID.toString())) removeFavorite(recipe)
+            else addFavorite(recipe)
         }
     }
 
@@ -49,7 +62,7 @@ class RecipeViewModel(private val localRepository: LocalRepository) : ViewModel(
         viewModelScope.launch {
             val favoriteEntity = FavoriteEntity(recipeId = recipe.recipeID.toLong())
             localRepository.addFavorite(favoriteEntity)
-            loadFavoriteRecipesFromDatabase()
+            loadRecipes()
         }
     }
 
@@ -57,7 +70,7 @@ class RecipeViewModel(private val localRepository: LocalRepository) : ViewModel(
     fun removeFavorite(recipe: RecipeModel) {
         viewModelScope.launch {
             localRepository.removeFavorite(recipe.recipeID.toLong())
-            loadFavoriteRecipesFromDatabase()
+            loadRecipes()
         }
     }
 

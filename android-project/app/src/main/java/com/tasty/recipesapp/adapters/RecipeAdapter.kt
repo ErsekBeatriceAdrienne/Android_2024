@@ -30,6 +30,10 @@ class RecipeAdapter(private var recipes: MutableList<RecipeModel>) : RecyclerVie
         holder.itemView.findViewById<Button>(R.id.buttonMoreDetails).setOnClickListener {
             onRecipeClickListener?.invoke(recipe)
         }
+
+        holder.binding.buttonFavorite.setOnClickListener {
+            onFavoriteClickListener?.invoke(recipe)
+        }
     }
 
     fun updateRecipes(newRecipes: MutableList<RecipeModel>) {
@@ -39,22 +43,20 @@ class RecipeAdapter(private var recipes: MutableList<RecipeModel>) : RecyclerVie
 
     override fun getItemCount(): Int = recipes.size
 
-    private fun toggleFavorite(recipe: RecipeModel) {
-        val updatedRecipe = recipe.copy(isFavorite = !recipe.isFavorite)
-
-        val position = recipes.indexOf(recipe)
-        if (position != -1) {
-            recipes[position] = updatedRecipe
-            notifyItemChanged(position)
-        }
-    }
-
-    inner class RecipesViewHolder(private val binding: ItemRecipeBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class RecipesViewHolder(val binding: ItemRecipeBinding) : RecyclerView.ViewHolder(binding.root) {
 
         init {
+            binding.root.setOnClickListener {
+                onRecipeClickListener?.invoke(recipes[adapterPosition])
+            }
+
+            binding.root.setOnLongClickListener {
+                onRecipeLongClickListener?.invoke(recipes[adapterPosition])
+                true
+            }
+
             binding.buttonFavorite.setOnClickListener {
                 val recipe = recipes[adapterPosition]
-                toggleFavorite(recipe)
                 onFavoriteClickListener?.invoke(recipe)
             }
         }
@@ -70,5 +72,4 @@ class RecipeAdapter(private var recipes: MutableList<RecipeModel>) : RecyclerVie
             }
         }
     }
-
 }

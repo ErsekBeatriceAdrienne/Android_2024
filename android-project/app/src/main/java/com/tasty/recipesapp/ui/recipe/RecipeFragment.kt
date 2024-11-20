@@ -51,6 +51,7 @@ class RecipeFragment : Fragment() {
         // Set up RecyclerView
         binding.recyclerViewRecipes.layoutManager = LinearLayoutManager(requireContext())
         recipeAdapter = RecipeAdapter(mutableListOf())
+        binding.recyclerViewRecipes.adapter = recipeAdapter
 
         recipeAdapter.onRecipeLongClickListener = { recipe ->
             showDeleteConfirmationDialog(recipe)
@@ -63,37 +64,17 @@ class RecipeFragment : Fragment() {
 
         // Set click listener for the favorite button
         recipeAdapter.onFavoriteClickListener = { recipe ->
-            toggleFavorite(recipe)
+            viewModel.toggleFavorite(recipe)
         }
-
-        binding.recyclerViewRecipes.adapter = recipeAdapter
 
         // Observe the ViewModel for updates
         viewModel.recipes.observe(viewLifecycleOwner) { recipes ->
             allRecipes.addAll(recipes)
             recipeAdapter.updateRecipes(recipes.toMutableList())
-            updateUIBasedOnRecipes(recipes)
         }
 
         // Initialize search functionality
         searchRecipe()
-    }
-
-    private fun toggleFavorite(recipe: RecipeModel) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            if (viewModel.isFavorite(recipe.recipeID.toString())) {
-                viewModel.removeFavorite(recipe)  // Remove from favorites
-            } else {
-                viewModel.addFavorite(recipe)  // Add to favorites
-            }
-
-            // Update the favorite status in allRecipes to reflect the change
-            val updatedRecipes = allRecipes.map {
-                if (it.recipeID == recipe.recipeID) it.copy(isFavorite = !it.isFavorite)
-                else it
-            }
-            recipeAdapter.updateRecipes(updatedRecipes.toMutableList())
-        }
     }
 
     private fun showDeleteConfirmationDialog(recipe: RecipeModel) {
