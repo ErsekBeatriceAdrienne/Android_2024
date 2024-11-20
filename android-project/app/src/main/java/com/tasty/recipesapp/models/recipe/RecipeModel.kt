@@ -18,7 +18,8 @@ data class RecipeModel(
     val numServings: Int,
     val components: List<ComponentModel>,
     val instructions: List<InstructionModel>,
-    val nutrition: NutritionModel
+    val nutrition: NutritionModel,
+    val isFavorite: Boolean
 )
 
 fun RecipeModel.toEntity(): RecipeEntity {

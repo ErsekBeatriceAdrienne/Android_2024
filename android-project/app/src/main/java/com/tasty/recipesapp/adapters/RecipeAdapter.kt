@@ -8,12 +8,12 @@ import com.tasty.recipesapp.R
 import com.tasty.recipesapp.databinding.ItemRecipeBinding
 import com.tasty.recipesapp.models.recipe.RecipeModel
 
-class RecipeAdapter(private var recipes: MutableList<RecipeModel>)
-    : RecyclerView.Adapter<RecipeAdapter.RecipesViewHolder>()
+class RecipeAdapter(private var recipes: MutableList<RecipeModel>) : RecyclerView.Adapter<RecipeAdapter.RecipesViewHolder>()
 {
     // Define a listener for long clicks
     var onRecipeLongClickListener: ((RecipeModel) -> Unit)? = null
     var onRecipeClickListener: ((RecipeModel) -> Unit)? = null
+    var onFavoriteClickListener: ((RecipeModel) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipesViewHolder
     {
@@ -33,25 +33,42 @@ class RecipeAdapter(private var recipes: MutableList<RecipeModel>)
     }
 
     fun updateRecipes(newRecipes: MutableList<RecipeModel>) {
-        recipes.clear()
-        recipes.addAll(newRecipes)
+        recipes = newRecipes
         notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = recipes.size
 
+    private fun toggleFavorite(recipe: RecipeModel) {
+        val updatedRecipe = recipe.copy(isFavorite = !recipe.isFavorite)
+
+        val position = recipes.indexOf(recipe)
+        if (position != -1) {
+            recipes[position] = updatedRecipe
+            notifyItemChanged(position)
+        }
+    }
+
     inner class RecipesViewHolder(private val binding: ItemRecipeBinding) : RecyclerView.ViewHolder(binding.root) {
+
         init {
-            // Handle long click to show delete confirmation dialog
-            binding.root.setOnLongClickListener {
-                onRecipeLongClickListener?.invoke(recipes[adapterPosition])  // Trigger the long click callback
-                true // Indicate that the long click was handled
+            binding.buttonFavorite.setOnClickListener {
+                val recipe = recipes[adapterPosition]
+                toggleFavorite(recipe)
+                onFavoriteClickListener?.invoke(recipe)
             }
         }
 
         fun bind(recipe: RecipeModel) {
             binding.recipe = recipe
             binding.executePendingBindings()
+
+            if (recipe.isFavorite) {
+                binding.buttonFavorite.setImageResource(R.drawable.heart_filled)
+            } else {
+                binding.buttonFavorite.setImageResource(R.drawable.heart_unfilled)
+            }
         }
     }
+
 }

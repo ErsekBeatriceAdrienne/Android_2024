@@ -194,7 +194,8 @@ class AddNewRecipeFragment : Fragment() {
             numServings = numServings,
             components = components,
             instructions = instructions,
-            nutrition = nutrition
+            nutrition = nutrition,
+            isFavorite = false
         )
 
         // Insert into Room database

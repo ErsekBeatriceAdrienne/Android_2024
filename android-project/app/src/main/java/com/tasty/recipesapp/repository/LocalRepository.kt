@@ -1,11 +1,8 @@
 package com.tasty.recipesapp.repository
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.map
 import com.google.gson.Gson
 import com.tasty.recipesapp.database.dao.FavoriteDao
 import com.tasty.recipesapp.database.dao.RecipeDao
 import com.tasty.recipesapp.database.entities.FavoriteEntity
-import com.tasty.recipesapp.database.entities.RecipeEntity
 import com.tasty.recipesapp.dtos.RecipeDTO
 import com.tasty.recipesapp.dtos.toModel
 import com.tasty.recipesapp.models.recipe.RecipeModel
@@ -59,8 +56,14 @@ class LocalRepository(private val recipeDao: RecipeDao, private val favoriteDao:
         return gson.fromJson(jsonObject.toString(), RecipeDTO::class.java).toModel()
     }
 
+    suspend fun addFavorite(favorite: FavoriteEntity) {
+        favoriteDao.addFavorite(favorite)
+    }
 
-    // Favorite management
+    suspend fun removeFavorite(recipeId: Long) {
+        favoriteDao.removeFavoriteByRecipeId(recipeId)
+    }
+
     suspend fun isFavorite(recipeId: String): Boolean {
         return favoriteDao.isFavorite(recipeId.toLong())
     }
@@ -68,9 +71,5 @@ class LocalRepository(private val recipeDao: RecipeDao, private val favoriteDao:
     suspend fun saveFavorite(recipeId: String) {
         val favoriteEntity = FavoriteEntity(recipeId.toLong(), recipeId.toLong())
         favoriteDao.addFavorite(favoriteEntity)
-    }
-
-    suspend fun removeFavorite(recipeId: String) {
-        favoriteDao.removeFavoriteByRecipeId(recipeId.toLong())
     }
 }

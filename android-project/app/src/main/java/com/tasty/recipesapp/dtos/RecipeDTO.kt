@@ -15,7 +15,8 @@ data class RecipeDTO(
     val numServings: Int,
     val components: List<ComponentDTO>,
     val instructions: List<InstructionDTO>,
-    val nutrition: NutritionDTO
+    val nutrition: NutritionDTO,
+    val isFavorite: Boolean
 )
 
 // Mapping function from RecipeDTO to RecipeModel
@@ -33,6 +34,7 @@ fun RecipeDTO.toModel(): RecipeModel {
         numServings = this.numServings,
         components = this.components.toModelList(),
         instructions = this.instructions.toModelList(),
-        nutrition = this.nutrition.toModel()
+        nutrition = this.nutrition.toModel(),
+        isFavorite = this.isFavorite
     )
 }
