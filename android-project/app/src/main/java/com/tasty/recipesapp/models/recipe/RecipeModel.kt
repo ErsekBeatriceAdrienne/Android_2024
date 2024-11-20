@@ -25,3 +25,7 @@ fun RecipeModel.toEntity(): RecipeEntity {
     val json = Gson().toJson(this)
     return RecipeEntity(json = json)
 }
+
+fun RecipeEntity.toModel(): RecipeModel {
+    return Gson().fromJson(this.json, RecipeModel::class.java)
+}

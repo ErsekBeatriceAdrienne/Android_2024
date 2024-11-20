@@ -10,17 +10,23 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
+import com.tasty.recipesapp.RecipeApp
+import com.tasty.recipesapp.database.RecipeDatabase
 import com.tasty.recipesapp.databinding.FragmentRecipeDetailBinding
 import com.tasty.recipesapp.models.recipe.RecipeModel
+import com.tasty.recipesapp.repository.LocalRepository
 import com.tasty.recipesapp.repository.RecipeRepository
+import kotlinx.coroutines.launch
 
 
 class RecipeDetailFragment : Fragment()
 {
     private lateinit var binding: FragmentRecipeDetailBinding
-    private lateinit var recipeRepository: RecipeRepository
+    private lateinit var localRepository: LocalRepository
     private lateinit var recipe: RecipeModel
+    private val database by lazy { RecipeDatabase.getDatabase(requireContext()) }
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -32,16 +38,20 @@ class RecipeDetailFragment : Fragment()
         savedInstanceState: Bundle?
     ): View?
     {
-        binding = FragmentRecipeDetailBinding.inflate(inflater, container, false)
-        recipeRepository = RecipeRepository(requireContext())
+        viewLifecycleOwner.lifecycleScope.launch {
+            binding = FragmentRecipeDetailBinding.inflate(inflater, container, false)
+            val recipeDao = (requireActivity().application as RecipeApp).database.recipeDao()
+            val favoriteDao = (requireActivity().application as RecipeApp).database.favoriteDao()
+            localRepository = LocalRepository(recipeDao, favoriteDao)
 
-        arguments?.getString("recipeId")?.let { recipeId ->
-            recipe = recipeRepository.getRecipeById(recipeId) ?: return@let
-            displayRecipeDetails()
-        }
+            arguments?.getString("recipeId")?.let { recipeId ->
+                recipe = localRepository.getRecipeById(recipeId.toLong())!!
+                displayRecipeDetails()
+            }
 
-        binding.backButton.setOnClickListener {
-            parentFragmentManager.popBackStack()
+            binding.backButton.setOnClickListener {
+                parentFragmentManager.popBackStack()
+            }
         }
 
         return binding.root

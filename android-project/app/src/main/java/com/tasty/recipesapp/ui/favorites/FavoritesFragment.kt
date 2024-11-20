@@ -6,22 +6,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tasty.recipesapp.adapters.RecipeAdapter
 import com.tasty.recipesapp.databinding.FragmentFavoritesBinding
 import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.models.recipe.RecipeViewModel
 import com.tasty.recipesapp.models.recipe.RecipeViewModelFactory
-import com.tasty.recipesapp.repository.RecipeRepository
+import com.tasty.recipesapp.repository.LocalRepository
+import com.tasty.recipesapp.RecipeApp
+import kotlinx.coroutines.launch
 
 class FavoritesFragment : Fragment()
 {
     private lateinit var binding: FragmentFavoritesBinding
     private lateinit var favoritesAdapter: RecipeAdapter
-    private lateinit var recipeRepository: RecipeRepository
+    private lateinit var localRepository: LocalRepository
 
     private val recipeViewModel: RecipeViewModel by viewModels {
-        RecipeViewModelFactory(recipeRepository)
+        RecipeViewModelFactory(localRepository)
     }
 
     override fun onCreateView(
@@ -32,7 +35,9 @@ class FavoritesFragment : Fragment()
         binding = FragmentFavoritesBinding.inflate(inflater, container, false)
 
         // Initialize the repository
-        recipeRepository = RecipeRepository(requireContext())
+        val recipeDao = (requireActivity().application as RecipeApp).database.recipeDao()
+        val favoriteDao = (requireActivity().application as RecipeApp).database.favoriteDao()
+        localRepository = LocalRepository(recipeDao, favoriteDao)
 
         return binding.root
     }
@@ -40,27 +45,25 @@ class FavoritesFragment : Fragment()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
     {
         super.onViewCreated(view, savedInstanceState)
-        val favoriteRecipes = getFavoriteRecipes()
+        viewLifecycleOwner.lifecycleScope.launch {
+            val favoriteRecipes = getFavoriteRecipes()
 
-        favoritesAdapter = RecipeAdapter(mutableListOf(), recipeRepository,
-            onRecipeLongClick = { recipe ->
-                // Handle long-click for favorite recipes if needed
+            favoritesAdapter = RecipeAdapter(mutableListOf())
+
+            binding.recyclerViewFavorites.layoutManager = LinearLayoutManager(context)
+            binding.recyclerViewFavorites.adapter = favoritesAdapter
+
+            // Kedvenc receptek betöltése az adatbázisból
+            recipeViewModel.loadFavoriteRecipesFromDatabase()
+
+            // Observe only the favorite recipes
+            recipeViewModel.favoriteRecipes.observe(viewLifecycleOwner) { favoriteRecipes ->
+                favoritesAdapter.updateRecipes(favoriteRecipes.toMutableList())
             }
-        )
-
-        binding.recyclerViewFavorites.layoutManager = LinearLayoutManager(context)
-        binding.recyclerViewFavorites.adapter = favoritesAdapter
-
-        // Kedvenc receptek betöltése az adatbázisból
-        recipeViewModel.loadFavoriteRecipesFromDatabase()
-
-        // Observe only the favorite recipes
-        recipeViewModel.favoriteRecipes.observe(viewLifecycleOwner) { favoriteRecipes ->
-            favoritesAdapter.updateRecipes(favoriteRecipes.toMutableList())
         }
     }
 
-    private fun getFavoriteRecipes(): List<RecipeModel> {
-        return recipeRepository.getFavorites()
+    private suspend fun getFavoriteRecipes(): List<RecipeModel> {
+        return localRepository.getFavorites()
     }
 }

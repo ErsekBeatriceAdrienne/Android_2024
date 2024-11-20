@@ -21,12 +21,10 @@ class ProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
     private lateinit var profileAdapter: ProfileRecipeAdapter
-    private lateinit var recyclerView: RecyclerView
 
-    // Adatbázis példány lekérése
     private val database by lazy { RecipeDatabase.getDatabase(requireContext()) } // Hozzáadás
     private val viewModel: ProfileRecipesViewModel by viewModels {
-        ProfileViewModelFactory(LocalRepository(database.recipeDao())) // Hozzáadás
+        ProfileViewModelFactory(LocalRepository(database.recipeDao(), database.favoriteDao())) // Hozzáadás
     }
 
     override fun onCreateView(

@@ -1,6 +1,7 @@
 package com.tasty.recipesapp.ui.recipe
 
 import android.os.Bundle
+import android.os.LocaleList
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -11,63 +12,67 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tasty.recipesapp.R
+import com.tasty.recipesapp.RecipeApp
+import com.tasty.recipesapp.activities.MainActivity
 import com.tasty.recipesapp.adapters.RecipeAdapter
+import com.tasty.recipesapp.database.RecipeDatabase
 import com.tasty.recipesapp.databinding.FragmentRecipeBinding
 import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.models.recipe.RecipeViewModel
 import com.tasty.recipesapp.models.recipe.RecipeViewModelFactory
+import com.tasty.recipesapp.repository.LocalRepository
 import com.tasty.recipesapp.repository.RecipeRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class RecipeFragment : Fragment()
-{
-    private lateinit var recipeRepository: RecipeRepository
+class RecipeFragment : Fragment() {
     private lateinit var binding: FragmentRecipeBinding
-    private lateinit var recipeViewModel: RecipeViewModel
-    private lateinit var recipesAdapter: RecipeAdapter
-    private lateinit var recipes: MutableList<RecipeModel>
+    private lateinit var recipeAdapter: RecipeAdapter
     private lateinit var searchEditText: EditText
+
+    // Mutable list to hold all recipes for filtering
+    private var allRecipes: MutableList<RecipeModel> = mutableListOf()
+
+    private val database by lazy { RecipeDatabase.getDatabase(requireContext()) }
+    private val viewModel: RecipeViewModel by viewModels {
+        RecipeViewModelFactory(LocalRepository(database.recipeDao(), database.favoriteDao()))
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View?
-    {
+    ): View? {
         binding = FragmentRecipeBinding.inflate(inflater, container, false)
-
-        initialize()
-        searchRecipe()
-
-        recipeViewModel.recipes.observe(viewLifecycleOwner) { updatedRecipes ->
-            recipesAdapter.updateRecipes(updatedRecipes.toMutableList())
-        }
-
         return binding.root
     }
 
-    private fun initialize()
-    {
-        recipeRepository = RecipeRepository(requireContext())
-        val viewModelFactory = RecipeViewModelFactory(recipeRepository)
-        recipeViewModel = ViewModelProvider(this, viewModelFactory).get(RecipeViewModel::class.java)
 
-        // Initialize the recipes and adapter
-        recipes = recipeRepository.getRecipes().toMutableList()
-        recipesAdapter = RecipeAdapter(recipes, recipeRepository, { recipe ->
-            showDeleteConfirmationDialog(recipe)
-        })
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        // Set up RecyclerView
         binding.recyclerViewRecipes.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerViewRecipes.adapter = recipesAdapter
 
-        // Bind the ViewModel
-        binding.viewModel = recipeViewModel
-        binding.lifecycleOwner = viewLifecycleOwner
+        // Initialize the adapter with an empty list
+        recipeAdapter = RecipeAdapter(mutableListOf())
+        binding.recyclerViewRecipes.adapter = recipeAdapter
 
+        // Observe the ViewModel for updates
+        viewModel.recipes.observe(viewLifecycleOwner) { recipes ->
+            allRecipes.addAll(recipes)
+            recipeAdapter.updateRecipes(recipes)
+            updateUIBasedOnRecipes(recipes)
+        }
+
+        // Initialize search functionality
+        searchRecipe()
     }
 
     private fun showDeleteConfirmationDialog(recipe: RecipeModel)
@@ -78,44 +83,37 @@ class RecipeFragment : Fragment()
             .setIcon(R.drawable.delete)
             .setPositiveButton("Yes") { _, _ ->
                 viewLifecycleOwner.lifecycleScope.launch {
-                    recipeViewModel.deleteRecipe(recipe)
+                    viewModel.deleteRecipe(recipe)
                 }}
             .setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
             .setCancelable(true) // Allow dismissing the dialog by tapping outside
 
         // Create and customize the AlertDialog
         val dialog = builder.create()
-
         dialog.show()
     }
 
-    private fun searchRecipe()
-    {
-        // Initialize the search field
+    private fun searchRecipe() {
         searchEditText = binding.editTextSearch
-        // Filter recipes based on search input
-        searchEditText.addTextChangedListener(object : TextWatcher
-        {
+        searchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                filterRecipes(s.toString())
+                filterRecipes(s.toString()) // Call filter on text change
             }
             override fun afterTextChanged(s: Editable?) {}
         })
     }
 
-    private suspend fun deleteRecipe(recipe: RecipeModel)
-    {
-        recipeRepository.removeRecipe(recipe)
-        recipes = recipeRepository.getRecipes().toMutableList()
-        recipesAdapter.updateRecipes(recipes)
-    }
-
-    private fun filterRecipes(query: String)
-    {
-        val filteredRecipes = recipes.filter { recipe ->
+    private fun filterRecipes(query: String) {
+        val filteredRecipes = allRecipes.filter { recipe ->
             recipe.name.contains(query, ignoreCase = true)
         }
-        recipesAdapter.updateRecipes(filteredRecipes.toMutableList())
+        recipeAdapter.updateRecipes(filteredRecipes.toMutableList())
+        updateUIBasedOnRecipes(filteredRecipes)
+    }
+
+    private fun updateUIBasedOnRecipes(recipes: List<RecipeModel>) {
+        if (recipes.isEmpty()) binding.recyclerViewRecipes.visibility = View.GONE
+        else binding.recyclerViewRecipes.visibility = View.VISIBLE
     }
 }

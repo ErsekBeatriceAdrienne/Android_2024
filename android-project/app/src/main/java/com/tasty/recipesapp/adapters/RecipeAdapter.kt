@@ -1,5 +1,6 @@
 package com.tasty.recipesapp.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tasty.recipesapp.R
 import com.tasty.recipesapp.databinding.ItemRecipeBinding
 import com.tasty.recipesapp.models.recipe.RecipeModel
+import com.tasty.recipesapp.repository.LocalRepository
 import com.tasty.recipesapp.repository.RecipeRepository
 import com.tasty.recipesapp.ui.recipe.RecipeFragmentDirections
 import com.tasty.recipesapp.ui.favorites.FavoritesFragmentDirections
@@ -17,86 +19,34 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class RecipeAdapter(
-    private var recipes: MutableList<RecipeModel>,
-    private val recipeRepository: RecipeRepository,
-    private val onRecipeLongClick: (RecipeModel) -> Unit
-) : RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder>()
+    private var recipes: MutableList<RecipeModel>
+) : RecyclerView.Adapter<RecipeAdapter.RecipesViewHolder>()
 {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipesViewHolder
     {
         val binding = ItemRecipeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return RecipeViewHolder(binding)
+        return RecipesViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: RecipeViewHolder, position: Int)
+    override fun onBindViewHolder(holder: RecipesViewHolder, position: Int)
     {
-        val recipe = recipes[position]
-        holder.bind(recipe)
+        holder.bind(recipes[position])
     }
 
     override fun getItemCount(): Int = recipes.size
 
-    fun updateRecipes(newRecipes: MutableList<RecipeModel>)
-    {
-        recipes = newRecipes
-        notifyDataSetChanged()
-    }
-
-    inner class RecipeViewHolder(private val binding: ItemRecipeBinding) :
-        RecyclerView.ViewHolder(binding.root)
-    {
-        fun bind(recipe: RecipeModel)
-        {
+    inner class RecipesViewHolder(private val binding: ItemRecipeBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(recipe: RecipeModel) {
             binding.recipe = recipe
-
-            // Set favorite button state
-            var isFavorite = recipeRepository.isFavorite(recipe.recipeID.toString())
-            binding.buttonFavorite.setImageResource(
-                if (isFavorite) R.drawable.heart_filled else R.drawable.heart_unfilled
-            )
-
-            binding.buttonFavorite.setOnClickListener {
-                isFavorite = !isFavorite
-                val lifecycleOwner = binding.root.findFragment<Fragment>().viewLifecycleOwner
-                lifecycleOwner.lifecycleScope.launch {
-                    if (isFavorite) {
-                        recipeRepository.saveFavorite(recipe.recipeID.toString())
-                    } else {
-                        recipeRepository.removeFavorite(recipe.recipeID.toString())
-                    }
-                }
-                binding.buttonFavorite.setImageResource(
-                    if (isFavorite) R.drawable.heart_filled else R.drawable.heart_unfilled
-                )
-            }
-
-
-            // Set long click listener to delete the recipe
-            binding.root.setOnLongClickListener {
-                onRecipeLongClick(recipe)
-                true
-            }
-
-            binding.buttonMoreDetails.setOnClickListener {
-                val currentFragment = binding.root.findFragment<Fragment>()
-                val navController = findNavController(currentFragment)
-
-                val action = when (currentFragment) {
-                    is com.tasty.recipesapp.ui.recipe.RecipeFragment -> {
-                        RecipeFragmentDirections.actionRecipeFragmentToRecipeDetailFragment(recipe.recipeID.toString())
-                    }
-                    is com.tasty.recipesapp.ui.favorites.FavoritesFragment -> {
-                        FavoritesFragmentDirections.actionFavoritesFragmentToRecipeDetailsFragment(recipe.recipeID.toString())
-                    }
-                    else -> null
-                }
-
-
-                action?.let { navController.navigate(it) }
-            }
-
-
             binding.executePendingBindings()
         }
+    }
+
+    // Update the recipe list
+    fun updateRecipes(newRecipes: List<RecipeModel>) {
+        recipes = newRecipes.toMutableList()
+        notifyDataSetChanged()
     }
 }

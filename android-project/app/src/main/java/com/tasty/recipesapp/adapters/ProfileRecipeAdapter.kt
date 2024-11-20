@@ -31,6 +31,6 @@ class ProfileRecipeAdapter(private var recipes: List<RecipeModel>) :
     // Hozzáadva az updateRecipes metódus
     fun updateRecipes(newRecipes: List<RecipeModel>) {
         recipes = newRecipes
-        notifyDataSetChanged() // Értesítsd az adaptert a frissítésekről
+        notifyDataSetChanged()
     }
 }

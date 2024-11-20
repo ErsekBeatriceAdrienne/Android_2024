@@ -4,52 +4,63 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tasty.recipesapp.repository.RecipeRepository
+import com.tasty.recipesapp.repository.LocalRepository
 import kotlinx.coroutines.launch
 
-class RecipeViewModel(private val recipeRepository: RecipeRepository) : ViewModel()
-{
+class RecipeViewModel(private val localRepository: LocalRepository) : ViewModel() {
+
     private val _recipes = MutableLiveData<List<RecipeModel>>()
     val recipes: LiveData<List<RecipeModel>> get() = _recipes
 
     private val _favoriteRecipes = MutableLiveData<List<RecipeModel>>()
     val favoriteRecipes: LiveData<List<RecipeModel>> get() = _favoriteRecipes
 
-    init
-    {
-        viewModelScope.launch {
-            loadRecipes()
-            loadFavoriteRecipes()
-            loadRecipesFromRoom()
-        }
+    init {
+        loadRecipes()
+        loadFavoriteRecipesFromDatabase()
     }
 
-    // Delete recipe from the database
-    suspend fun deleteRecipe(recipe: RecipeModel) {
-        recipeRepository.removeRecipe(recipe)
-        _recipes.value = _recipes.value?.filter { it.recipeID != recipe.recipeID }
-    }
-
+    // Load recipes from the database
     private fun loadRecipes() {
-        _recipes.value = recipeRepository.getRecipes()
-    }
-
-    // Load recipes from Room
-    private suspend fun loadRecipesFromRoom() {
-        recipeRepository.getRecipesFromRoom().observeForever { recipeModels ->
-            _recipes.value = _recipes.value?.plus(recipeModels)
+        viewModelScope.launch {
+            val recipesFromRoom = localRepository.getAllRecipes()
+            _recipes.postValue(recipesFromRoom)
         }
     }
 
-    // Load favorite recipes from Room
+    // Load favorite recipes from the database
     fun loadFavoriteRecipesFromDatabase() {
         viewModelScope.launch {
-            val favoriteRecipesFromRoom = recipeRepository.getFavoriteRecipesFromRoom()
-            _favoriteRecipes.value = _favoriteRecipes.value?.plus(favoriteRecipesFromRoom)
+            val favoriteRecipesFromRoom = localRepository.getFavorites()
+            _favoriteRecipes.postValue(favoriteRecipesFromRoom)
         }
     }
 
-    private fun loadFavoriteRecipes() {
-        _favoriteRecipes.value = recipeRepository.getFavorites()
+    suspend fun getAllRecipes(): List<RecipeModel> {
+        return localRepository.getAllRecipes()
+    }
+
+    // Add a recipe to the database
+    fun saveRecipe(recipe: RecipeModel) {
+        viewModelScope.launch {
+            localRepository.insertRecipe(recipe)
+            loadRecipes()
+        }
+    }
+
+    // Delete a recipe from the database
+    fun deleteRecipe(recipe: RecipeModel) {
+        viewModelScope.launch {
+            localRepository.deleteRecipe(recipe)
+            loadRecipes()
+        }
+    }
+
+    // Get a single recipe by its ID
+    fun getRecipeById(recipeId: String, callback: (RecipeModel?) -> Unit) {
+        viewModelScope.launch {
+            val recipe = localRepository.getRecipeById(recipeId.toLong())
+            callback(recipe)
+        }
     }
 }

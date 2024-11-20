@@ -1,6 +1,7 @@
 package com.tasty.recipesapp.ui.addrecipe
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.tasty.recipesapp.R
 import com.tasty.recipesapp.database.RecipeDatabase
+import com.tasty.recipesapp.database.dao.FavoriteDao
 import com.tasty.recipesapp.database.dao.RecipeDao
 import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.models.recipe.recipemodels.ComponentModel
@@ -20,11 +22,10 @@ import com.tasty.recipesapp.models.recipe.recipemodels.MeasurementModel
 import com.tasty.recipesapp.models.recipe.recipemodels.NutritionModel
 import com.tasty.recipesapp.models.recipe.recipemodels.UnitModel
 import com.tasty.recipesapp.repository.LocalRepository
-import com.tasty.recipesapp.repository.RecipeRepository
 import kotlinx.coroutines.launch
 
-class AddNewRecipeFragment : Fragment()
-{
+class AddNewRecipeFragment : Fragment() {
+
     private lateinit var recipeTitleEditText: EditText
     private lateinit var recipeDescriptionEditText: EditText
     private lateinit var thumbnailUrlEditText: EditText
@@ -40,23 +41,24 @@ class AddNewRecipeFragment : Fragment()
     private lateinit var addRecipeButton: Button
     private lateinit var repository: LocalRepository
     private lateinit var recipeDao: RecipeDao
+    private lateinit var favoriteDao: FavoriteDao
 
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val db = RecipeDatabase.getDatabase(requireContext())
         recipeDao = db.recipeDao()
-        repository = LocalRepository(recipeDao)
+        favoriteDao = db.favoriteDao()
+        repository = LocalRepository(recipeDao, favoriteDao)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View?
-    {
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_add_new_recipe, container, false)
 
+        // Initialize all the EditTexts
         recipeTitleEditText = view.findViewById(R.id.recipeTitleEditText)
         recipeDescriptionEditText = view.findViewById(R.id.recipeDescriptionEditText)
         thumbnailUrlEditText = view.findViewById(R.id.thumbnailUrlEditText)
@@ -81,13 +83,12 @@ class AddNewRecipeFragment : Fragment()
         return view
     }
 
-    private suspend fun addRecipe()
-    {
+
+    private suspend fun addRecipe() {
         val title = recipeTitleEditText.text.toString()
         val description = recipeDescriptionEditText.text.toString()
 
-        if (title.isEmpty() || description.isEmpty())
-        {
+        if (title.isEmpty() || description.isEmpty()) {
             Toast.makeText(requireContext(), "Title and description are required!", Toast.LENGTH_SHORT).show()
             return
         }
@@ -156,6 +157,7 @@ class AddNewRecipeFragment : Fragment()
             .split(",")
             .mapNotNull {
                 val parts = it.trim().split(":")
+                if (parts.isEmpty()) ""
                 if (parts.size == 2) {
                     val nutrient = parts[0].trim()
                     val amount = parts[1].trim().toIntOrNull() ?: 0
@@ -198,6 +200,7 @@ class AddNewRecipeFragment : Fragment()
         // Insert into Room database
         repository.insertRecipe(newRecipe)
 
+        Log.d("AddNewRecipeFragment", "New recipe added: $newRecipeId")
         Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show()
     }
 }
