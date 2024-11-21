@@ -19,7 +19,7 @@ data class RecipeModel(
     val components: List<ComponentModel>,
     val instructions: List<InstructionModel>,
     val nutrition: NutritionModel,
-    val isFavorite: Boolean
+    var isFavorite: Boolean
 )
 
 fun RecipeModel.toEntity(): RecipeEntity {

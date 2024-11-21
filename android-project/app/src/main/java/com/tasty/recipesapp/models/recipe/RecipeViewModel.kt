@@ -38,8 +38,8 @@ class RecipeViewModel(private val localRepository: LocalRepository) : ViewModel(
     // Load favorite recipes from the database
     fun loadFavoriteRecipesFromDatabase() {
         viewModelScope.launch {
-            val favoriteRecipesFromRoom = localRepository.getFavorites()
-            _favoriteRecipes.postValue(favoriteRecipesFromRoom)
+            val favorites = localRepository.getFavorites()
+            _favoriteRecipes.value = favorites.distinctBy { it.recipeID }
         }
     }
 
@@ -47,6 +47,8 @@ class RecipeViewModel(private val localRepository: LocalRepository) : ViewModel(
         viewModelScope.launch {
             if (isFavorite(recipe.recipeID.toString())) removeFavorite(recipe)
             else addFavorite(recipe)
+            loadRecipes()
+            loadFavoriteRecipesFromDatabase()
         }
     }
 

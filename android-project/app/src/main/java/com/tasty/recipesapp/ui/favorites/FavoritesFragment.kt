@@ -43,28 +43,28 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewLifecycleOwner.lifecycleScope.launch {
-            val favoriteRecipes = getFavoriteRecipes()
-
             favoritesAdapter = RecipeAdapter(mutableListOf())
 
             binding.recyclerViewFavorites.layoutManager = LinearLayoutManager(context)
             binding.recyclerViewFavorites.adapter = favoritesAdapter
 
-            // Kedvenc receptek betöltése az adatbázisból
             recipeViewModel.loadFavoriteRecipesFromDatabase()
 
             // Observe only the favorite recipes
             recipeViewModel.favoriteRecipes.observe(viewLifecycleOwner) { favoriteRecipes ->
+                favoriteRecipes.forEach { it.isFavorite = true }
                 favoritesAdapter.updateRecipes(favoriteRecipes.toMutableList())
             }
 
             // Set the listener for toggling the favorite status
             favoritesAdapter.onFavoriteClickListener = { recipe ->
+                recipeViewModel.toggleFavorite(recipe)
                 if (recipe.isFavorite) {
                     recipeViewModel.addFavorite(recipe)
                 } else {
                     recipeViewModel.removeFavorite(recipe)
                 }
+                favoritesAdapter.updateRecipes(recipeViewModel.favoriteRecipes.value?.toMutableList() ?: mutableListOf())
             }
         }
     }

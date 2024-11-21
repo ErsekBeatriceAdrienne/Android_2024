@@ -23,7 +23,7 @@ class RecipeAdapter(private var recipes: MutableList<RecipeModel>) : RecyclerVie
 
     override fun onBindViewHolder(holder: RecipesViewHolder, position: Int)
     {
-        val recipe = recipes[position]
+        var recipe = recipes[position]
         holder.bind(recipe)
 
         // Set the listener for the "More Details" button
@@ -34,10 +34,23 @@ class RecipeAdapter(private var recipes: MutableList<RecipeModel>) : RecyclerVie
         holder.binding.buttonFavorite.setOnClickListener {
             onFavoriteClickListener?.invoke(recipe)
         }
+
+        with(holder.binding) {
+            buttonFavorite.setImageResource(
+                if (recipe.isFavorite) R.drawable.heart_filled else R.drawable.heart_unfilled
+            )
+
+            buttonFavorite.setOnClickListener {
+                onFavoriteClickListener?.invoke(recipe)
+                recipe.isFavorite = !recipe.isFavorite
+                notifyItemChanged(position)
+            }
+        }
     }
 
     fun updateRecipes(newRecipes: MutableList<RecipeModel>) {
-        recipes = newRecipes
+        recipes.clear()
+        recipes.addAll(newRecipes)
         notifyDataSetChanged()
     }
 
