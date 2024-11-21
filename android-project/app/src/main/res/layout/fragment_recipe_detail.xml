@@ -37,7 +37,7 @@
             android:id="@+id/recipeTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:textSize="24dp"
             android:textStyle="bold"
             android:text="Recipe Title" />
 
@@ -47,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:textSize="24dp"
             android:text="Description" />
 
         <!-- Recipe Keywords -->
@@ -55,6 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:textSize="24dp"
             android:text="Keywords"/>
 
         <!-- Servings -->
@@ -63,6 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:textSize="24dp"
             android:text="Servings"/>
 
         <!-- Ingredients Title -->
@@ -71,6 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:textSize="24dp"
             android:text="Ingredients:" />
 
         <!-- Ingredients Container (dynamically populated) -->
@@ -87,6 +91,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:textSize="24dp"
             android:text="Instructions:" />
 
         <!-- Instructions Container (dynamically populated) -->
@@ -103,6 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:textSize="24dp"
             android:text="Nutrition" />
 
         <!-- Nutrition Container (dynamically populated) -->

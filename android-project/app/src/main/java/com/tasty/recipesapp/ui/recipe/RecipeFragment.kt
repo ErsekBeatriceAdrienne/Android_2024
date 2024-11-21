@@ -3,6 +3,7 @@ package com.tasty.recipesapp.ui.recipe
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +24,8 @@ import com.tasty.recipesapp.databinding.FragmentRecipeBinding
 import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.models.recipe.RecipeViewModel
 import com.tasty.recipesapp.models.recipe.RecipeViewModelFactory
+import com.tasty.recipesapp.models.recipe.toEntity
+import com.tasty.recipesapp.models.recipe.toModel
 import com.tasty.recipesapp.repository.LocalRepository
 import kotlinx.coroutines.launch
 
@@ -48,7 +51,6 @@ class RecipeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Set up RecyclerView
         binding.recyclerViewRecipes.layoutManager = LinearLayoutManager(requireContext())
         recipeAdapter = RecipeAdapter(mutableListOf())
         binding.recyclerViewRecipes.adapter = recipeAdapter
@@ -56,7 +58,7 @@ class RecipeFragment : Fragment() {
         recipeAdapter.onRecipeLongClickListener = { recipe ->
             showDeleteConfirmationDialog(recipe)
         }
-        // Set click listener for "More Details" button in each recipe card
+
         recipeAdapter.onRecipeClickListener = { recipe ->
             val action = RecipeFragmentDirections.actionRecipeFragmentToRecipeDetailFragment(recipe.recipeID.toString())
             findNavController().navigate(action)
@@ -84,20 +86,23 @@ class RecipeFragment : Fragment() {
             .setIcon(R.drawable.delete)
             .setPositiveButton("Yes") { _, _ ->
                 viewLifecycleOwner.lifecycleScope.launch {
-                    viewModel.deleteRecipe(recipe)
-                    allRecipes.remove(recipe)
-                    recipeAdapter.updateRecipes(allRecipes)
-                    Toast.makeText(requireContext(), "Recipe deleted", Toast.LENGTH_SHORT).show()
+                    try {
+                        viewModel.deleteRecipeById(recipe.recipeID)
+                        allRecipes.remove(recipe)
+                        recipeAdapter.updateRecipes(allRecipes)
+
+                        Toast.makeText(requireContext(), "Recipe deleted", Toast.LENGTH_SHORT).show()
+                    } catch (e: Exception) {
+                        Toast.makeText(requireContext(), "Error deleting recipe", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
             .setNegativeButton("No") { dialog, _ -> dialog.dismiss() }
-            .setCancelable(true) // Allow dismissing the dialog by tapping outside
+            .setCancelable(true)
 
-        // Create and show the AlertDialog
         val dialog = builder.create()
         dialog.show()
     }
-
 
     private fun searchRecipe() {
         searchEditText = binding.editTextSearch

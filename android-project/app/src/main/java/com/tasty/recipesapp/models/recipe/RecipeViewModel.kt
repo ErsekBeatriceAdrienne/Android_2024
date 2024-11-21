@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tasty.recipesapp.database.entities.FavoriteEntity
+import com.tasty.recipesapp.database.entities.RecipeEntity
 import com.tasty.recipesapp.repository.LocalRepository
 import kotlinx.coroutines.launch
 
@@ -49,14 +50,23 @@ class RecipeViewModel(private val localRepository: LocalRepository) : ViewModel(
             else addFavorite(recipe)
             loadRecipes()
             loadFavoriteRecipesFromDatabase()
+            recipe.isFavorite = !recipe.isFavorite
+            _favoriteRecipes.value = _favoriteRecipes.value?.filter { it.isFavorite }?.toList()
+
         }
     }
 
     // Delete a recipe from the database
-    fun deleteRecipe(recipe: RecipeModel) {
+    fun deleteRecipe(recipeEntity: RecipeEntity) {
         viewModelScope.launch {
-            localRepository.deleteRecipe(recipe)
+            localRepository.deleteRecipe(recipeEntity)
             loadRecipes()
+        }
+    }
+
+    fun deleteRecipeById(recipeID: Int) {
+        viewModelScope.launch {
+            localRepository.deleteRecipeById(recipeID)
         }
     }
 

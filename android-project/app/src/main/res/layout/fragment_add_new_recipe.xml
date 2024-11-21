@@ -67,13 +67,112 @@
                     android:hint="Keywords (comma separated)"
                     android:background="@drawable/rounded_edittext_background" />
 
-                <EditText
-                    android:id="@+id/isPublicEditText"
+                <CheckBox
+                    android:id="@+id/isPublicCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Is Public"
+                    android:layout_marginTop="8dp" />
+
+                <Button
+                    android:id="@+id/addComponentButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:backgroundTint="@color/unselected_icon_color"
+                    android:text="Add Ingredient" />
+
+                <LinearLayout
+                    android:id="@+id/dynamicFieldsLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="16dp"/>
+
+                <Button
+                    android:id="@+id/addInstructionButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:backgroundTint="@color/unselected_icon_color"
+                    android:text="Add Instruction" />
+
+                <LinearLayout
+                    android:id="@+id/instructionsContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="16dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nutrition"
+                    android:textSize="24dp"/>
+
+                <!-- Nutrition fields placed in a GridLayout -->
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:columnCount="3"
                     android:layout_marginTop="8dp"
-                    android:hint="Is Public (true/false)"
-                    android:background="@drawable/rounded_edittext_background" />
+                    android:layout_marginBottom="16dp">
+
+                    <!-- Calories Field -->
+                    <EditText
+                        android:id="@+id/caloriesEditText"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_columnWeight="1"
+                        android:hint="Calories"
+                        android:background="@drawable/rounded_edittext_background" />
+
+                    <!-- Fat Field -->
+                    <EditText
+                        android:id="@+id/fatEditText"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_columnWeight="1"
+                        android:hint="Fat (g)"
+                        android:background="@drawable/rounded_edittext_background" />
+
+                    <!-- Protein Field -->
+                    <EditText
+                        android:id="@+id/proteinEditText"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_columnWeight="1"
+                        android:hint="Protein (g)"
+                        android:background="@drawable/rounded_edittext_background" />
+
+                    <!-- Sugar Field -->
+                    <EditText
+                        android:id="@+id/sugarEditText"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_columnWeight="1"
+                        android:hint="Sugar (g)"
+                        android:background="@drawable/rounded_edittext_background" />
+
+                    <!-- Carbohydrates Field -->
+                    <EditText
+                        android:id="@+id/carbsEditText"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_columnWeight="1"
+                        android:hint="Carbs (g)"
+                        android:background="@drawable/rounded_edittext_background" />
+
+                    <!-- Fiber Field -->
+                    <EditText
+                        android:id="@+id/fiberEditText"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_columnWeight="1"
+                        android:hint="Fiber (g)"
+                        android:background="@drawable/rounded_edittext_background" />
+                </GridLayout>
 
                 <EditText
                     android:id="@+id/userEmailEditText"
@@ -107,37 +206,13 @@
                     android:hint="Number of Servings"
                     android:background="@drawable/rounded_edittext_background" />
 
-                <EditText
-                    android:id="@+id/componentsEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="8dp"
-                    android:hint="Components (comma separated)"
-                    android:background="@drawable/rounded_edittext_background" />
-
-                <EditText
-                    android:id="@+id/instructionsEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="8dp"
-                    android:hint="Instructions (comma separated)"
-                    android:background="@drawable/rounded_edittext_background" />
-
-                <EditText
-                    android:id="@+id/nutritionEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:layout_marginTop="8dp"
-                    android:hint="Nutrition (comma separated)"
-                    android:background="@drawable/rounded_edittext_background" />
-
                 <Button
                     android:id="@+id/addRecipeButton"
                     android:layout_width="wrap_content"
                     android:layout_height="56dp"
                     android:layout_marginTop="8dp"
                     android:backgroundTint="@color/unselected_icon_color"
-                    android:text="Add" />
+                    android:text="Create Recipe" />
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

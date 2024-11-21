@@ -28,11 +28,6 @@ class RecipeDetailFragment : Fragment()
     private lateinit var recipe: RecipeModel
     private val database by lazy { RecipeDatabase.getDatabase(requireContext()) }
 
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,9 +35,7 @@ class RecipeDetailFragment : Fragment()
     {
         viewLifecycleOwner.lifecycleScope.launch {
             binding = FragmentRecipeDetailBinding.inflate(inflater, container, false)
-            val recipeDao = (requireActivity().application as RecipeApp).database.recipeDao()
-            val favoriteDao = (requireActivity().application as RecipeApp).database.favoriteDao()
-            localRepository = LocalRepository(recipeDao, favoriteDao)
+            localRepository = LocalRepository(database.recipeDao(), database.favoriteDao())
 
             arguments?.getString("recipeId")?.let { recipeId ->
                 recipe = localRepository.getRecipeById(recipeId.toLong())!!

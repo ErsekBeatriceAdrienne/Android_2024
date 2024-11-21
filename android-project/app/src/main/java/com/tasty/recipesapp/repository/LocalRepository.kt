@@ -3,6 +3,7 @@ import com.google.gson.Gson
 import com.tasty.recipesapp.database.dao.FavoriteDao
 import com.tasty.recipesapp.database.dao.RecipeDao
 import com.tasty.recipesapp.database.entities.FavoriteEntity
+import com.tasty.recipesapp.database.entities.RecipeEntity
 import com.tasty.recipesapp.dtos.RecipeDTO
 import com.tasty.recipesapp.dtos.toModel
 import com.tasty.recipesapp.models.recipe.RecipeModel
@@ -44,9 +45,12 @@ class LocalRepository(private val recipeDao: RecipeDao, private val favoriteDao:
         return favoriteRecipes
     }
 
-    suspend fun deleteRecipe(recipe: RecipeModel) {
-        val recipeEntity = recipe.toEntity()
-        recipeDao.deleteRecipe(recipeEntity)
+    suspend fun deleteRecipe(recipe: RecipeEntity) {
+        recipeDao.deleteRecipe(recipe)
+    }
+
+    suspend fun deleteRecipeById(recipeID: Int) {
+        recipeDao.deleteRecipeById(recipeID)
     }
 
     suspend fun getRecipeById(id: Long): RecipeModel? {

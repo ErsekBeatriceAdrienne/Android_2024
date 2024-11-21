@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tasty.recipesapp.adapters.RecipeAdapter
 import com.tasty.recipesapp.databinding.FragmentFavoritesBinding
@@ -43,12 +44,14 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewLifecycleOwner.lifecycleScope.launch {
-            favoritesAdapter = RecipeAdapter(mutableListOf())
 
+            favoritesAdapter = RecipeAdapter(mutableListOf())
             binding.recyclerViewFavorites.layoutManager = LinearLayoutManager(context)
             binding.recyclerViewFavorites.adapter = favoritesAdapter
 
-            recipeViewModel.loadFavoriteRecipesFromDatabase()
+            viewLifecycleOwner.lifecycleScope.launch {
+                recipeViewModel.loadFavoriteRecipesFromDatabase()
+            }
 
             // Observe only the favorite recipes
             recipeViewModel.favoriteRecipes.observe(viewLifecycleOwner) { favoriteRecipes ->
@@ -65,6 +68,12 @@ class FavoritesFragment : Fragment() {
                     recipeViewModel.removeFavorite(recipe)
                 }
                 favoritesAdapter.updateRecipes(recipeViewModel.favoriteRecipes.value?.toMutableList() ?: mutableListOf())
+            }
+
+            favoritesAdapter.onRecipeClickListener = { recipe ->
+                val action = FavoritesFragmentDirections
+                    .actionFavoritesFragmentToRecipeDetailsFragment(recipe.recipeID.toString())
+                findNavController().navigate(action)
             }
         }
     }

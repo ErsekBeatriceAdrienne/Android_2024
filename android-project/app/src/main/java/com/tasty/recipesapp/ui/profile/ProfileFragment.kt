@@ -22,9 +22,9 @@ class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
     private lateinit var profileAdapter: ProfileRecipeAdapter
 
-    private val database by lazy { RecipeDatabase.getDatabase(requireContext()) } // Hozzáadás
+    private val database by lazy { RecipeDatabase.getDatabase(requireContext()) }
     private val viewModel: ProfileRecipesViewModel by viewModels {
-        ProfileViewModelFactory(LocalRepository(database.recipeDao(), database.favoriteDao())) // Hozzáadás
+        ProfileViewModelFactory(LocalRepository(database.recipeDao(), database.favoriteDao()))
     }
 
     override fun onCreateView(

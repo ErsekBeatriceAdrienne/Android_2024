@@ -6,7 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -30,15 +33,24 @@ class AddNewRecipeFragment : Fragment() {
     private lateinit var recipeDescriptionEditText: EditText
     private lateinit var thumbnailUrlEditText: EditText
     private lateinit var keywordsEditText: EditText
-    private lateinit var isPublicEditText: EditText
+    private lateinit var isPublicCheckbox: CheckBox
     private lateinit var userEmailEditText: EditText
     private lateinit var originalVideoUrlEditText: EditText
     private lateinit var countryEditText: EditText
     private lateinit var numServingsEditText: EditText
-    private lateinit var componentsEditText: EditText
-    private lateinit var instructionsEditText: EditText
-    private lateinit var nutritionEditText: EditText
+    private lateinit var caloriesEditText: EditText
+    private lateinit var fatEditText: EditText
+    private lateinit var proteinEditText: EditText
+    private lateinit var sugarEditText: EditText
+    private lateinit var carbsEditText: EditText
+    private lateinit var fiberEditText: EditText
+    private lateinit var dynamicFieldsLayout: LinearLayout
+    private lateinit var addComponentButton: Button
     private lateinit var addRecipeButton: Button
+    private lateinit var instructionsContainer: LinearLayout
+    private lateinit var addInstructionButton: Button
+    private val instructionsList = mutableListOf<InstructionModel>()
+    private var instructionCounter = 1
     private lateinit var repository: LocalRepository
     private lateinit var recipeDao: RecipeDao
     private lateinit var favoriteDao: FavoriteDao
@@ -63,15 +75,31 @@ class AddNewRecipeFragment : Fragment() {
         recipeDescriptionEditText = view.findViewById(R.id.recipeDescriptionEditText)
         thumbnailUrlEditText = view.findViewById(R.id.thumbnailUrlEditText)
         keywordsEditText = view.findViewById(R.id.keywordsEditText)
-        isPublicEditText = view.findViewById(R.id.isPublicEditText)
+        isPublicCheckbox= view.findViewById(R.id.isPublicCheckBox)
         userEmailEditText = view.findViewById(R.id.userEmailEditText)
         originalVideoUrlEditText = view.findViewById(R.id.originalVideoUrlEditText)
         countryEditText = view.findViewById(R.id.countryEditText)
         numServingsEditText = view.findViewById(R.id.numServingsEditText)
-        componentsEditText = view.findViewById(R.id.componentsEditText)
-        instructionsEditText = view.findViewById(R.id.instructionsEditText)
-        nutritionEditText = view.findViewById(R.id.nutritionEditText)
+        caloriesEditText = view.findViewById(R.id.caloriesEditText)
+        fatEditText = view.findViewById(R.id.fatEditText)
+        proteinEditText = view.findViewById(R.id.proteinEditText)
+        sugarEditText = view.findViewById(R.id.sugarEditText)
+        carbsEditText = view.findViewById(R.id.carbsEditText)
+        fiberEditText = view.findViewById(R.id.fiberEditText)
         addRecipeButton = view.findViewById(R.id.addRecipeButton)
+        dynamicFieldsLayout = view.findViewById(R.id.dynamicFieldsLayout)
+        addComponentButton = view.findViewById(R.id.addComponentButton)
+        instructionsContainer = view.findViewById(R.id.instructionsContainer)
+        addInstructionButton = view.findViewById(R.id.addInstructionButton)
+
+        // Set up the Add Instruction Button
+        addInstructionButton.setOnClickListener {
+            addInstructionField()
+        }
+
+        addComponentButton.setOnClickListener {
+            addDynamicFields()
+        }
 
         addRecipeButton.setOnClickListener {
             // Call the method to add the recipe
@@ -81,6 +109,63 @@ class AddNewRecipeFragment : Fragment() {
         }
 
         return view
+    }
+
+    // Method to dynamically add a new instruction field
+    private fun addInstructionField() {
+        val instructionEditText = EditText(requireContext()).apply {
+            hint = "Enter instruction"
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(0, 8, 0, 8)
+            }
+        }
+
+        // Add the EditText to the container
+        instructionsContainer.addView(instructionEditText)
+    }
+
+
+    // Method to save the instruction to the list and update the UI
+    private fun saveInstruction(instructionText: String) {
+        val instructionModel = InstructionModel(
+            instructionID = instructionCounter++,
+            displayText = instructionText,
+            position = instructionsList.size + 1
+        )
+        instructionsList.add(instructionModel)
+        Toast.makeText(requireContext(), "Instruction added", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun addDynamicFields() {
+        // Create the three EditTexts for Ingredient, Quantity, and Unit
+        val ingredientNameEditText = EditText(requireContext()).apply {
+            hint = "Ingredient Name"
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+
+        val quantityEditText = EditText(requireContext()).apply {
+            hint = "Quantity"
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+
+        val unitEditText = EditText(requireContext()).apply {
+            hint = "Unit"
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+
+        // Add the three fields to the dynamic layout
+        val horizontalLayout = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.HORIZONTAL
+            addView(ingredientNameEditText)
+            addView(quantityEditText)
+            addView(unitEditText)
+        }
+
+        dynamicFieldsLayout.addView(horizontalLayout)
+        Log.d("AddNewRecipeFragment", "Dynamic fields added.")
     }
 
 
@@ -95,86 +180,69 @@ class AddNewRecipeFragment : Fragment() {
 
         val thumbnailUrl = thumbnailUrlEditText.text.toString()
         val keywords = keywordsEditText.text.toString()
-        val isPublic = isPublicEditText.text.toString().toBoolean()
+        val isPublic = isPublicCheckbox.isChecked
         val userEmail = userEmailEditText.text.toString()
         val originalVideoUrl = originalVideoUrlEditText.text.toString()
         val country = countryEditText.text.toString()
         val numServings = numServingsEditText.text.toString().toIntOrNull() ?: 0
-        // Convert components
-        val components = componentsEditText.text.toString()
-            .split(",")
-            .mapIndexed { index, text ->
-                val parts = text.trim().split(":") // Assuming "ingredient:measurement" format
-                if (parts.size == 2) {
-                    val ingredient = IngredientModel(name = parts[0].trim())
-                    val measurementParts = parts[1].trim().split(" ") // Assuming "quantity unit" format
-                    val measurement = if (measurementParts.size >= 2) {
-                        val quantity = measurementParts[0]
-                        val unit = UnitModel(
-                            name = measurementParts[1], // Simplified, adjust as necessary
-                            displaySingular = measurementParts[1],
-                            displayPlural = measurementParts[1] + "s",  // Adding plural form (can adjust)
-                            abbreviation = measurementParts[1].take(2) // Simplified abbreviation
-                        )
-                        MeasurementModel(quantity = quantity, unit = unit)
-                    } else {
-                        // Handle cases where measurement is missing or malformed
-                        MeasurementModel(quantity = "", unit = UnitModel("", "", "", ""))
-                    }
+        val components = mutableListOf<ComponentModel>()
 
-                    ComponentModel(
-                        rawText = text.trim(),
-                        ingredient = ingredient,
-                        measurement = measurement,
-                        position = index + 1 // Position starts from 1
-                    )
-                } else {
-                    val ingredient = IngredientModel(name = parts[0].trim())
-                    val measurement = MeasurementModel(quantity = "", unit = UnitModel("", "", "", ""))
+        // Iterate through dynamic fields (we assume that dynamic fields are contained in 'dynamicFieldsLayout')
+        for (i in 0 until dynamicFieldsLayout.childCount) {
+            val dynamicRow = dynamicFieldsLayout.getChildAt(i) as LinearLayout
+            val ingredientEditText = dynamicRow.getChildAt(0) as EditText
+            val quantityEditText = dynamicRow.getChildAt(1) as EditText
+            val unitEditText = dynamicRow.getChildAt(2) as EditText
 
-                    ComponentModel(
-                        rawText = text.trim(),
-                        ingredient = ingredient,
-                        measurement = measurement,
-                        position = index + 1
-                    )
-                }
-            }
+            val ingredientName = ingredientEditText.text.toString()
+            val quantity = quantityEditText.text.toString()
+            val unitName = unitEditText.text.toString()
 
-        // Convert instructions
-        val instructions = instructionsEditText.text.toString()
-            .split(",")
-            .mapIndexed { index, instruction ->
-                InstructionModel(
-                    instructionID = index + 1, // You can use a simple index or fetch an ID if needed
-                    displayText = instruction.trim(),
-                    position = index + 1
+            if (ingredientName.isNotEmpty() && quantity.isNotEmpty() && unitName.isNotEmpty()) {
+                val ingredient = IngredientModel(name = ingredientName)
+                val unit = UnitModel(name = unitName, displaySingular = unitName, displayPlural = unitName + "s", abbreviation = unitName.take(2))
+                val measurement = MeasurementModel(quantity = quantity, unit = unit)
+
+                val component = ComponentModel(
+                    rawText = "$ingredientName:$quantity $unitName",
+                    ingredient = ingredient,
+                    measurement = measurement,
+                    position = i + 1 // Position starts from 1
                 )
+
+                components.add(component)
             }
+        }
 
-        // Convert nutrition
-        val nutrition = nutritionEditText.text.toString()
-            .split(",")
-            .mapNotNull {
-                val parts = it.trim().split(":")
-                if (parts.isEmpty()) ""
-                if (parts.size == 2) {
-                    val nutrient = parts[0].trim()
-                    val amount = parts[1].trim().toIntOrNull() ?: 0
-                    when (nutrient.lowercase()) {
-                        "calories" -> NutritionModel(calories = amount, protein = 0, fat = 0, carbohydrates = 0, sugar = 0, fiber = 0)
-                        "protein" -> NutritionModel(calories = 0, protein = amount, fat = 0, carbohydrates = 0, sugar = 0, fiber = 0)
-                        "fat" -> NutritionModel(calories = 0, protein = 0, fat = amount, carbohydrates = 0, sugar = 0, fiber = 0)
-                        "carbohydrates" -> NutritionModel(calories = 0, protein = 0, fat = 0, carbohydrates = amount, sugar = 0, fiber = 0)
-                        "sugar" -> NutritionModel(calories = 0, protein = 0, fat = 0, carbohydrates = 0, sugar = amount, fiber = 0)
-                        "fiber" -> NutritionModel(calories = 0, protein = 0, fat = 0, carbohydrates = 0, sugar = 0, fiber = amount)
-                        else -> null
-                    }
-                } else {
-                    null
-                }
-            }.firstOrNull() ?: NutritionModel(calories = 0, protein = 0, fat = 0, carbohydrates = 0, sugar = 0, fiber = 0)
+        val instructions = mutableListOf<InstructionModel>()
+        for (i in 0 until instructionsContainer.childCount) {
+            val instructionEditText = instructionsContainer.getChildAt(i) as EditText
+            val instructionText = instructionEditText.text.toString()
+            if (instructionText.isNotEmpty()) {
+                val instruction = InstructionModel(
+                    instructionID = instructionCounter++,
+                    displayText = instructionText,
+                    position = instructions.size + 1
+                )
+                instructions.add(instruction)
+            }
+        }
 
+        val calories = caloriesEditText.text.toString().toIntOrNull() ?: 0
+        val fat = fatEditText.text.toString().toIntOrNull() ?: 0
+        val protein = proteinEditText.text.toString().toIntOrNull() ?: 0
+        val sugar = sugarEditText.text.toString().toIntOrNull() ?: 0
+        val carbs = carbsEditText.text.toString().toIntOrNull() ?: 0
+        val fiber = fiberEditText.text.toString().toIntOrNull() ?: 0
+
+        val nutrition = NutritionModel(
+            calories = calories,
+            protein = protein,
+            fat = fat,
+            carbohydrates = carbs,
+            sugar = sugar,
+            fiber = fiber
+        )
 
         val existingRecipes = repository.getAllRecipes()
         val newRecipeId = if (existingRecipes.isNotEmpty()) {
