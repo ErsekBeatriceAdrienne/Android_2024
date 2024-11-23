@@ -1,26 +1,36 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    tools:context=".ui.home.HomeFragment">
+    android:orientation="vertical">
 
-    <!-- Kép középre igazítva -->
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="229dp"
-        android:layout_height="225dp"
-        android:layout_gravity="center"
-        android:src="@drawable/recipehub_icon" />
-
-    <!-- Szöveg az ImageView alatt középre igazítva -->
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/textViewRecipesTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome to the homepage"
-        android:layout_marginTop="16dp" /> <!-- Térköz hozzáadása a kép és a szöveg között -->
+        android:text="Planner"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:layout_margin="16dp"
+        android:textColor="@color/selected_icon_color" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewTodo"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/buttonAddPlan"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="65dp"
+        android:backgroundTint="@color/selected_icon_color"
+        android:drawableEnd="@drawable/add"
+        android:drawablePadding="16dp"
+        android:gravity="center"
+        android:textColor="@color/selected_icon_color"
+        android:src="@drawable/add" />
 
 </LinearLayout>

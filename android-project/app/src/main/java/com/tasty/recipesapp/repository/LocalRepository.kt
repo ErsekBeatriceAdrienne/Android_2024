@@ -64,6 +64,10 @@ class LocalRepository(private val recipeDao: RecipeDao, private val favoriteDao:
         favoriteDao.addFavorite(favorite)
     }
 
+    suspend fun updateRecipe(recipe: RecipeModel) {
+        recipeDao.update(recipe.toEntity())
+    }
+
     suspend fun removeFavorite(recipeId: Long) {
         favoriteDao.removeFavoriteByRecipeId(recipeId)
     }

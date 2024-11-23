@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.tasty.recipesapp.database.entities.RecipeEntity
 
 @Dao
@@ -19,6 +20,8 @@ interface RecipeDao
     suspend fun getRecipeCount(): Int
     @Query("DELETE FROM recipe WHERE internalId = :recipeID")
     suspend fun deleteRecipeById(recipeID: Int)
+    @Update
+    suspend fun update(recipe: RecipeEntity)
     @Delete
     suspend fun deleteRecipe(recipe: RecipeEntity)
 }

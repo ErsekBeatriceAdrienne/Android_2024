@@ -1,12 +1,14 @@
 package com.tasty.recipesapp.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.tasty.recipesapp.databinding.ItemRecipeBinding
 import com.tasty.recipesapp.models.recipe.RecipeModel
 
-class ProfileRecipeAdapter(private var recipes: List<RecipeModel>) :
+class ProfileRecipeAdapter(private var recipes: List<RecipeModel>,
+                           private val onRecipeClick: (RecipeModel) -> Unit) :
     RecyclerView.Adapter<ProfileRecipeAdapter.ProfileRecipesViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileRecipesViewHolder {
@@ -15,7 +17,19 @@ class ProfileRecipeAdapter(private var recipes: List<RecipeModel>) :
     }
 
     override fun onBindViewHolder(holder: ProfileRecipesViewHolder, position: Int) {
-        holder.bind(recipes[position])
+        val recipe = recipes[position]
+
+        holder.bind(recipe)
+
+        // Kattintás esemény
+        holder.itemView.setOnClickListener {
+            if (recipe.recipeID != null) {
+                onRecipeClick(recipe)
+            } else {
+                Log.e("ProfileFragment", "Invalid recipe ID: ${recipe.recipeID}")
+            }
+        }
+
     }
 
     override fun getItemCount(): Int = recipes.size

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tasty.recipesapp.R
@@ -47,7 +48,10 @@ class ProfileFragment : Fragment() {
         binding.favoriteRecipesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         // Adapter inicializálása
-        profileAdapter = ProfileRecipeAdapter(emptyList())
+        profileAdapter = ProfileRecipeAdapter(emptyList()) { recipe ->
+            val action = ProfileFragmentDirections.actionProfileFragmentToRecipeDetailFragment(recipe.recipeID.toString())
+            findNavController().navigate(action)
+        }
         binding.favoriteRecipesRecyclerView.adapter = profileAdapter
 
         // Megfigyelő a receptek betöltésére

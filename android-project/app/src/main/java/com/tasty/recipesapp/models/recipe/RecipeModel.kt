@@ -7,18 +7,18 @@ import com.tasty.recipesapp.models.recipe.recipemodels.NutritionModel
 
 data class RecipeModel(
     var recipeID: Int,
-    val name: String,
-    val description: String,
-    val thumbnailUrl: String,
-    val keywords: String,
-    val isPublic: Boolean,
-    val userEmail: String,
-    val originalVideoUrl: String,
-    val country: String,
-    val numServings: Int,
-    val components: List<ComponentModel>,
-    val instructions: List<InstructionModel>,
-    val nutrition: NutritionModel,
+    var name: String,
+    var description: String,
+    var thumbnailUrl: String,
+    var keywords: String,
+    var isPublic: Boolean,
+    var userEmail: String,
+    var originalVideoUrl: String,
+    var country: String,
+    var numServings: Int,
+    var components: List<ComponentModel>,
+    var instructions: List<InstructionModel>,
+    var nutrition: NutritionModel,
     var isFavorite: Boolean
 )
 

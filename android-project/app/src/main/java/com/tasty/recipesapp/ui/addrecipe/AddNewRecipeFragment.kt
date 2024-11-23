@@ -180,7 +180,10 @@ class AddNewRecipeFragment : Fragment() {
 
         val thumbnailUrl = thumbnailUrlEditText.text.toString()
         val keywords = keywordsEditText.text.toString()
-        val isPublic = isPublicCheckbox.isChecked
+
+        var isPublic : Boolean = if (isPublicCheckbox.isChecked) true
+        else false
+
         val userEmail = userEmailEditText.text.toString()
         val originalVideoUrl = originalVideoUrlEditText.text.toString()
         val country = countryEditText.text.toString()
