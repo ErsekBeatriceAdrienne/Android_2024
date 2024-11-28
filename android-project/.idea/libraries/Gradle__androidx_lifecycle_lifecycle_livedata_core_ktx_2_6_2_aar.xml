@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.lifecycle:lifecycle-livedata-core-ktx:2.6.2@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/c1592e2afe2fe07aa4ab5af394c517c3/transformed/lifecycle-livedata-core-ktx-2.6.2/res" />
-      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/c1592e2afe2fe07aa4ab5af394c517c3/transformed/lifecycle-livedata-core-ktx-2.6.2/AndroidManifest.xml" />
-      <root url="jar://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/c1592e2afe2fe07aa4ab5af394c517c3/transformed/lifecycle-livedata-core-ktx-2.6.2/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/75fcbc0cf580fdb87dec940d6bc157ef/transformed/lifecycle-livedata-core-ktx-2.6.2/res" />
+      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/75fcbc0cf580fdb87dec940d6bc157ef/transformed/lifecycle-livedata-core-ktx-2.6.2/AndroidManifest.xml" />
+      <root url="jar://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/75fcbc0cf580fdb87dec940d6bc157ef/transformed/lifecycle-livedata-core-ktx-2.6.2/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

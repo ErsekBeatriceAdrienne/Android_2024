@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.core:core-ktx:1.13.0@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/b84d60d9d4be74be643bca195c202b9d/transformed/core-ktx-1.13.0/res" />
-      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/b84d60d9d4be74be643bca195c202b9d/transformed/core-ktx-1.13.0/AndroidManifest.xml" />
-      <root url="jar://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/b84d60d9d4be74be643bca195c202b9d/transformed/core-ktx-1.13.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/b3ce7bb4ae4ee4b7235e77b94d474462/transformed/core-ktx-1.13.0/res" />
+      <root url="jar://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/b3ce7bb4ae4ee4b7235e77b94d474462/transformed/core-ktx-1.13.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/b3ce7bb4ae4ee4b7235e77b94d474462/transformed/core-ktx-1.13.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

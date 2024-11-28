@@ -7,9 +7,18 @@ import androidx.lifecycle.viewModelScope
 import com.tasty.recipesapp.database.entities.FavoriteEntity
 import com.tasty.recipesapp.database.entities.RecipeEntity
 import com.tasty.recipesapp.repository.LocalRepository
+import com.tasty.recipesapp.repository.RecipeRepository
+import com.tasty.recipesapp.restapi.response.Recipe
+import com.tasty.recipesapp.restapi.response.toModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class RecipeViewModel(private val localRepository: LocalRepository) : ViewModel() {
+
+    private val recipeRepository = RecipeRepository()
+    private val _recipesAPI = MutableStateFlow<List<Recipe>>(emptyList())
+    val recipesAPI: StateFlow<List<Recipe>> get() = _recipesAPI
 
     private val _recipes = MutableLiveData<List<RecipeModel>>()
     val recipes: LiveData<List<RecipeModel>> get() = _recipes
@@ -20,6 +29,34 @@ class RecipeViewModel(private val localRepository: LocalRepository) : ViewModel(
     init {
         loadRecipes()
         loadFavoriteRecipesFromDatabase()
+    }
+
+    private fun fetchRecipesFromApi() {
+        viewModelScope.launch {
+            val fetchedRecipes = recipeRepository.fetchRecipes()
+            fetchedRecipes?.let { recipes ->
+                val recipeModels = recipes.map { recipe ->
+                    RecipeModel(
+                        recipeID = recipe.recipeID, // Map `recipe.recipeID` from API response
+                        name = recipe.name, // Map `recipe.name`
+                        description = recipe.description, // Map `recipe.description`
+                        thumbnailUrl = recipe.thumbnailUrl, // Map `recipe.thumbnailUrl`
+                        keywords = recipe.keywords ?: "", // Handle nullable fields
+                        isPublic = recipe.isPublic,
+                        userEmail = recipe.userEmail ?: "", // Handle nullable fields
+                        originalVideoUrl = recipe.originalVideoUrl ?: "",
+                        country = recipe.country ?: "",
+                        numServings = recipe.numServings,
+                        components = recipe.components.map { it.toModel() }, // Convert components
+                        instructions = recipe.instructions.map { it.toModel() }, // Convert instructions
+                        nutrition = recipe.nutrition.toModel(), // Convert nutrition
+                        isFavorite = recipe.isFavorite
+                    )
+                }
+                _recipes.postValue(recipeModels)
+                _recipesAPI.value = recipes
+            }
+        }
     }
 
     // Load recipes from the database

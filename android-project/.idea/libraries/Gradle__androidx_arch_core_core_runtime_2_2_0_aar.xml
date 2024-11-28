@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.arch.core:core-runtime:2.2.0@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/60931a6d93a547d467650daade6b1ae7/transformed/core-runtime-2.2.0/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/60931a6d93a547d467650daade6b1ae7/transformed/core-runtime-2.2.0/AndroidManifest.xml" />
-      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/60931a6d93a547d467650daade6b1ae7/transformed/core-runtime-2.2.0/res" />
+      <root url="jar://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/3b86e497e6f1c3077eec0f6bc228c15c/transformed/core-runtime-2.2.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/3b86e497e6f1c3077eec0f6bc228c15c/transformed/core-runtime-2.2.0/AndroidManifest.xml" />
+      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/3b86e497e6f1c3077eec0f6bc228c15c/transformed/core-runtime-2.2.0/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

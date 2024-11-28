@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.room:room-ktx:2.6.0@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/77484d6fe0d943508018a53f99040857/transformed/room-ktx-2.6.0/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/77484d6fe0d943508018a53f99040857/transformed/room-ktx-2.6.0/res" />
-      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/77484d6fe0d943508018a53f99040857/transformed/room-ktx-2.6.0/AndroidManifest.xml" />
+      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/cee8e0b2cc339935cc245709f5f61dbc/transformed/room-ktx-2.6.0/res" />
+      <root url="jar://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/cee8e0b2cc339935cc245709f5f61dbc/transformed/room-ktx-2.6.0/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/cee8e0b2cc339935cc245709f5f61dbc/transformed/room-ktx-2.6.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

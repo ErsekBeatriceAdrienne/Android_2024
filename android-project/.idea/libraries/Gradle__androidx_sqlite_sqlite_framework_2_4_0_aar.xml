@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.sqlite:sqlite-framework:2.4.0@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/f067d8adac588f09eb0a4c130e99740b/transformed/sqlite-framework-2.4.0/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/f067d8adac588f09eb0a4c130e99740b/transformed/sqlite-framework-2.4.0/res" />
-      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/f067d8adac588f09eb0a4c130e99740b/transformed/sqlite-framework-2.4.0/AndroidManifest.xml" />
+      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/a4f80c46e387268e41e92b2eebb3e773/transformed/sqlite-framework-2.4.0/res" />
+      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/a4f80c46e387268e41e92b2eebb3e773/transformed/sqlite-framework-2.4.0/AndroidManifest.xml" />
+      <root url="jar://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/a4f80c46e387268e41e92b2eebb3e773/transformed/sqlite-framework-2.4.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

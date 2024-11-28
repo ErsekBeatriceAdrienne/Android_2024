@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.android.engage:engage-core:1.5.5@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/90999d0c725a722a9bc35ea176cb6134/transformed/engage-core-1.5.5/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/90999d0c725a722a9bc35ea176cb6134/transformed/engage-core-1.5.5/AndroidManifest.xml" />
+      <root url="jar://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/6c0693787604809e22720dab547a1eba/transformed/engage-core-1.5.5/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/6c0693787604809e22720dab547a1eba/transformed/engage-core-1.5.5/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$PROJECT_DIR$/../../../jdk-17/caches/modules-2/files-2.1/com.google.android.engage/engage-core/1.5.5/50df2b3530f54c0771770c948853f1c24efcc97d/engage-core-1.5.5-javadoc.jar!/" />

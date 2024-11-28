@@ -1,0 +1,531 @@
+{
+	"info": {
+		"_postman_id": "1d9490d7-deae-430f-9698-6ee3aa9cc80a",
+		"name": "Recipe_API",
+		"description": "# 🚀 Get started here\n\nThis API provides the main requests regarding recipes.\n\n## 🔖 Authentication\n\nTo use authentication during testing you may create your own OAuth Token based on the following steps:\n\n#### **Step 1: Get your access-token**\n\n- Go to Google Developers Console -> OAuth 2.0 Playground: [https://developers.google.com/oauthplayground/](https://developers.google.com/oauthplayground/)\n    \n- Select OAuth2 API v2 (check email and profile as well)\n    \n\n<img src=\"https://content.pstmn.io/df56c449-efbf-49f3-8825-3f3ec1c9b9e2/aW1hZ2UucG5n\" width=\"440\" height=\"92\">\n\n- Before clicking on Authorize APIs option ensure that the token will be created based on a common Client ID and Client secret. You may specify this clicking on the settings icon (on the right, see Image 3.)\n    \n    - OAuth Client ID: 162589133748-qjgufs6rv44fcrt4q8dstre6v1elo4cs.apps.googleusercontent.com\n        \n    - OAuth Client secret: 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\n        \n\n<img src=\"https://content.pstmn.io/c2d98ebc-ebaa-463b-a25d-4d8f1df18a8e/aW1hZ2UucG5n\" width=\"518\" height=\"623\">\n\n- Click on **Exchange authorization code for tokens option ->** you may get your own acces-token. During testing you may use the value of the **id_token**.\n    \n\n#### **Step 2: Check token validity**\n\nYou may check if the provided id-token is valid here: [https://oauth2.googleapis.com/tokeninfo?id_token=](https://oauth2.googleapis.com/tokeninfo?id_token=eyJhbGciOiJSUzI1NiIsImtpZCI6IjI4YTQyMWNhZmJlM2RkODg5MjcxZGY5MDBmNGJiZjE2ZGI1YzI0ZDQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIxNjI1ODkxMzM3NDgtcWpndWZzNnJ2NDRmY3J0NHE4ZHN0cmU2djFlbG80Y3MuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiIxNjI1ODkxMzM3NDgtcWpndWZzNnJ2NDRmY3J0NHE4ZHN0cmU2djFlbG80Y3MuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTMxNTI0MTc0ODM3NTIxNDM2NDkiLCJlbWFpbCI6ImNvZGVzcHJpbmdtZW50b3JAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiJpNFlMaUlJaUhlNXZ5cUppM3RUam9nIiwibmFtZSI6Ik1lbnRvciBDb2Rlc3ByaW5nIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0tTZEZOT2F6UTkyRWFBY3pqR2NCdXpmVEYyaHFqN2lNNEllcWFEQXBmSkVVdjNLdz1zOTYtYyIsImdpdmVuX25hbWUiOiJNZW50b3IiLCJmYW1pbHlfbmFtZSI6IkNvZGVzcHJpbmciLCJpYXQiOjE3MjgzMzczMjcsImV4cCI6MTcyODM0MDkyN30.jkbw3pkfN67UUqvpfczLktoNVaukuCNDRATYx_VX16moqn7F1mm1Ccoy8Ja5RkGGr_ayvAwB2LeRBHYg6IYCFut5f7qNIa1a31Wx5IhpjkAUqY23AuIE7UQ3hscpyiHwfc_3TlQVhP5vmMU-4sdofRnCbwmDYG7STLk8lbbaw70ppWoKvDRxLYNSV1ZVgsMrHdjkjOkyiVdCjfSg7erSZWYp5xn-WmOtRyedBfK9nEwwwUe0HZwRW492rXX8RaitcVN6UF6jO8ALt0c5PYs0TqvgsvRysW7GP89hxhw241LTtmfPfW1PDp6svBwK2Q8koxxWqy9AUuUZ3dpKSObf-Q)\n\n#### **Step 3: Try out the API endpoints using the provided Postman collection**",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "16107714"
+	},
+	"item": [
+		{
+			"name": "GetRecipes",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{base_url}}/api/recipes",
+				"description": "This GET request is used to \"get\" recipe data from an endpoint. There is no request body for this GET request.\n\nA successful GET response will have a `200 OK` status, and includes an array of recipes or empty array if there are no visible public recipes.\n\nThere are two main categories in case of this request: guest mode and authenticated user. In guest mode, all public recipes will be shown, while in case of an authenticated user (you should provide the Bearer Token) all public recipes + the user's own recipes as well (see Image 1.).\n\n<img src=\"https://content.pstmn.io/86291d66-5f81-43d0-9af6-3c2aeeb782b2/aW1hZ2UucG5n\" alt=\"Successful%20response\" width=\"1370\" height=\"771\">"
+			},
+			"response": [
+				{
+					"name": "GetRecipes-list-of-recipes-example",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/recipes"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 13 Oct 2024 14:53:21 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "Kestrel"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						},
+						{
+							"key": "Token-Expired",
+							"value": "true"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"recipeID\": 1,\n        \"name\": \"Avocado Chicken Salad\",\n        \"description\": \"A tasty and healthy avocado chicken salad.\",\n        \"thumbnailUrl\": \"https://www.slenderkitchen.com/sites/default/files/styles/gsd-1x1/public/recipe_images/avocado-chicken-salad.jpg\",\n        \"keywords\": \"salad, avocado, chicken\",\n        \"isPublic\": true,\n        \"userEmail\": \"Unknown\",\n        \"originalVideoUrl\": \"https://s3.amazonaws.com/video-api-prod/assets/a0e1b07dc71c4ac6b378f24493ae2d85/FixedFBFinal.mp4\",\n        \"country\": \"US\",\n        \"numServings\": 4,\n        \"components\": [],\n        \"instructions\": []\n    },\n    {\n        \"recipeID\": 2,\n        \"name\": \"Vegan Lentil Soup\",\n        \"description\": \"A hearty vegan lentil soup.\",\n        \"thumbnailUrl\": \"https://www.allrecipes.com/thmb/UeFtapHyGFBo4Lx-72GxgjrOGnk=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/13978-lentil-soup-DDMFS-4x3-edfa47fc6b234e6b8add24d44c036d43.jpg\",\n        \"keywords\": \"soup, lentil, vegan\",\n        \"isPublic\": true,\n        \"userEmail\": \"Unknown\",\n        \"originalVideoUrl\": \"https://www.youtube.com/watch?v=KSyi9U8Zwcc&ab_channel=MarthaStewart\",\n        \"country\": \"UK\",\n        \"numServings\": 6,\n        \"components\": [],\n        \"instructions\": []\n    },\n    {\n        \"recipeID\": 3,\n        \"name\": \"Classic Caesar Salad\",\n        \"description\": \"A traditional Caesar salad with croutons and dressing.\",\n        \"thumbnailUrl\": \"https://www.allrecipes.com/thmb/mXZ0Tulwn3x9_YB_ZbkiTveDYFE=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/229063-Classic-Restaurant-Caesar-Salad-ddmfs-4x3-231-89bafa5e54dd4a8c933cf2a5f9f12a6f.jpg\",\n        \"keywords\": \"salad, caesar, classic\",\n        \"isPublic\": true,\n        \"userEmail\": \"Unknown\",\n        \"originalVideoUrl\": \"https://www.google.com/search?q=ceasar+salad&sca_esv=1c412232e298010e&sca_upv=1&biw=1536&bih=695&tbm=vid&sxsrf=ADLYWIJOrXTFUvuqtW0Sx3qBi7VTqUt87g%3A1727071651852&ei=owXxZvnMM9-C9u8P0YnMkAY&ved=0ahUKEwi5qr2is9iIAxVfgf0HHdEEE2IQ4dUDCA0&uact=5&oq=ceasar+salad&gs_lp=Eg1nd3Mtd2l6LXZpZGVvIgxjZWFzYXIgc2FsYWQyCxAAGIAEGJECGIoFMgoQABiABBhDGIoFMgcQABiABBgKMgcQABiABBgKMgcQABiABBgKMgcQABiABBgKMgcQABiABBgKMgcQABiABBgKMgcQABiABBgKMgcQABiABBgKSJIDUABYAHAAeACQAQCYAW2gAW2qAQMwLjG4AQPIAQD4AQL4AQGYAgGgAniYAwCSBwMwLjGgB-sH&sclient=gws-wiz-video#fpstate=ive&vld=cid:dc55894c,vid:7Mi8DmbAE74,st:0\",\n        \"country\": \"Canada\",\n        \"numServings\": 3,\n        \"components\": [],\n        \"instructions\": []\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "GetRecipeDetail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImE1MGY2ZTcwZWY0YjU0OGE1ZmQ5MTQyZWVjZDFmYjhmNTRkY2U5ZWUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIxNjI1ODkxMzM3NDgtcWpndWZzNnJ2NDRmY3J0NHE4ZHN0cmU2djFlbG80Y3MuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiIxNjI1ODkxMzM3NDgtcWpndWZzNnJ2NDRmY3J0NHE4ZHN0cmU2djFlbG80Y3MuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTMxNTI0MTc0ODM3NTIxNDM2NDkiLCJlbWFpbCI6ImNvZGVzcHJpbmdtZW50b3JAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiJ4cU96OEU4MjEwdW9rYnVJbTlaTnNRIiwibmFtZSI6Ik1lbnRvciBDb2Rlc3ByaW5nIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0tTZEZOT2F6UTkyRWFBY3pqR2NCdXpmVEYyaHFqN2lNNEllcWFEQXBmSkVVdjNLdz1zOTYtYyIsImdpdmVuX25hbWUiOiJNZW50b3IiLCJmYW1pbHlfbmFtZSI6IkNvZGVzcHJpbmciLCJpYXQiOjE3Mjg4NDIyMjMsImV4cCI6MTcyODg0NTgyM30.FetCX0sgWDVo4sdQB0bVggWlCfb9vFVmER74OsX0c4saD70MTjfa9iTjMXpphXR1f4tzusyCmhkaT49QH9fBolR-UQ0r6uaEVzbzdUBtTGd518PHFkXlJstpE2KFm-XhlkgvG4u03LJP8ODfmns5hvA_sfD_ouS6uctbTrCWfrziUoFc40CsZyegP8Zmjj3MpbAXCZmWfz3F1oHI4ApP0GCy_kJT7b7-PogviyS0G3tFR4aPkPLwNXoaIB-vO-yL4KWgGYm3Him-niLLZZHjbbE1Mq-QxB-rnCWM1G00Xj3vev63orlp0DMg0JzvpdX0ggN_3OExZfvR2tCMaivdQQ"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{base_url}}/api/recipes/6",
+				"description": "This GET request is used to get more details of a specific recipe. There is no request body for this GET request.\n\nA successful GET response will have a `200 OK` status, and the details of a recipe in JSON format.\n\n<img src=\"https://content.pstmn.io/5d4ea498-70f7-42c9-ac22-e79cbbff4e85/aW1hZ2UucG5n\" alt=\"Success\n<br>\n<br>\n<br>\" width=\"1351\" height=\"802\">\n\n<img src=\"https://content.pstmn.io/f5466c1c-8968-4d25-a30a-ba5672268071/aW1hZ2UucG5n\" alt=\"Bad%20request%20-%20wrong%20recipe%20id\n<br>\n<br>\n<br>\" width=\"1057\" height=\"649\">\n\nIn case of a personal recipe you should add the token as well using the Authorization tab."
+			},
+			"response": [
+				{
+					"name": "GetRecipeDetail-recipe-with-id-1",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/recipes/1"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 13 Oct 2024 15:18:45 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "Kestrel"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"recipeID\": 1,\n    \"name\": \"Avocado Chicken Salad\",\n    \"description\": \"A tasty and healthy avocado chicken salad.\",\n    \"thumbnailUrl\": \"https://www.slenderkitchen.com/sites/default/files/styles/gsd-1x1/public/recipe_images/avocado-chicken-salad.jpg\",\n    \"keywords\": \"salad, avocado, chicken\",\n    \"isPublic\": true,\n    \"userEmail\": \"Unknown\",\n    \"originalVideoUrl\": \"https://s3.amazonaws.com/video-api-prod/assets/a0e1b07dc71c4ac6b378f24493ae2d85/FixedFBFinal.mp4\",\n    \"country\": \"US\",\n    \"numServings\": 4,\n    \"components\": [],\n    \"instructions\": []\n}"
+				},
+				{
+					"name": "GetRecipeDetail-wrong-recipe-id",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/recipes/5"
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/problem+json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 13 Oct 2024 15:24:37 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "Kestrel"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"type\": \"https://tools.ietf.org/html/rfc9110#section-15.5.2\",\n    \"title\": \"Bad Request\",\n    \"status\": 400,\n    \"detail\": \"Recipe ID in the URL does not match the recipe ID in the request body.\",\n    \"instance\": \"/api/recipes/5\"\n}"
+				}
+			]
+		},
+		{
+			"name": "AddRecipe",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{token}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\": \"One-Pot Lemon Garlic Shrimp Pasta - to be deleted 5\",\n    \"description\": \"This easy 30-minute pasta recipe transforms ingredients that you already have in your kitchen into a posh, seafood dish you’ll want to serve at your next dinner party. And since the whole dish is made in a single pot, clean-up is easy. Don’t be surprised if this becomes your favorite quick go-to.\",\n    \"thumbnailUrl\": \"https://img.buzzfeed.com/video-api-prod/assets/9ee2dadcbfcb4095872e6cdbaa24ff14/Thumb_A_FB.jpg\",\n    \"keywords\": \"pasta, shrimp, lemon, garlic\",\n    \"totalTime\": \"Under 30 minutes\",\n    \"originalVideoUrl\": \"https://s3.amazonaws.com/video-api-prod/assets/3de913d586424e189521e13eeee0222d/BFV10181_One-Pot_Lemon_Garlic_Shrimp_Pasta_FB1080SQ.mp4\",\n    \"country\": \"US\",\n    \"numServings\": 4,\n    \"instructions\": [\n        {\n            \n            \"displayText\": \"In a large pot, boil water and add pasta. Cook (stirring frequently) until al dente.\",\n            \"position\": 1\n        },\n        {\n            \n            \"displayText\": \"Drain and set pasta aside.\",\n            \"position\": 2\n        },\n        {\n            \n            \"displayText\": \"In the same pan, heat olive oil and 2 tablespoons of butter. Add garlic and crushed red pepper, cook until fragrant.\",\n            \"position\": 3\n        },\n        {\n            \n            \"displayText\": \"Toss in shrimp, salt and pepper to taste, and stir until shrimp start to turn pink, but are not fully cooked.\",\n            \"position\": 4\n        },\n        {\n            \n            \"displayText\": \"Add oregano and spinach, cook until wilted.\",\n            \"position\": 5\n        },\n        {\n            \n            \"displayText\": \"Return cooked pasta to the pot, add remaining butter, parmesan, and parsley. Stir until well mixed and the butter is melted.\",\n            \"position\": 6\n        },\n        {\n            \n            \"displayText\": \"When the shrimp are cooked, add lemon juice, mix once more, then serve while hot.\",\n            \"position\": 7\n        },\n        {\n            \n            \"displayText\": \"Enjoy!\",\n            \"position\": 8\n        }\n    ],\n    \"components\": [\n        {\n            \"rawText\": \"8 oz linguine\",\n            \"extraComment\": \"\",\n            \"ingredient\": {\n                \"name\": \"linguine\"\n            },\n            \"measurement\": {\n                \"quantity\": \"8\",\n                \"unit\": {\n                \"name\": \"ounce\",\n                \"displaySingular\": \"oz\",\n                \"displayPlural\": \"oz\",\n                \"abbreviation\": \"oz\"\n                }\n            },\n            \"position\": 1\n        },\n        {\n            \"rawText\": \"2 Tbsp. olive oil\",\n            \"extraComment\": \"\",\n            \"ingredient\": {\n                \"name\": \"olive oil\"\n            },\n            \"measurement\": {\n                \"quantity\": \"2\",\n                \"unit\": {\n                \"name\": \"tablespoon\",\n                \"displaySingular\": \"tablespoon\",\n                \"displayPlural\": \"tablespoons\",\n                \"abbreviation\": \"tbsp\"\n                }\n            },\n            \"position\": 2\n        },\n        {\n            \"rawText\": \"8 Tbsp. (1 stick) unsalted butter\",\n            \"extraComment\": \"1 stick\",\n            \"ingredient\": {\n                \"name\": \"unsalted butter\"\n            },\n             \"measurement\": {\n                \"quantity\": \"8\",\n                \"unit\": {\n                \"name\": \"tablespoon\",\n                \"displaySingular\": \"tablespoon\",\n                \"displayPlural\": \"tablespoons\",\n                \"abbreviation\": \"tbsp\"\n                }\n            },\n            \"position\": 3\n        }\n        ],\n        \"nutrition\": {\n            \"calories\": 567,\n            \"protein\": 31,\n            \"fat\": 28,\n            \"carbohydrates\": 44,\n            \"sugar\": 1,\n            \"fiber\": 2\n            }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/api/recipes",
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data (all important information about a recipe), and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code.\n\nIn order to be able to add a new recipe providing a valid token is inevitable, otherwise it should result in a 401 Unauthorized error.\n\n<img src=\"https://content.pstmn.io/6bdb46b7-36e0-4379-9432-c687bacbc30b/aW1hZ2UucG5n\" width=\"607\" height=\"251\">"
+			},
+			"response": [
+				{
+					"name": "AddRecipe-example",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"One-Pot Lemon Garlic Shrimp Pasta\",\n    \"description\": \"This easy 30-minute pasta recipe transforms ingredients that you already have in your kitchen into a posh, seafood dish you’ll want to serve at your next dinner party. And since the whole dish is made in a single pot, clean-up is easy. Don’t be surprised if this becomes your favorite quick go-to.\",\n    \"thumbnailUrl\": \"https://img.buzzfeed.com/video-api-prod/assets/9ee2dadcbfcb4095872e6cdbaa24ff14/Thumb_A_FB.jpg\",\n    \"keywords\": \"pasta, shrimp, lemon, garlic\",\n    \"totalTime\": \"Under 30 minutes\",\n    \"originalVideoUrl\": \"https://s3.amazonaws.com/video-api-prod/assets/3de913d586424e189521e13eeee0222d/BFV10181_One-Pot_Lemon_Garlic_Shrimp_Pasta_FB1080SQ.mp4\",\n    \"country\": \"US\",\n    \"numServings\": 4,\n    \"instructions\": [\n        {\n            \n            \"displayText\": \"In a large pot, boil water and add pasta. Cook (stirring frequently) until al dente.\",\n            \"position\": 1\n        },\n        {\n            \n            \"displayText\": \"Drain and set pasta aside.\",\n            \"position\": 2\n        },\n        {\n            \n            \"displayText\": \"In the same pan, heat olive oil and 2 tablespoons of butter. Add garlic and crushed red pepper, cook until fragrant.\",\n            \"position\": 3\n        },\n        {\n            \n            \"displayText\": \"Toss in shrimp, salt and pepper to taste, and stir until shrimp start to turn pink, but are not fully cooked.\",\n            \"position\": 4\n        },\n        {\n            \n            \"displayText\": \"Add oregano and spinach, cook until wilted.\",\n            \"position\": 5\n        },\n        {\n            \n            \"displayText\": \"Return cooked pasta to the pot, add remaining butter, parmesan, and parsley. Stir until well mixed and the butter is melted.\",\n            \"position\": 6\n        },\n        {\n            \n            \"displayText\": \"When the shrimp are cooked, add lemon juice, mix once more, then serve while hot.\",\n            \"position\": 7\n        },\n        {\n            \n            \"displayText\": \"Enjoy!\",\n            \"position\": 8\n        }\n    ],\n    \"components\": [\n        {\n            \"rawText\": \"8 oz linguine\",\n            \"extraComment\": \"\",\n            \"ingredient\": {\n                \"name\": \"linguine\"\n            },\n            \"measurement\": {\n                \"quantity\": \"8\",\n                \"unit\": {\n                \"name\": \"ounce\",\n                \"displaySingular\": \"oz\",\n                \"displayPlural\": \"oz\",\n                \"abbreviation\": \"oz\"\n                }\n            },\n            \"position\": 1\n        },\n        {\n            \"rawText\": \"2 Tbsp. olive oil\",\n            \"extraComment\": \"\",\n            \"ingredient\": {\n                \"name\": \"olive oil\"\n            },\n            \"measurement\": {\n                \"quantity\": \"2\",\n                \"unit\": {\n                \"name\": \"tablespoon\",\n                \"displaySingular\": \"tablespoon\",\n                \"displayPlural\": \"tablespoons\",\n                \"abbreviation\": \"tbsp\"\n                }\n            },\n            \"position\": 2\n        },\n        {\n            \"rawText\": \"8 Tbsp. (1 stick) unsalted butter\",\n            \"extraComment\": \"1 stick\",\n            \"ingredient\": {\n                \"name\": \"unsalted butter\"\n            },\n             \"measurement\": {\n                \"quantity\": \"8\",\n                \"unit\": {\n                \"name\": \"tablespoon\",\n                \"displaySingular\": \"tablespoon\",\n                \"displayPlural\": \"tablespoons\",\n                \"abbreviation\": \"tbsp\"\n                }\n            },\n            \"position\": 3\n        }\n        ],\n        \"nutrition\": {\n            \"calories\": 567,\n            \"protein\": 31,\n            \"fat\": 28,\n            \"carbohydrates\": 44,\n            \"sugar\": 1,\n            \"fiber\": 2\n            }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/recipes"
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 13 Oct 2024 15:20:18 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "Kestrel"
+						},
+						{
+							"key": "Location",
+							"value": "https://recipe-appservice-cthjbdfafnhfdtes.germanywestcentral-01.azurewebsites.net/api/Recipes/4"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \n    \"name\": \"One-Pot Lemon Garlic Shrimp Pasta\",\n    \"description\": \"This easy 30-minute pasta recipe transforms ingredients that you already have in your kitchen into a posh, seafood dish you’ll want to serve at your next dinner party. And since the whole dish is made in a single pot, clean-up is easy. Don’t be surprised if this becomes your favorite quick go-to.\",\n    \"thumbnailUrl\": \"https://img.buzzfeed.com/video-api-prod/assets/9ee2dadcbfcb4095872e6cdbaa24ff14/Thumb_A_FB.jpg\",\n    \"keywords\": \"pasta, shrimp, lemon, garlic\",\n    \"isPublic\": false,\n    \"userEmail\": \"codespringmentor@gmail.com\",\n    \"originalVideoUrl\": \"https://s3.amazonaws.com/video-api-prod/assets/3de913d586424e189521e13eeee0222d/BFV10181_One-Pot_Lemon_Garlic_Shrimp_Pasta_FB1080SQ.mp4\",\n    \"country\": \"US\",\n    \"numServings\": 4,\n    \"components\": [\n        {\n            \"rawText\": \"8 oz linguine\",\n            \"extraComment\": \"\",\n            \"ingredient\": {\n                \"name\": \"linguine\"\n            },\n            \"measurement\": {\n                \"quantity\": \"8\",\n                \"unit\": {\n                    \"name\": \"ounce\",\n                    \"displaySingular\": \"oz\",\n                    \"displayPlural\": \"oz\",\n                    \"abbreviation\": \"oz\"\n                }\n            },\n            \"position\": 1\n        },\n        {\n            \"rawText\": \"2 Tbsp. olive oil\",\n            \"extraComment\": \"\",\n            \"ingredient\": {\n                \"name\": \"olive oil\"\n            },\n            \"measurement\": {\n                \"quantity\": \"2\",\n                \"unit\": {\n                    \"name\": \"tablespoon\",\n                    \"displaySingular\": \"tablespoon\",\n                    \"displayPlural\": \"tablespoons\",\n                    \"abbreviation\": \"tbsp\"\n                }\n            },\n            \"position\": 2\n        },\n        {\n            \"rawText\": \"8 Tbsp. (1 stick) unsalted butter\",\n            \"extraComment\": \"1 stick\",\n            \"ingredient\": {\n                \"name\": \"unsalted butter\"\n            },\n            \"measurement\": {\n                \"quantity\": \"8\",\n                \"unit\": {\n                    \"name\": \"tablespoon\",\n                    \"displaySingular\": \"tablespoon\",\n                    \"displayPlural\": \"tablespoons\",\n                    \"abbreviation\": \"tbsp\"\n                }\n            },\n            \"position\": 3\n        }\n    ],\n    \"instructions\": [\n        {\n            \"instructionID\": 0,\n            \"displayText\": \"In a large pot, boil water and add pasta. Cook (stirring frequently) until al dente.\",\n            \"position\": 1\n        },\n        {\n            \"instructionID\": 0,\n            \"displayText\": \"Drain and set pasta aside.\",\n            \"position\": 2\n        },\n        {\n            \"instructionID\": 0,\n            \"displayText\": \"In the same pan, heat olive oil and 2 tablespoons of butter. Add garlic and crushed red pepper, cook until fragrant.\",\n            \"position\": 3\n        },\n        {\n            \"instructionID\": 0,\n            \"displayText\": \"Toss in shrimp, salt and pepper to taste, and stir until shrimp start to turn pink, but are not fully cooked.\",\n            \"position\": 4\n        },\n        {\n            \"instructionID\": 0,\n            \"displayText\": \"Add oregano and spinach, cook until wilted.\",\n            \"position\": 5\n        },\n        {\n            \"instructionID\": 0,\n            \"displayText\": \"Return cooked pasta to the pot, add remaining butter, parmesan, and parsley. Stir until well mixed and the butter is melted.\",\n            \"position\": 6\n        },\n        {\n            \"instructionID\": 0,\n            \"displayText\": \"When the shrimp are cooked, add lemon juice, mix once more, then serve while hot.\",\n            \"position\": 7\n        },\n        {\n            \"instructionID\": 0,\n            \"displayText\": \"Enjoy!\",\n            \"position\": 8\n        }\n    ],\n    \"nutrition\": {\n        \"calories\": 567,\n        \"protein\": 31,\n        \"fat\": 28,\n        \"carbohydrates\": 44,\n        \"sugar\": 1,\n        \"fiber\": 2\n    }\n}"
+				},
+				{
+					"name": "AddRecipe-unauthorized",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"One-Pot Lemon Garlic Shrimp Pasta\",\n    \"description\": \"This easy 30-minute pasta recipe transforms ingredients that you already have in your kitchen into a posh, seafood dish you’ll want to serve at your next dinner party. And since the whole dish is made in a single pot, clean-up is easy. Don’t be surprised if this becomes your favorite quick go-to.\",\n    \"thumbnailUrl\": \"https://img.buzzfeed.com/video-api-prod/assets/9ee2dadcbfcb4095872e6cdbaa24ff14/Thumb_A_FB.jpg\",\n    \"keywords\": \"pasta, shrimp, lemon, garlic\",\n    \"totalTime\": \"Under 30 minutes\",\n    \"originalVideoUrl\": \"https://s3.amazonaws.com/video-api-prod/assets/3de913d586424e189521e13eeee0222d/BFV10181_One-Pot_Lemon_Garlic_Shrimp_Pasta_FB1080SQ.mp4\",\n    \"country\": \"US\",\n    \"numServings\": 4,\n    \"instructions\": [\n        {\n            \n            \"displayText\": \"In a large pot, boil water and add pasta. Cook (stirring frequently) until al dente.\",\n            \"position\": 1\n        },\n        {\n            \n            \"displayText\": \"Drain and set pasta aside.\",\n            \"position\": 2\n        },\n        {\n            \n            \"displayText\": \"In the same pan, heat olive oil and 2 tablespoons of butter. Add garlic and crushed red pepper, cook until fragrant.\",\n            \"position\": 3\n        },\n        {\n            \n            \"displayText\": \"Toss in shrimp, salt and pepper to taste, and stir until shrimp start to turn pink, but are not fully cooked.\",\n            \"position\": 4\n        },\n        {\n            \n            \"displayText\": \"Add oregano and spinach, cook until wilted.\",\n            \"position\": 5\n        },\n        {\n            \n            \"displayText\": \"Return cooked pasta to the pot, add remaining butter, parmesan, and parsley. Stir until well mixed and the butter is melted.\",\n            \"position\": 6\n        },\n        {\n            \n            \"displayText\": \"When the shrimp are cooked, add lemon juice, mix once more, then serve while hot.\",\n            \"position\": 7\n        },\n        {\n            \n            \"displayText\": \"Enjoy!\",\n            \"position\": 8\n        }\n    ],\n    \"components\": [\n        {\n            \"rawText\": \"8 oz linguine\",\n            \"extraComment\": \"\",\n            \"ingredient\": {\n                \"name\": \"linguine\"\n            },\n            \"measurement\": {\n                \"quantity\": \"8\",\n                \"unit\": {\n                \"name\": \"ounce\",\n                \"displaySingular\": \"oz\",\n                \"displayPlural\": \"oz\",\n                \"abbreviation\": \"oz\"\n                }\n            },\n            \"position\": 1\n        },\n        {\n            \"rawText\": \"2 Tbsp. olive oil\",\n            \"extraComment\": \"\",\n            \"ingredient\": {\n                \"name\": \"olive oil\"\n            },\n            \"measurement\": {\n                \"quantity\": \"2\",\n                \"unit\": {\n                \"name\": \"tablespoon\",\n                \"displaySingular\": \"tablespoon\",\n                \"displayPlural\": \"tablespoons\",\n                \"abbreviation\": \"tbsp\"\n                }\n            },\n            \"position\": 2\n        },\n        {\n            \"rawText\": \"8 Tbsp. (1 stick) unsalted butter\",\n            \"extraComment\": \"1 stick\",\n            \"ingredient\": {\n                \"name\": \"unsalted butter\"\n            },\n             \"measurement\": {\n                \"quantity\": \"8\",\n                \"unit\": {\n                \"name\": \"tablespoon\",\n                \"displaySingular\": \"tablespoon\",\n                \"displayPlural\": \"tablespoons\",\n                \"abbreviation\": \"tbsp\"\n                }\n            },\n            \"position\": 3\n        }\n        ],\n        \"nutrition\": {\n            \"calories\": 567,\n            \"protein\": 31,\n            \"fat\": 28,\n            \"carbohydrates\": 44,\n            \"sugar\": 1,\n            \"fiber\": 2\n            }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/recipes"
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Content-Length",
+							"value": "0"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 13 Oct 2024 15:30:53 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "Kestrel"
+						},
+						{
+							"key": "WWW-Authenticate",
+							"value": "Bearer"
+						}
+					],
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Update data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful PUT request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImE1MGY2ZTcwZWY0YjU0OGE1ZmQ5MTQyZWVjZDFmYjhmNTRkY2U5ZWUiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIxNjI1ODkxMzM3NDgtcWpndWZzNnJ2NDRmY3J0NHE4ZHN0cmU2djFlbG80Y3MuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiIxNjI1ODkxMzM3NDgtcWpndWZzNnJ2NDRmY3J0NHE4ZHN0cmU2djFlbG80Y3MuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTMxNTI0MTc0ODM3NTIxNDM2NDkiLCJlbWFpbCI6ImNvZGVzcHJpbmdtZW50b3JAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiJ2dHc0YVVBaFBqZlNKbk5EU1haYmp3IiwibmFtZSI6Ik1lbnRvciBDb2Rlc3ByaW5nIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0tTZEZOT2F6UTkyRWFBY3pqR2NCdXpmVEYyaHFqN2lNNEllcWFEQXBmSkVVdjNLdz1zOTYtYyIsImdpdmVuX25hbWUiOiJNZW50b3IiLCJmYW1pbHlfbmFtZSI6IkNvZGVzcHJpbmciLCJpYXQiOjE3Mjg4MzI4MDgsImV4cCI6MTcyODgzNjQwOH0.1_U5w9nViLGGwcgh3P6cuh0hV8A8uTA-xKe3rEIdNbG_9JjEwlwEuQIpuKciqDE_4oo4QcDlF9LfVUzmfHxOh5vdjcwyrgNciwNWJZZMTbmR-gP9UpisBZuTiy1nxR8X4j181p_dCaH0DSnF4TiDRsr1R1_Cx0xxvFP_e3l-uCbSMJvvdFAdH9kNHsztnx4r3Rv5VfveFpd1LC9jrzIj4GM-gIqwzvEiyphNIh9MsChpHSltw1EGBK3iETg5WkSB5YzmMIzQjcqchb9p8KqkhCpZFrpuALtdtAvgHyHvq41iCwmIRODY35indiN3tT7CwYVZOgiQxjQTNW_TuCgIwQ"
+					}
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"recipeId\": 4,\n    \"name\": \"One-Pot Lemon Garlic Shrimp Pasta - recipe updated\",\n    \"description\": \"This easy 30-minute pasta recipe transforms ingredients that you already have in your kitchen into a posh, seafood dish you’ll want to serve at your next dinner party. And since the whole dish is made in a single pot, clean-up is easy. Don’t be surprised if this becomes your favorite quick go-to.\",\n    \"thumbnailUrl\": \"https://img.buzzfeed.com/video-api-prod/assets/9ee2dadcbfcb4095872e6cdbaa24ff14/Thumb_A_FB.jpg\",\n    \"keywords\": \"pasta, shrimp, lemon, garlic\",\n    \"totalTime\": \"Under 30 minutes\",\n    \"originalVideoUrl\": \"https://s3.amazonaws.com/video-api-prod/assets/3de913d586424e189521e13eeee0222d/BFV10181_One-Pot_Lemon_Garlic_Shrimp_Pasta_FB1080SQ.mp4\",\n    \"country\": \"US\",\n    \"numServings\": 4,\n    \"instructions\": [\n        {\n            \n            \"displayText\": \"In a large pot, boil water and add pasta. Cook (stirring frequently) until al dente.\",\n            \"position\": 1\n        },\n        {\n            \n            \"displayText\": \"Drain and set pasta aside.\",\n            \"position\": 2\n        },\n        {\n            \n            \"displayText\": \"In the same pan, heat olive oil and 2 tablespoons of butter. Add garlic and crushed red pepper, cook until fragrant.\",\n            \"position\": 3\n        },\n        {\n            \n            \"displayText\": \"Toss in shrimp, salt and pepper to taste, and stir until shrimp start to turn pink, but are not fully cooked.\",\n            \"position\": 4\n        },\n        {\n            \n            \"displayText\": \"Add oregano and spinach, cook until wilted.\",\n            \"position\": 5\n        },\n        {\n            \n            \"displayText\": \"Return cooked pasta to the pot, add remaining butter, parmesan, and parsley. Stir until well mixed and the butter is melted.\",\n            \"position\": 6\n        },\n        {\n            \n            \"displayText\": \"When the shrimp are cooked, add lemon juice, mix once more, then serve while hot.\",\n            \"position\": 7\n        },\n        {\n            \n            \"displayText\": \"Enjoy!\",\n            \"position\": 8\n        }\n    ],\n    \"components\": [\n        {\n            \"rawText\": \"8 oz linguine\",\n            \"extraComment\": \"\",\n            \"ingredient\": {\n                \"name\": \"linguine\"\n            },\n            \"measurement\": {\n                \"quantity\": \"8\",\n                \"unit\": {\n                \"name\": \"ounce\",\n                \"displaySingular\": \"oz\",\n                \"displayPlural\": \"oz\",\n                \"abbreviation\": \"oz\"\n                }\n            },\n            \"position\": 1\n        },\n        {\n            \"rawText\": \"2 Tbsp. olive oil\",\n            \"extraComment\": \"\",\n            \"ingredient\": {\n                \"name\": \"olive oil\"\n            },\n            \"measurement\": {\n                \"quantity\": \"2\",\n                \"unit\": {\n                \"name\": \"tablespoon\",\n                \"displaySingular\": \"tablespoon\",\n                \"displayPlural\": \"tablespoons\",\n                \"abbreviation\": \"tbsp\"\n                }\n            },\n            \"position\": 2\n        },\n        {\n            \"rawText\": \"8 Tbsp. (1 stick) unsalted butter\",\n            \"extraComment\": \"1 stick\",\n            \"ingredient\": {\n                \"name\": \"unsalted butter\"\n            },\n             \"measurement\": {\n                \"quantity\": \"8\",\n                \"unit\": {\n                \"name\": \"tablespoon\",\n                \"displaySingular\": \"tablespoon\",\n                \"displayPlural\": \"tablespoons\",\n                \"abbreviation\": \"tbsp\"\n                }\n            },\n            \"position\": 3\n        }\n        ],\n        \"nutrition\": {\n            \"calories\": 567,\n            \"protein\": 31,\n            \"fat\": 28,\n            \"carbohydrates\": 44,\n            \"sugar\": 1,\n            \"fiber\": 2\n            }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/api/recipes/4",
+				"description": "This is a PUT request and it is used to overwrite an existing piece of recipe data. For instance, after you create a new recipe entity with a POST request, you may want to modify that later. You can do that using this PUT request. You need to identify the entity being updated by including an identifier in the URL (eg. `4`).\n\nA successful PUT request will result in `204 No content` response code."
+			},
+			"response": [
+				{
+					"name": "Update data - recipe-4-updated",
+					"originalRequest": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"recipeId\": 4,\n    \"name\": \"One-Pot Lemon Garlic Shrimp Pasta - recipe updated\",\n    \"description\": \"This easy 30-minute pasta recipe transforms ingredients that you already have in your kitchen into a posh, seafood dish you’ll want to serve at your next dinner party. And since the whole dish is made in a single pot, clean-up is easy. Don’t be surprised if this becomes your favorite quick go-to.\",\n    \"thumbnailUrl\": \"https://img.buzzfeed.com/video-api-prod/assets/9ee2dadcbfcb4095872e6cdbaa24ff14/Thumb_A_FB.jpg\",\n    \"keywords\": \"pasta, shrimp, lemon, garlic\",\n    \"totalTime\": \"Under 30 minutes\",\n    \"originalVideoUrl\": \"https://s3.amazonaws.com/video-api-prod/assets/3de913d586424e189521e13eeee0222d/BFV10181_One-Pot_Lemon_Garlic_Shrimp_Pasta_FB1080SQ.mp4\",\n    \"country\": \"US\",\n    \"numServings\": 4,\n    \"instructions\": [\n        {\n            \n            \"displayText\": \"In a large pot, boil water and add pasta. Cook (stirring frequently) until al dente.\",\n            \"position\": 1\n        },\n        {\n            \n            \"displayText\": \"Drain and set pasta aside.\",\n            \"position\": 2\n        },\n        {\n            \n            \"displayText\": \"In the same pan, heat olive oil and 2 tablespoons of butter. Add garlic and crushed red pepper, cook until fragrant.\",\n            \"position\": 3\n        },\n        {\n            \n            \"displayText\": \"Toss in shrimp, salt and pepper to taste, and stir until shrimp start to turn pink, but are not fully cooked.\",\n            \"position\": 4\n        },\n        {\n            \n            \"displayText\": \"Add oregano and spinach, cook until wilted.\",\n            \"position\": 5\n        },\n        {\n            \n            \"displayText\": \"Return cooked pasta to the pot, add remaining butter, parmesan, and parsley. Stir until well mixed and the butter is melted.\",\n            \"position\": 6\n        },\n        {\n            \n            \"displayText\": \"When the shrimp are cooked, add lemon juice, mix once more, then serve while hot.\",\n            \"position\": 7\n        },\n        {\n            \n            \"displayText\": \"Enjoy!\",\n            \"position\": 8\n        }\n    ],\n    \"components\": [\n        {\n            \"rawText\": \"8 oz linguine\",\n            \"extraComment\": \"\",\n            \"ingredient\": {\n                \"name\": \"linguine\"\n            },\n            \"measurement\": {\n                \"quantity\": \"8\",\n                \"unit\": {\n                \"name\": \"ounce\",\n                \"displaySingular\": \"oz\",\n                \"displayPlural\": \"oz\",\n                \"abbreviation\": \"oz\"\n                }\n            },\n            \"position\": 1\n        },\n        {\n            \"rawText\": \"2 Tbsp. olive oil\",\n            \"extraComment\": \"\",\n            \"ingredient\": {\n                \"name\": \"olive oil\"\n            },\n            \"measurement\": {\n                \"quantity\": \"2\",\n                \"unit\": {\n                \"name\": \"tablespoon\",\n                \"displaySingular\": \"tablespoon\",\n                \"displayPlural\": \"tablespoons\",\n                \"abbreviation\": \"tbsp\"\n                }\n            },\n            \"position\": 2\n        },\n        {\n            \"rawText\": \"8 Tbsp. (1 stick) unsalted butter\",\n            \"extraComment\": \"1 stick\",\n            \"ingredient\": {\n                \"name\": \"unsalted butter\"\n            },\n             \"measurement\": {\n                \"quantity\": \"8\",\n                \"unit\": {\n                \"name\": \"tablespoon\",\n                \"displaySingular\": \"tablespoon\",\n                \"displayPlural\": \"tablespoons\",\n                \"abbreviation\": \"tbsp\"\n                }\n            },\n            \"position\": 3\n        }\n        ],\n        \"nutrition\": {\n            \"calories\": 567,\n            \"protein\": 31,\n            \"fat\": 28,\n            \"carbohydrates\": 44,\n            \"sugar\": 1,\n            \"fiber\": 2\n            }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/recipes/4"
+					},
+					"status": "No Content",
+					"code": 204,
+					"_postman_previewlanguage": "plain",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Sun, 13 Oct 2024 15:36:14 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "Kestrel"
+						}
+					],
+					"cookie": [],
+					"body": null
+				}
+			]
+		},
+		{
+			"name": "Delete data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful DELETE request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{token}}"
+					}
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{base_url}}/api/recipes/5",
+				"description": "This is a DELETE request, and it is used to delete recipe data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. 5).\n\nA successful DELETE request will result in `204 No Content` response code."
+			},
+			"response": [
+				{
+					"name": "Delete data - Unauthorized",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/api/recipes/5"
+					},
+					"status": "Unauthorized",
+					"code": 401,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/problem+json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 17 Nov 2024 21:20:48 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "Kestrel"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"type\": \"https://tools.ietf.org/html/rfc9110#section-15.5.1\",\n    \"title\": \"Unauthorized\",\n    \"status\": 401,\n    \"detail\": \"You are not authorized to access the resource with ID 5.\",\n    \"instance\": \"/api/recipes/5\"\n}"
+				}
+			]
+		},
+		{
+			"name": "GetMyRecipes",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "{{base_url}}/api/recipes/my",
+				"description": "Using this GET request you may get your own recipes. Providing a valid token is necesarry.\n\n<img src=\"https://content.pstmn.io/e55530a3-a795-4e85-b321-879ecd74131b/aW1hZ2UucG5n\" alt=\"\" height=\"840\" width=\"1339\">"
+			},
+			"response": [
+				{
+					"name": "GetMyRecipes-example",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/api/recipes/my"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 13 Oct 2024 15:41:08 GMT"
+						},
+						{
+							"key": "Server",
+							"value": "Kestrel"
+						},
+						{
+							"key": "Transfer-Encoding",
+							"value": "chunked"
+						}
+					],
+					"cookie": [],
+					"body": "[\n    {\n        \"recipeID\": 4,\n        \"name\": \"One-Pot Lemon Garlic Shrimp Pasta - recipe updated\",\n        \"description\": \"This easy 30-minute pasta recipe transforms ingredients that you already have in your kitchen into a posh, seafood dish you’ll want to serve at your next dinner party. And since the whole dish is made in a single pot, clean-up is easy. Don’t be surprised if this becomes your favorite quick go-to.\",\n        \"thumbnailUrl\": \"https://img.buzzfeed.com/video-api-prod/assets/9ee2dadcbfcb4095872e6cdbaa24ff14/Thumb_A_FB.jpg\",\n        \"keywords\": \"pasta, shrimp, lemon, garlic\",\n        \"isPublic\": false,\n        \"userEmail\": \"codespringmentor@gmail.com\",\n        \"originalVideoUrl\": \"https://s3.amazonaws.com/video-api-prod/assets/3de913d586424e189521e13eeee0222d/BFV10181_One-Pot_Lemon_Garlic_Shrimp_Pasta_FB1080SQ.mp4\",\n        \"country\": \"US\",\n        \"numServings\": 4,\n        \"components\": [],\n        \"instructions\": []\n    },\n    {\n        \"recipeID\": 6,\n        \"name\": \"One-Pot Lemon Garlic Shrimp Pasta - to be deleted\",\n        \"description\": \"This easy 30-minute pasta recipe transforms ingredients that you already have in your kitchen into a posh, seafood dish you’ll want to serve at your next dinner party. And since the whole dish is made in a single pot, clean-up is easy. Don’t be surprised if this becomes your favorite quick go-to.\",\n        \"thumbnailUrl\": \"https://img.buzzfeed.com/video-api-prod/assets/9ee2dadcbfcb4095872e6cdbaa24ff14/Thumb_A_FB.jpg\",\n        \"keywords\": \"pasta, shrimp, lemon, garlic\",\n        \"isPublic\": false,\n        \"userEmail\": \"codespringmentor@gmail.com\",\n        \"originalVideoUrl\": \"https://s3.amazonaws.com/video-api-prod/assets/3de913d586424e189521e13eeee0222d/BFV10181_One-Pot_Lemon_Garlic_Shrimp_Pasta_FB1080SQ.mp4\",\n        \"country\": \"US\",\n        \"numServings\": 4,\n        \"components\": [],\n        \"instructions\": []\n    }\n]"
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "id",
+			"value": "1"
+		},
+		{
+			"key": "base_url",
+			"value": "https://recipe-appservice-cthjbdfafnhfdtes.germanywestcentral-01.azurewebsites.net\n"
+		},
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6IjFkYzBmMTcyZThkNmVmMzgyZDZkM2EyMzFmNmMxOTdkZDY4Y2U1ZWYiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIxNjI1ODkxMzM3NDgtcWpndWZzNnJ2NDRmY3J0NHE4ZHN0cmU2djFlbG80Y3MuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiIxNjI1ODkxMzM3NDgtcWpndWZzNnJ2NDRmY3J0NHE4ZHN0cmU2djFlbG80Y3MuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTMxNTI0MTc0ODM3NTIxNDM2NDkiLCJlbWFpbCI6ImNvZGVzcHJpbmdtZW50b3JAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiJPSEhFdHdYX19iZ01QNEJIUmVHTjdRIiwibmFtZSI6Ik1lbnRvciBDb2Rlc3ByaW5nIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0tTZEZOT2F6UTkyRWFBY3pqR2NCdXpmVEYyaHFqN2lNNEllcWFEQXBmSkVVdjNLdz1zOTYtYyIsImdpdmVuX25hbWUiOiJNZW50b3IiLCJmYW1pbHlfbmFtZSI6IkNvZGVzcHJpbmciLCJpYXQiOjE3MzE4NzgzNjIsImV4cCI6MTczMTg4MTk2Mn0.yAkPDj2yLc6T53aVQQ9W33JZtz2A6jIOjr26wRGa8JWkheN3N8f4vGOrePCnlaCsfq_Rm_VWnPQpciv_JktuakODwoPrzyiL1-DE6CrsoRxqQmdn3NoLo0j_Mn_DuXwCbuLuZoBHbFJ99joYtbUTGM-LlnZSmctAL3g31RhVMixLkong1xT3uNtKWbusSYshfOIUy89hunfux0O6W35-KA-iRzB8S9sucCPGtOXKX-gNawH_qlDfKYMblh0iMGaFmv_ErrH5mJqCWwhhYLbiJpEM1zBQMrcW6nsJ9zkQpoEOD9_kZz_2UQWMgJP3LCxvlvR06Jc9wU3woEiEmzJR0w"
+		}
+	]
+}

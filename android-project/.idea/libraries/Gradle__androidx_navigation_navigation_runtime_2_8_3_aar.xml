@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.navigation:navigation-runtime:2.8.3@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/998ce4093a38b02b6860abab4ac3b53e/transformed/navigation-runtime-2.8.3/res" />
-      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/998ce4093a38b02b6860abab4ac3b53e/transformed/navigation-runtime-2.8.3/AndroidManifest.xml" />
-      <root url="jar://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/998ce4093a38b02b6860abab4ac3b53e/transformed/navigation-runtime-2.8.3/jars/classes.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/ec32a4f8beb6d85f70d4dabab368866c/transformed/navigation-runtime-2.8.3/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/ec32a4f8beb6d85f70d4dabab368866c/transformed/navigation-runtime-2.8.3/AndroidManifest.xml" />
+      <root url="file://$PROJECT_DIR$/../../../jdk-17/caches/8.9/transforms/ec32a4f8beb6d85f70d4dabab368866c/transformed/navigation-runtime-2.8.3/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
