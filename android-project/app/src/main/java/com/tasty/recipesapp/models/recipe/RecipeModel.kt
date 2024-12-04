@@ -6,20 +6,20 @@ import com.tasty.recipesapp.models.recipe.recipemodels.InstructionModel
 import com.tasty.recipesapp.models.recipe.recipemodels.NutritionModel
 
 data class RecipeModel(
-    var recipeID: Int,
-    var name: String,
-    var description: String,
-    var thumbnailUrl: String,
-    var keywords: String,
-    var isPublic: Boolean,
-    var userEmail: String,
-    var originalVideoUrl: String,
-    var country: String,
-    var numServings: Int,
-    var components: List<ComponentModel>,
-    var instructions: List<InstructionModel>,
-    var nutrition: NutritionModel,
-    var isFavorite: Boolean
+    var recipeID: Int = 0,
+    var name: String = "",
+    var description: String = "",
+    var thumbnailUrl: String = "",
+    var keywords: String = "",
+    var isPublic: Boolean = false,
+    var userEmail: String = "",
+    var originalVideoUrl: String = "",
+    var country: String = "",
+    var numServings: Int = 0,
+    var components: List<ComponentModel> = emptyList(),
+    var instructions: List<InstructionModel> = emptyList(),
+    var nutrition: NutritionModel = NutritionModel(0,0,0,0,0,0),
+    var isFavorite: Boolean = false
 )
 
 fun RecipeModel.toEntity(): RecipeEntity {

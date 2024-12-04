@@ -1,24 +1,22 @@
 package com.tasty.recipesapp.repository
 
-import com.tasty.recipesapp.restapi.client.RecipeApiClient
-import com.tasty.recipesapp.restapi.response.Recipe
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import com.tasty.recipesapp.models.recipe.RecipeModel
+import com.tasty.recipesapp.restapi.service.RecipeService
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class RecipeRepository {
 
-    private val recipeApiClient = RecipeApiClient()
+    private val baseUrl = "https://recipe-appservice-cthjbdfafnhfdtes.germanywestcentral-01.azurewebsites.net"
 
-    // Fetch recipes from the API
-    suspend fun fetchRecipes(): List<Recipe>? {
-        return withContext(Dispatchers.IO) {
-            try {
-                val response = recipeApiClient.getRecipes()
-                response?.recipes
-            } catch (e: Exception) {
-                e.printStackTrace()
-                null // Handle error (e.g., return null or empty list)
-            }
-        }
+    private val apiService: RecipeService = Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+        .create(RecipeService::class.java)
+
+    suspend fun getRecipesFromApi(): List<RecipeModel> {
+        return apiService.getRecipes()
     }
 }
+

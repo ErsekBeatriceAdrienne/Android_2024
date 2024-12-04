@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.tasty.recipesapp.R
 import com.tasty.recipesapp.adapters.RecipeAdapter
 import com.tasty.recipesapp.database.RecipeDatabase
+import com.tasty.recipesapp.database.provider.RepositoryProvider
 import com.tasty.recipesapp.databinding.FragmentRecipeBinding
 import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.models.recipe.RecipeViewModel
@@ -71,10 +72,16 @@ class RecipeFragment : Fragment() {
 
         // Observe the ViewModel for updates
         viewModel.recipes.observe(viewLifecycleOwner) { recipes ->
-            allRecipes.addAll(recipes)
-            recipeAdapter.updateRecipes(recipes.toMutableList())
+            if (recipes.isNullOrEmpty()) {
+                Toast.makeText(requireContext(), "No recipes available", Toast.LENGTH_SHORT).show()
+                binding.recyclerViewRecipes.visibility = View.GONE
+            } else {
+                binding.recyclerViewRecipes.visibility = View.VISIBLE
+                recipeAdapter.updateRecipes(recipes.toMutableList())
+            }
         }
 
+        viewModel.fetchRecipes()
         // Initialize search functionality
         searchRecipe()
     }

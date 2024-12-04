@@ -1,5 +1,6 @@
 package com.tasty.recipesapp.models.recipe
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,18 +9,11 @@ import com.tasty.recipesapp.database.entities.FavoriteEntity
 import com.tasty.recipesapp.database.entities.RecipeEntity
 import com.tasty.recipesapp.repository.LocalRepository
 import com.tasty.recipesapp.repository.RecipeRepository
-import com.tasty.recipesapp.restapi.response.Recipe
-import com.tasty.recipesapp.restapi.response.toModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class RecipeViewModel(private val localRepository: LocalRepository) : ViewModel() {
 
     private val recipeRepository = RecipeRepository()
-    private val _recipesAPI = MutableStateFlow<List<Recipe>>(emptyList())
-    val recipesAPI: StateFlow<List<Recipe>> get() = _recipesAPI
-
     private val _recipes = MutableLiveData<List<RecipeModel>>()
     val recipes: LiveData<List<RecipeModel>> get() = _recipes
 
@@ -27,91 +21,84 @@ class RecipeViewModel(private val localRepository: LocalRepository) : ViewModel(
     val favoriteRecipes: LiveData<List<RecipeModel>> get() = _favoriteRecipes
 
     init {
-        loadRecipes()
+        getAllRecipesFromApi()
         loadFavoriteRecipesFromDatabase()
     }
 
-    private fun fetchRecipesFromApi() {
+    fun fetchRecipes() {
         viewModelScope.launch {
-            val fetchedRecipes = recipeRepository.fetchRecipes()
-            fetchedRecipes?.let { recipes ->
-                val recipeModels = recipes.map { recipe ->
-                    RecipeModel(
-                        recipeID = recipe.recipeID, // Map `recipe.recipeID` from API response
-                        name = recipe.name, // Map `recipe.name`
-                        description = recipe.description, // Map `recipe.description`
-                        thumbnailUrl = recipe.thumbnailUrl, // Map `recipe.thumbnailUrl`
-                        keywords = recipe.keywords ?: "", // Handle nullable fields
-                        isPublic = recipe.isPublic,
-                        userEmail = recipe.userEmail ?: "", // Handle nullable fields
-                        originalVideoUrl = recipe.originalVideoUrl ?: "",
-                        country = recipe.country ?: "",
-                        numServings = recipe.numServings,
-                        components = recipe.components.map { it.toModel() }, // Convert components
-                        instructions = recipe.instructions.map { it.toModel() }, // Convert instructions
-                        nutrition = recipe.nutrition.toModel(), // Convert nutrition
-                        isFavorite = recipe.isFavorite
-                    )
-                }
-                _recipes.postValue(recipeModels)
-                _recipesAPI.value = recipes
+            try {
+                val recipeList = recipeRepository.getRecipesFromApi()
+                _recipes.postValue(recipeList)
+            } catch (e: Exception) {
+                _recipes.postValue(emptyList())  // Handle error by posting an empty list
             }
         }
     }
 
-    // Load recipes from the database
-    private fun loadRecipes() {
+    // Fetch all recipes from the API
+    private fun getAllRecipesFromApi() {
         viewModelScope.launch {
-            val recipesFromRoom = localRepository.getAllRecipes()
-            val favoriteRecipesFromRoom = localRepository.getFavorites()
-
-            // Merge recipes with their favorite status
-            val updatedRecipes = recipesFromRoom.map { recipe ->
-                recipe.copy(isFavorite = favoriteRecipesFromRoom.any { it.recipeID == recipe.recipeID })
+            try {
+                val recipesFromApi = recipeRepository.getRecipesFromApi()
+                if (recipesFromApi.isNotEmpty()) {
+                    _recipes.postValue(recipesFromApi)
+                } else {
+                    Log.e("RECIPE_API", "No recipes available.")
+                    // Show toast for no recipes available
+                }
+            } catch (e: Exception) {
+                Log.e("RECIPE_API", "Error fetching recipes from API", e)
+                // Show toast for API error
             }
-            _recipes.postValue(updatedRecipes)
+        }
+    }
+
+
+    // Load recipes from local database if the API call fails or returns no data
+    private fun loadRecipesFromDatabase() {
+        viewModelScope.launch {
+            try {
+                val recipesFromRoom = localRepository.getAllRecipes()
+                // Update LiveData with recipes from local database
+                _recipes.postValue(recipesFromRoom)
+            } catch (e: Exception) {
+                Log.e("RECIPE_DB", "Error fetching recipes from database", e)
+            }
         }
     }
 
     // Load favorite recipes from the database
     fun loadFavoriteRecipesFromDatabase() {
         viewModelScope.launch {
-            val favorites = localRepository.getFavorites()
-            _favoriteRecipes.value = favorites.distinctBy { it.recipeID }
+            try {
+                val favorites = localRepository.getFavorites()
+                _favoriteRecipes.postValue(favorites.distinctBy { it.recipeID })
+            } catch (e: Exception) {
+                Log.e("RECIPE_FAV", "Error fetching favorite recipes", e)
+            }
         }
     }
 
+    // Toggle favorite status for a recipe
     fun toggleFavorite(recipe: RecipeModel) {
         viewModelScope.launch {
-            if (isFavorite(recipe.recipeID.toString())) removeFavorite(recipe)
-            else addFavorite(recipe)
-            loadRecipes()
+            if (isFavorite(recipe.recipeID.toString())) {
+                removeFavorite(recipe)
+            } else {
+                addFavorite(recipe)
+            }
+            loadRecipesFromDatabase()
             loadFavoriteRecipesFromDatabase()
             recipe.isFavorite = !recipe.isFavorite
-            _favoriteRecipes.value = _favoriteRecipes.value?.filter { it.isFavorite }?.toList()
-
         }
     }
 
-    // Delete a recipe from the database
-    fun deleteRecipe(recipeEntity: RecipeEntity) {
-        viewModelScope.launch {
-            localRepository.deleteRecipe(recipeEntity)
-            loadRecipes()
-        }
-    }
-
-    fun deleteRecipeById(recipeID: Int) {
-        viewModelScope.launch {
-            localRepository.deleteRecipeById(recipeID)
-        }
-    }
-
+    // Add recipe to favorites
     fun addFavorite(recipe: RecipeModel) {
         viewModelScope.launch {
             val favoriteEntity = FavoriteEntity(recipeId = recipe.recipeID.toLong())
             localRepository.addFavorite(favoriteEntity)
-            loadRecipes()
         }
     }
 
@@ -119,10 +106,24 @@ class RecipeViewModel(private val localRepository: LocalRepository) : ViewModel(
     fun removeFavorite(recipe: RecipeModel) {
         viewModelScope.launch {
             localRepository.removeFavorite(recipe.recipeID.toLong())
-            loadRecipes()
         }
     }
 
+    // Delete a recipe from the local database
+    fun deleteRecipe(recipeEntity: RecipeEntity) {
+        viewModelScope.launch {
+            localRepository.deleteRecipe(recipeEntity)
+        }
+    }
+
+    // Delete a recipe from the local database by its ID
+    fun deleteRecipeById(recipeID: Int) {
+        viewModelScope.launch {
+            localRepository.deleteRecipeById(recipeID)
+        }
+    }
+
+    // Check if a recipe is marked as a favorite
     suspend fun isFavorite(recipeId: String): Boolean {
         return localRepository.isFavorite(recipeId)
     }
