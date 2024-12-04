@@ -71,7 +71,9 @@ class RecipeFragment : Fragment() {
                 binding.recyclerViewRecipes.visibility = View.GONE
             } else {
                 binding.recyclerViewRecipes.visibility = View.VISIBLE
-                recipeAdapter.updateRecipes(recipes.toMutableList())
+                allRecipes.clear() // Clear the existing list
+                allRecipes.addAll(recipes) // Populate with new data
+                recipeAdapter.updateRecipes(allRecipes.toMutableList()) // Update the adapter
             }
         }
 
