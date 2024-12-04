@@ -13,7 +13,7 @@ import com.tasty.recipesapp.adapters.RecipeAdapter
 import com.tasty.recipesapp.databinding.FragmentFavoritesBinding
 import com.tasty.recipesapp.models.recipe.RecipeViewModel
 import com.tasty.recipesapp.models.recipe.RecipeViewModelFactory
-import com.tasty.recipesapp.repository.LocalRepository
+import com.tasty.recipesapp.repository.roomdatabase.LocalDBRepository
 import com.tasty.recipesapp.RecipeApp
 import com.tasty.recipesapp.models.recipe.RecipeModel
 import kotlinx.coroutines.launch
@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 class FavoritesFragment : Fragment() {
     private lateinit var binding: FragmentFavoritesBinding
     private lateinit var favoritesAdapter: RecipeAdapter
-    private lateinit var localRepository: LocalRepository
+    private lateinit var localRepository: LocalDBRepository
 
     private val recipeViewModel: RecipeViewModel by viewModels {
         RecipeViewModelFactory(localRepository)
@@ -36,7 +36,7 @@ class FavoritesFragment : Fragment() {
         // Initialize the repository
         val recipeDao = (requireActivity().application as RecipeApp).database.recipeDao()
         val favoriteDao = (requireActivity().application as RecipeApp).database.favoriteDao()
-        localRepository = LocalRepository(recipeDao, favoriteDao)
+        localRepository = LocalDBRepository(recipeDao, favoriteDao)
 
         return binding.root
     }

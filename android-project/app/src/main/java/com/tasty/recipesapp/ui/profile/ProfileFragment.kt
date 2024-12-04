@@ -9,14 +9,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.tasty.recipesapp.R
 import com.tasty.recipesapp.adapters.ProfileRecipeAdapter
 import com.tasty.recipesapp.database.RecipeDatabase
 import com.tasty.recipesapp.databinding.FragmentProfileBinding
 import com.tasty.recipesapp.models.profile.ProfileRecipesViewModel
 import com.tasty.recipesapp.models.profile.ProfileViewModelFactory
-import com.tasty.recipesapp.repository.LocalRepository
+import com.tasty.recipesapp.repository.roomdatabase.LocalDBRepository
 
 class ProfileFragment : Fragment() {
 
@@ -25,7 +23,7 @@ class ProfileFragment : Fragment() {
 
     private val database by lazy { RecipeDatabase.getDatabase(requireContext()) }
     private val viewModel: ProfileRecipesViewModel by viewModels {
-        ProfileViewModelFactory(LocalRepository(database.recipeDao(), database.favoriteDao()))
+        ProfileViewModelFactory(LocalDBRepository(database.recipeDao(), database.favoriteDao()))
     }
 
     override fun onCreateView(

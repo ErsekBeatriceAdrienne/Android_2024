@@ -23,7 +23,7 @@ import com.tasty.recipesapp.models.recipe.recipemodels.InstructionModel
 import com.tasty.recipesapp.models.recipe.recipemodels.MeasurementModel
 import com.tasty.recipesapp.models.recipe.recipemodels.NutritionModel
 import com.tasty.recipesapp.models.recipe.recipemodels.UnitModel
-import com.tasty.recipesapp.repository.LocalRepository
+import com.tasty.recipesapp.repository.roomdatabase.LocalDBRepository
 import kotlinx.coroutines.launch
 
 class AddNewRecipeFragment : Fragment() {
@@ -50,7 +50,7 @@ class AddNewRecipeFragment : Fragment() {
     private lateinit var addInstructionButton: Button
     private val instructionsList = mutableListOf<InstructionModel>()
     private var instructionCounter = 1
-    private lateinit var repository: LocalRepository
+    private lateinit var repository: LocalDBRepository
     private lateinit var recipeDao: RecipeDao
     private lateinit var favoriteDao: FavoriteDao
 
@@ -60,7 +60,7 @@ class AddNewRecipeFragment : Fragment() {
         val db = RecipeDatabase.getDatabase(requireContext())
         recipeDao = db.recipeDao()
         favoriteDao = db.favoriteDao()
-        repository = LocalRepository(recipeDao, favoriteDao)
+        repository = LocalDBRepository(recipeDao, favoriteDao)
     }
 
     override fun onCreateView(

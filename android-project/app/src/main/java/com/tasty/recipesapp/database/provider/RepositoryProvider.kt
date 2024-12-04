@@ -4,7 +4,7 @@ import android.content.Context
 import com.tasty.recipesapp.database.RecipeDatabase
 import com.tasty.recipesapp.database.dao.FavoriteDao
 import com.tasty.recipesapp.database.dao.RecipeDao
-import com.tasty.recipesapp.repository.LocalRepository
+import com.tasty.recipesapp.repository.roomdatabase.LocalDBRepository
 
 object RepositoryProvider {
     private lateinit var recipeDao: RecipeDao
@@ -14,9 +14,9 @@ object RepositoryProvider {
         recipeDao = RecipeDatabase.getDatabase(context).recipeDao()
     }
 
-    val localRepository: LocalRepository by lazy {
+    val localRepository: LocalDBRepository by lazy {
         checkInitialized()
-        LocalRepository(recipeDao, favoriteDao)
+        LocalDBRepository(recipeDao, favoriteDao)
     }
 
     private fun checkInitialized() {

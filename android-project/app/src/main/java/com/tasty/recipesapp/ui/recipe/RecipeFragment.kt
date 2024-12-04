@@ -3,31 +3,25 @@ package com.tasty.recipesapp.ui.recipe
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tasty.recipesapp.R
 import com.tasty.recipesapp.adapters.RecipeAdapter
 import com.tasty.recipesapp.database.RecipeDatabase
-import com.tasty.recipesapp.database.provider.RepositoryProvider
 import com.tasty.recipesapp.databinding.FragmentRecipeBinding
 import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.models.recipe.RecipeViewModel
 import com.tasty.recipesapp.models.recipe.RecipeViewModelFactory
-import com.tasty.recipesapp.models.recipe.toEntity
-import com.tasty.recipesapp.models.recipe.toModel
-import com.tasty.recipesapp.repository.LocalRepository
+import com.tasty.recipesapp.repository.roomdatabase.LocalDBRepository
 import kotlinx.coroutines.launch
 
 class RecipeFragment : Fragment() {
@@ -38,7 +32,7 @@ class RecipeFragment : Fragment() {
 
     private val database by lazy { RecipeDatabase.getDatabase(requireContext()) }
     private val viewModel: RecipeViewModel by viewModels {
-        RecipeViewModelFactory(LocalRepository(database.recipeDao(), database.favoriteDao()))
+        RecipeViewModelFactory(LocalDBRepository(database.recipeDao(), database.favoriteDao()))
     }
 
     override fun onCreateView(

@@ -15,14 +15,14 @@ import com.bumptech.glide.Glide
 import com.tasty.recipesapp.database.RecipeDatabase
 import com.tasty.recipesapp.databinding.FragmentRecipeDetailBinding
 import com.tasty.recipesapp.models.recipe.RecipeModel
-import com.tasty.recipesapp.repository.LocalRepository
+import com.tasty.recipesapp.repository.roomdatabase.LocalDBRepository
 import kotlinx.coroutines.launch
 
 
 class RecipeDetailFragment : Fragment()
 {
     private lateinit var binding: FragmentRecipeDetailBinding
-    private lateinit var localRepository: LocalRepository
+    private lateinit var localRepository: LocalDBRepository
     private lateinit var recipe: RecipeModel
     private val database by lazy { RecipeDatabase.getDatabase(requireContext()) }
 
@@ -33,7 +33,7 @@ class RecipeDetailFragment : Fragment()
     {
         viewLifecycleOwner.lifecycleScope.launch {
             binding = FragmentRecipeDetailBinding.inflate(inflater, container, false)
-            localRepository = LocalRepository(database.recipeDao(), database.favoriteDao())
+            localRepository = LocalDBRepository(database.recipeDao(), database.favoriteDao())
 
             arguments?.getString("recipeId")?.let { recipeId ->
                 recipe = localRepository.getRecipeById(recipeId.toLong())!!

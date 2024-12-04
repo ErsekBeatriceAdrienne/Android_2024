@@ -1,14 +1,11 @@
 package com.tasty.recipesapp.models.home
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import com.tasty.recipesapp.repository.TodoRepository
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import com.tasty.recipesapp.repository.myplanner.TodoRepository
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val todoRepository = TodoRepository(application)

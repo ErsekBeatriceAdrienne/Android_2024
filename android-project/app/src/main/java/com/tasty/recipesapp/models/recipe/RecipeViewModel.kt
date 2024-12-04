@@ -7,13 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tasty.recipesapp.database.entities.FavoriteEntity
 import com.tasty.recipesapp.database.entities.RecipeEntity
-import com.tasty.recipesapp.repository.LocalRepository
-import com.tasty.recipesapp.repository.RecipeRepository
+import com.tasty.recipesapp.repository.roomdatabase.LocalDBRepository
+import com.tasty.recipesapp.repository.restapi.RecipeAPIRepository
 import kotlinx.coroutines.launch
 
-class RecipeViewModel(private val localRepository: LocalRepository) : ViewModel() {
+class RecipeViewModel(private val localRepository: LocalDBRepository) : ViewModel() {
 
-    private val recipeRepository = RecipeRepository()
+    private val recipeRepository = RecipeAPIRepository()
     private val _recipes = MutableLiveData<List<RecipeModel>>()
     val recipes: LiveData<List<RecipeModel>> get() = _recipes
 

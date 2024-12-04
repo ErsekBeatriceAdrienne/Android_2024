@@ -1,4 +1,4 @@
-package com.tasty.recipesapp.repository
+package com.tasty.recipesapp.repository.myplanner
 
 import android.content.Context
 import androidx.core.content.edit

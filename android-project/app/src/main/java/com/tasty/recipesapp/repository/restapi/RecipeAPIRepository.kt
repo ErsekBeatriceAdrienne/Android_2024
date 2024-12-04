@@ -1,11 +1,11 @@
-package com.tasty.recipesapp.repository
+package com.tasty.recipesapp.repository.restapi
 
 import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.restapi.service.RecipeService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class RecipeRepository {
+class RecipeAPIRepository {
 
     private val baseUrl = "https://recipe-appservice-cthjbdfafnhfdtes.germanywestcentral-01.azurewebsites.net"
 
@@ -19,4 +19,3 @@ class RecipeRepository {
         return apiService.getRecipes()
     }
 }
-
