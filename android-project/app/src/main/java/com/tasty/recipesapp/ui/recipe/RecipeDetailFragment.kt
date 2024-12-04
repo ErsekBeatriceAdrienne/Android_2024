@@ -9,46 +9,72 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.tasty.recipesapp.database.RecipeDatabase
 import com.tasty.recipesapp.databinding.FragmentRecipeDetailBinding
 import com.tasty.recipesapp.models.recipe.RecipeModel
+import com.tasty.recipesapp.models.recipe.RecipeViewModel
+import com.tasty.recipesapp.models.recipe.RecipeViewModelFactory
+import com.tasty.recipesapp.repository.restapi.RecipeAPIRepository
 import com.tasty.recipesapp.repository.roomdatabase.LocalDBRepository
 import kotlinx.coroutines.launch
-
 
 class RecipeDetailFragment : Fragment()
 {
     private lateinit var binding: FragmentRecipeDetailBinding
-    private lateinit var localRepository: LocalDBRepository
+    private val apiRepository: RecipeAPIRepository = RecipeAPIRepository()
     private lateinit var recipe: RecipeModel
-    private val database by lazy { RecipeDatabase.getDatabase(requireContext()) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View?
-    {
+    ): View? {
+        binding = FragmentRecipeDetailBinding.inflate(inflater, container, false)
+
         viewLifecycleOwner.lifecycleScope.launch {
-            binding = FragmentRecipeDetailBinding.inflate(inflater, container, false)
-            localRepository = LocalDBRepository(database.recipeDao(), database.favoriteDao())
-
             arguments?.getString("recipeId")?.let { recipeId ->
-                recipe = localRepository.getRecipeById(recipeId.toLong())!!
-                displayRecipeDetails()
+                val fetchedRecipe = fetchRecipeById(recipeId.toLong())
+                if (fetchedRecipe != null) {
+                    recipe = fetchedRecipe
+                    displayRecipeDetails(recipe)
+                } else {
+                    Toast.makeText(requireContext(), "Recipe not found", Toast.LENGTH_SHORT).show()
+                }
             }
+        }
 
-            binding.backButton.setOnClickListener {
-                parentFragmentManager.popBackStack()
-            }
+        binding.backButton.setOnClickListener {
+            parentFragmentManager.popBackStack()
         }
 
         return binding.root
     }
 
-    private fun displayRecipeDetails() {
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val recipeId = arguments?.getString("recipeId")
+        if (recipeId == null) {
+            Toast.makeText(requireContext(), "Recipe ID is missing", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        binding.backButton.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+    }
+
+    private suspend fun fetchRecipeById(recipeId: Long): RecipeModel? {
+        val recipes = apiRepository.getRecipesFromApi()
+        return recipes.find { it.recipeID.toLong() == recipeId }
+    }
+
+    private fun displayRecipeDetails(recipe: RecipeModel) {
         binding.recipeTitle.text = recipe.name
         binding.recipeDescription.text = recipe.description
 
@@ -59,9 +85,6 @@ class RecipeDetailFragment : Fragment()
                 .into(binding.recipeThumbnail)
             binding.recipeThumbnail.visibility = View.VISIBLE
         }
-
-        // Display Keywords
-        binding.recipeKeywords.text = recipe.keywords
 
         // Display Servings
         binding.recipeNumServings.text = "Servings: ${recipe.numServings}"
@@ -107,12 +130,13 @@ class RecipeDetailFragment : Fragment()
         binding.nutritionContainer.addView(nutritionTextView)
 
         // Display Video URL (if present)
-        if (recipe.originalVideoUrl.isNotEmpty()) {
+        if (!recipe.originalVideoUrl.isNullOrEmpty()) {
             setupWebView(binding.recipeVideoPlayer, recipe.originalVideoUrl)
             binding.recipeVideoPlayer.visibility = View.VISIBLE
         } else {
             binding.recipeVideoPlayer.visibility = View.GONE
         }
+
     }
 
     private fun setupWebView(webView: WebView, url: String) {

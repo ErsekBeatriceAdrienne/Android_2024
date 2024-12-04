@@ -37,7 +37,7 @@
             android:id="@+id/recipeThumbnail"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp"
             android:scaleType="centerCrop"
             android:visibility="gone"/>
 
@@ -56,17 +56,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textSize="24dp"
+            android:textSize="20dp"
             android:text="Description" />
-
-        <!-- Recipe Keywords -->
-        <TextView
-            android:id="@+id/recipeKeywords"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="24dp"
-            android:text="Keywords"/>
 
         <!-- Servings -->
         <TextView
@@ -74,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:textSize="24dp"
+            android:textSize="20dp"
             android:text="Servings"/>
 
         <!-- Ingredients Title -->
@@ -83,7 +74,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:textSize="24dp"
+            android:textSize="20dp"
             android:text="Ingredients:" />
 
         <!-- Ingredients Container (dynamically populated) -->
@@ -100,7 +91,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:textSize="24dp"
+            android:textSize="20dp"
             android:text="Instructions:" />
 
         <!-- Instructions Container (dynamically populated) -->
@@ -117,7 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:textSize="24dp"
+            android:textSize="20dp"
             android:text="Nutrition" />
 
         <!-- Nutrition Container (dynamically populated) -->

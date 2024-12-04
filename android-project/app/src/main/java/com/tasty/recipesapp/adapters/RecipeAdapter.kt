@@ -10,7 +10,6 @@ import com.tasty.recipesapp.models.recipe.RecipeModel
 
 class RecipeAdapter(private var recipes: MutableList<RecipeModel>) : RecyclerView.Adapter<RecipeAdapter.RecipesViewHolder>()
 {
-    // Define a listener for long clicks
     var onRecipeLongClickListener: ((RecipeModel) -> Unit)? = null
     var onRecipeClickListener: ((RecipeModel) -> Unit)? = null
     var onFavoriteClickListener: ((RecipeModel) -> Unit)? = null
@@ -26,7 +25,6 @@ class RecipeAdapter(private var recipes: MutableList<RecipeModel>) : RecyclerVie
         var recipe = recipes[position]
         holder.bind(recipe)
 
-        // Set the listener for the "More Details" button
         holder.itemView.findViewById<Button>(R.id.buttonMoreDetails).setOnClickListener {
             onRecipeClickListener?.invoke(recipe)
         }
