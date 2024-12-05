@@ -63,9 +63,10 @@ class RecipeFragment : Fragment() {
         recipeAdapter.onFavoriteClickListener = { recipe ->
             if (recipe.isFavorite) viewModel.removeFavorite(recipe)
             else viewModel.addFavorite(recipe)
+
             recipe.isFavorite = !recipe.isFavorite
             val position = allRecipes.indexOf(recipe)
-            recipeAdapter.notifyItemChanged(position) // Only update the affected item
+            recipeAdapter.notifyItemChanged(position)
         }
 
         // Observe the ViewModel for updates

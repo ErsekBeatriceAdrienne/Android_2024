@@ -77,8 +77,4 @@ class FavoritesFragment : Fragment() {
             }
         }
     }
-
-    private suspend fun getFavoriteRecipes(): List<RecipeModel> {
-        return localRepository.getFavorites()
-    }
 }

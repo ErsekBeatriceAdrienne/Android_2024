@@ -2,12 +2,13 @@ package com.tasty.recipesapp.database.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.tasty.recipesapp.database.entities.FavoriteEntity
 
 @Dao
 interface FavoriteDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addFavorite(favorite: FavoriteEntity)
     @Query("SELECT * FROM favorites")
     suspend fun getAllFavorites(): List<FavoriteEntity>

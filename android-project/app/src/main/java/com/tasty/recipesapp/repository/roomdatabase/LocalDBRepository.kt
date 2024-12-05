@@ -36,7 +36,10 @@ class LocalDBRepository(private val recipeDao: RecipeDao, private val favoriteDa
     suspend fun getFavorites(): List<RecipeModel> {
         return favoriteDao.getAllFavorites().map { favorite ->
             RecipeModel(
-                recipeID = favorite.recipeId.toInt()
+                recipeID = favorite.recipeId.toInt(),
+                name = favorite.name,
+                thumbnailUrl = favorite.thumbnailUrl,
+                isFavorite = true
             )
         }
     }
@@ -49,19 +52,8 @@ class LocalDBRepository(private val recipeDao: RecipeDao, private val favoriteDa
         recipeDao.deleteRecipeById(recipeID)
     }
 
-    suspend fun getRecipeById(id: Long): RecipeModel? {
-        val recipeEntity = recipeDao.getRecipeById(id.toString()) ?: return null
-        val jsonObject = JSONObject(recipeEntity.json)
-        jsonObject.put("id", recipeEntity.internalId)
-        return gson.fromJson(jsonObject.toString(), RecipeDTO::class.java).toModel()
-    }
-
     suspend fun addFavorite(favorite: FavoriteEntity) {
         favoriteDao.addFavorite(favorite)
-    }
-
-    suspend fun updateRecipe(recipe: RecipeModel) {
-        recipeDao.update(recipe.toEntity())
     }
 
     suspend fun removeFavorite(recipeId: Long) {
@@ -70,13 +62,6 @@ class LocalDBRepository(private val recipeDao: RecipeDao, private val favoriteDa
 
     suspend fun isFavorite(recipeId: String): Boolean {
         return favoriteDao.isFavorite(recipeId.toLong())
-    }
-
-    suspend fun saveFavorite(recipe: RecipeModel) {
-        val favoriteEntity = FavoriteEntity(
-            recipeId = recipe.recipeID.toLong(),
-        )
-        favoriteDao.addFavorite(favoriteEntity)
     }
 
 }

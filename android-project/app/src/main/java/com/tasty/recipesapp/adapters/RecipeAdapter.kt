@@ -76,11 +76,9 @@ class RecipeAdapter(private var recipes: MutableList<RecipeModel>) : RecyclerVie
             binding.recipe = recipe
             binding.executePendingBindings()
 
-            if (recipe.isFavorite) {
-                binding.buttonFavorite.setImageResource(R.drawable.heart_filled)
-            } else {
-                binding.buttonFavorite.setImageResource(R.drawable.heart_unfilled)
-            }
+            binding.buttonFavorite.setImageResource(
+                if (recipe.isFavorite) R.drawable.heart_filled else R.drawable.heart_unfilled
+            )
         }
     }
 }
