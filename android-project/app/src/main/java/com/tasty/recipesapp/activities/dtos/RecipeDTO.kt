@@ -1,4 +1,4 @@
-package com.tasty.recipesapp.dtos
+package com.tasty.recipesapp.activities.dtos
 
 import com.tasty.recipesapp.models.recipe.RecipeModel
 

@@ -41,43 +41,18 @@
             android:layout_marginBottom="8dp"
             android:gravity="center" />
 
-        <!-- Profile Details -->
-        <TextView
-            android:id="@+id/profileDetail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sapientia EMTE university"
-            android:textSize="16sp"
-            android:textColor="@android:color/darker_gray"
-            android:layout_marginBottom="16dp"
-            android:gravity="center" />
-
-        <!-- Recipe Title -->
-        <TextView
-            android:id="@+id/favoriteRecipeTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:gravity="center"
-            android:text="My All time favorite recipe"
-            android:textColor="@color/selected_icon_color"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
         <!-- Recipe of the Day Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonRecipeOfTheDay"
             android:layout_width="374dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/favoriteRecipeTitle"
+            android:layout_below="@id/profileName"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="17dp"
-            android:layout_marginLeft="16dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="20dp"
             android:backgroundTint="@color/unselected_icon_color"
-            android:layout_marginRight="16dp"
             android:layout_marginBottom="16dp"
             android:text="Recipe of the Day" />
 

@@ -4,11 +4,10 @@ import com.tasty.recipesapp.database.dao.FavoriteDao
 import com.tasty.recipesapp.database.dao.RecipeDao
 import com.tasty.recipesapp.database.entities.FavoriteEntity
 import com.tasty.recipesapp.database.entities.RecipeEntity
-import com.tasty.recipesapp.dtos.RecipeDTO
-import com.tasty.recipesapp.dtos.toModel
+import com.tasty.recipesapp.activities.dtos.RecipeDTO
+import com.tasty.recipesapp.activities.dtos.toModel
 import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.models.recipe.toEntity
-import com.tasty.recipesapp.models.recipe.toModel
 import org.json.JSONObject
 
 // ... > App Inspection to see all Local Db tables

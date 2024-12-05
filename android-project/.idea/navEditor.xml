@@ -8,6 +8,18 @@
             <LayoutPositions>
               <option name="myPositions">
                 <map>
+                  <entry key="addNewRecipeAPIFragment">
+                    <value>
+                      <LayoutPositions>
+                        <option name="myPosition">
+                          <Point>
+                            <option name="x" value="-873" />
+                            <option name="y" value="-2328" />
+                          </Point>
+                        </option>
+                      </LayoutPositions>
+                    </value>
+                  </entry>
                   <entry key="addNewRecipeFragment">
                     <value>
                       <LayoutPositions>
@@ -15,18 +27,6 @@
                           <Point>
                             <option name="x" value="-647" />
                             <option name="y" value="-1716" />
-                          </Point>
-                        </option>
-                      </LayoutPositions>
-                    </value>
-                  </entry>
-                  <entry key="editRecipeFragment">
-                    <value>
-                      <LayoutPositions>
-                        <option name="myPosition">
-                          <Point>
-                            <option name="x" value="-647" />
-                            <option name="y" value="-2024" />
                           </Point>
                         </option>
                       </LayoutPositions>
@@ -74,6 +74,15 @@
                             <option name="y" value="-1721" />
                           </Point>
                         </option>
+                        <option name="myPositions">
+                          <map>
+                            <entry key="action_profileFragment_to_recipeDetailFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
+                          </map>
+                        </option>
                       </LayoutPositions>
                     </value>
                   </entry>
@@ -85,15 +94,6 @@
                             <option name="x" value="-881" />
                             <option name="y" value="-2024" />
                           </Point>
-                        </option>
-                        <option name="myPositions">
-                          <map>
-                            <entry key="action_recipeDetailFragment_to_editRecipeFragment">
-                              <value>
-                                <LayoutPositions />
-                              </value>
-                            </entry>
-                          </map>
                         </option>
                       </LayoutPositions>
                     </value>
@@ -109,6 +109,11 @@
                         </option>
                         <option name="myPositions">
                           <map>
+                            <entry key="action_recipeFragment_to_addNewRecipeAPIFragment">
+                              <value>
+                                <LayoutPositions />
+                              </value>
+                            </entry>
                             <entry key="action_recipeFragment_to_recipeDetailFragment">
                               <value>
                                 <LayoutPositions />

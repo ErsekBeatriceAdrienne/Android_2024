@@ -21,7 +21,6 @@ class ProfileRecipeAdapter(private var recipes: List<RecipeModel>,
 
         holder.bind(recipe)
 
-        // Kattintás esemény
         holder.itemView.setOnClickListener {
             if (recipe.recipeID != null) {
                 onRecipeClick(recipe)
@@ -29,7 +28,6 @@ class ProfileRecipeAdapter(private var recipes: List<RecipeModel>,
                 Log.e("ProfileFragment", "Invalid recipe ID: ${recipe.recipeID}")
             }
         }
-
     }
 
     override fun getItemCount(): Int = recipes.size

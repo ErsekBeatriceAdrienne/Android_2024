@@ -1,5 +1,6 @@
-package com.tasty.recipesapp.ui.addrecipe
+package com.tasty.recipesapp.ui.addrecipeapi
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,10 +13,8 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import com.tasty.recipesapp.R
-import com.tasty.recipesapp.database.RecipeDatabase
-import com.tasty.recipesapp.database.dao.FavoriteDao
-import com.tasty.recipesapp.database.dao.RecipeDao
 import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.models.recipe.recipemodels.ComponentModel
 import com.tasty.recipesapp.models.recipe.recipemodels.IngredientModel
@@ -23,17 +22,20 @@ import com.tasty.recipesapp.models.recipe.recipemodels.InstructionModel
 import com.tasty.recipesapp.models.recipe.recipemodels.MeasurementModel
 import com.tasty.recipesapp.models.recipe.recipemodels.NutritionModel
 import com.tasty.recipesapp.models.recipe.recipemodels.UnitModel
-import com.tasty.recipesapp.repository.roomdatabase.LocalDBRepository
+import com.tasty.recipesapp.repository.restapi.RecipeAPIRepository
+import com.tasty.recipesapp.restapi.auth.SharedPrefsUtil
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class AddNewRecipeFragment : Fragment() {
+class AddNewRecipeAPIFragment : Fragment() {
+    val recipeAPIRepository = RecipeAPIRepository()
 
     private lateinit var recipeTitleEditText: EditText
     private lateinit var recipeDescriptionEditText: EditText
     private lateinit var thumbnailUrlEditText: EditText
     private lateinit var keywordsEditText: EditText
     private lateinit var isPublicCheckbox: CheckBox
-    private lateinit var userEmailEditText: EditText
     private lateinit var originalVideoUrlEditText: EditText
     private lateinit var countryEditText: EditText
     private lateinit var numServingsEditText: EditText
@@ -50,17 +52,9 @@ class AddNewRecipeFragment : Fragment() {
     private lateinit var addInstructionButton: Button
     private val instructionsList = mutableListOf<InstructionModel>()
     private var instructionCounter = 1
-    private lateinit var repository: LocalDBRepository
-    private lateinit var recipeDao: RecipeDao
-    private lateinit var favoriteDao: FavoriteDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val db = RecipeDatabase.getDatabase(requireContext())
-        recipeDao = db.recipeDao()
-        favoriteDao = db.favoriteDao()
-        repository = LocalDBRepository(recipeDao, favoriteDao)
     }
 
     override fun onCreateView(
@@ -75,7 +69,6 @@ class AddNewRecipeFragment : Fragment() {
         thumbnailUrlEditText = view.findViewById(R.id.thumbnailUrlEditText)
         keywordsEditText = view.findViewById(R.id.keywordsEditText)
         isPublicCheckbox= view.findViewById(R.id.isPublicCheckBox)
-        userEmailEditText = view.findViewById(R.id.userEmailEditText)
         originalVideoUrlEditText = view.findViewById(R.id.originalVideoUrlEditText)
         countryEditText = view.findViewById(R.id.countryEditText)
         numServingsEditText = view.findViewById(R.id.numServingsEditText)
@@ -101,9 +94,16 @@ class AddNewRecipeFragment : Fragment() {
         }
 
         addRecipeButton.setOnClickListener {
-            // Call the method to add the recipe
-            lifecycleScope.launch {
-                addRecipe()
+            // Check if the user is logged in
+            if (SharedPrefsUtil.isLoggedIn(requireContext())) {
+                lifecycleScope.launch {
+                    addRecipe()
+                }
+            } else {
+                // If not logged in, prompt to log in
+                Toast.makeText(requireContext(), "Please log in to create a recipe.", Toast.LENGTH_SHORT).show()
+                // Optionally, navigate to a login screen
+                //showLoginPromptDialog()
             }
         }
 
@@ -169,36 +169,65 @@ class AddNewRecipeFragment : Fragment() {
 
 
     private suspend fun addRecipe() {
-        val title = recipeTitleEditText.text.toString()
-        val description = recipeDescriptionEditText.text.toString()
+        // Get the user input from the UI
+        val title = recipeTitleEditText.text.toString().trim()
+        val description = recipeDescriptionEditText.text.toString().trim()
 
+        // Validate inputs
         if (title.isEmpty() || description.isEmpty()) {
             Toast.makeText(requireContext(), "Title and description are required!", Toast.LENGTH_SHORT).show()
             return
         }
 
-        val thumbnailUrl = thumbnailUrlEditText.text.toString()
-        val keywords = keywordsEditText.text.toString()
+        // Create RecipeModel
+        val recipe = RecipeModel(
+            name = title,
+            description = description,
+            thumbnailUrl = thumbnailUrlEditText.text.toString(),
+            keywords = keywordsEditText.text.toString(),
+            isPublic = isPublicCheckbox.isChecked,
+            originalVideoUrl = originalVideoUrlEditText.text.toString(),
+            country = countryEditText.text.toString(),
+            numServings = numServingsEditText.text.toString().toIntOrNull() ?: 0,
+            components = collectComponents(),
+            instructions = collectInstructions(),
+            nutrition = NutritionModel(
+                calories = caloriesEditText.text.toString().toIntOrNull() ?: 0,
+                fat = fatEditText.text.toString().toIntOrNull() ?: 0,
+                protein = proteinEditText.text.toString().toIntOrNull() ?: 0,
+                sugar = sugarEditText.text.toString().toIntOrNull() ?: 0,
+                carbohydrates = carbsEditText.text.toString().toIntOrNull() ?: 0,
+                fiber = fiberEditText.text.toString().toIntOrNull() ?: 0
+            )
+        )
 
-        var isPublic : Boolean = if (isPublicCheckbox.isChecked) true
-        else false
+        // Show loading indicator (e.g., a progress bar)
+        showLoading(true)
 
-        val userEmail = userEmailEditText.text.toString()
-        val originalVideoUrl = originalVideoUrlEditText.text.toString()
-        val country = countryEditText.text.toString()
-        val numServings = numServingsEditText.text.toString().toIntOrNull() ?: 0
+        try {
+            // Post the recipe data to API
+            //val addedRecipe = recipeAPIRepository.addRecipeToApi(recipe)
+            Toast.makeText(requireContext(), "Recipe added successfully!", Toast.LENGTH_SHORT).show()
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "Error adding recipe: ${e.message}", Toast.LENGTH_SHORT).show()
+        } finally {
+            // Hide loading indicator
+            showLoading(false)
+        }
+    }
+
+    private fun collectComponents(): List<ComponentModel> {
         val components = mutableListOf<ComponentModel>()
-
-        // Iterate through dynamic fields (we assume that dynamic fields are contained in 'dynamicFieldsLayout')
+        // Loop through dynamic fields and collect data for components
         for (i in 0 until dynamicFieldsLayout.childCount) {
             val dynamicRow = dynamicFieldsLayout.getChildAt(i) as LinearLayout
             val ingredientEditText = dynamicRow.getChildAt(0) as EditText
             val quantityEditText = dynamicRow.getChildAt(1) as EditText
             val unitEditText = dynamicRow.getChildAt(2) as EditText
 
-            val ingredientName = ingredientEditText.text.toString()
-            val quantity = quantityEditText.text.toString()
-            val unitName = unitEditText.text.toString()
+            val ingredientName = ingredientEditText.text.toString().trim()
+            val quantity = quantityEditText.text.toString().trim()
+            val unitName = unitEditText.text.toString().trim()
 
             if (ingredientName.isNotEmpty() && quantity.isNotEmpty() && unitName.isNotEmpty()) {
                 val ingredient = IngredientModel(name = ingredientName)
@@ -211,15 +240,17 @@ class AddNewRecipeFragment : Fragment() {
                     measurement = measurement,
                     position = i + 1 // Position starts from 1
                 )
-
                 components.add(component)
             }
         }
+        return components
+    }
 
+    private fun collectInstructions(): List<InstructionModel> {
         val instructions = mutableListOf<InstructionModel>()
         for (i in 0 until instructionsContainer.childCount) {
             val instructionEditText = instructionsContainer.getChildAt(i) as EditText
-            val instructionText = instructionEditText.text.toString()
+            val instructionText = instructionEditText.text.toString().trim()
             if (instructionText.isNotEmpty()) {
                 val instruction = InstructionModel(
                     instructionID = instructionCounter++,
@@ -229,49 +260,15 @@ class AddNewRecipeFragment : Fragment() {
                 instructions.add(instruction)
             }
         }
+        return instructions
+    }
 
-        val calories = caloriesEditText.text.toString().toIntOrNull() ?: 0
-        val fat = fatEditText.text.toString().toIntOrNull() ?: 0
-        val protein = proteinEditText.text.toString().toIntOrNull() ?: 0
-        val sugar = sugarEditText.text.toString().toIntOrNull() ?: 0
-        val carbs = carbsEditText.text.toString().toIntOrNull() ?: 0
-        val fiber = fiberEditText.text.toString().toIntOrNull() ?: 0
-
-        val nutrition = NutritionModel(
-            calories = calories,
-            protein = protein,
-            fat = fat,
-            carbohydrates = carbs,
-            sugar = sugar,
-            fiber = fiber
-        )
-
-        val existingRecipes = repository.getAllRecipes()
-        val newRecipeId = if (existingRecipes.isNotEmpty()) {
-            existingRecipes.maxOf { it.recipeID } + 1
-        } else 1
-
-        val newRecipe = RecipeModel(
-            recipeID = newRecipeId,
-            name = title,
-            description = description,
-            thumbnailUrl = thumbnailUrl,
-            keywords = keywords,
-            isPublic = isPublic,
-            userEmail = userEmail,
-            originalVideoUrl = originalVideoUrl,
-            country = country,
-            numServings = numServings,
-            components = components,
-            instructions = instructions,
-            nutrition = nutrition,
-            isFavorite = false
-        )
-
-        // Insert into Room database
-        repository.insertRecipe(newRecipe)
-
-        Log.d("AddNewRecipeFragment", "New recipe added: $newRecipeId")
-        Toast.makeText(requireContext(), "Saved!", Toast.LENGTH_SHORT).show()
+    private fun showLoading(isLoading: Boolean) {
+        addRecipeButton.isEnabled = !isLoading
+        if (isLoading) {
+            // Show a loading spinner or something similar
+        } else {
+            // Hide the loading spinner
+        }
     }
 }

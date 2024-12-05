@@ -11,11 +11,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tasty.recipesapp.adapters.RecipeAdapter
 import com.tasty.recipesapp.databinding.FragmentFavoritesBinding
-import com.tasty.recipesapp.models.recipe.RecipeViewModel
-import com.tasty.recipesapp.models.recipe.RecipeViewModelFactory
 import com.tasty.recipesapp.repository.roomdatabase.LocalDBRepository
 import com.tasty.recipesapp.RecipeApp
-import com.tasty.recipesapp.models.recipe.RecipeModel
+import com.tasty.recipesapp.models.recipe.RecipeViewModel
+import com.tasty.recipesapp.models.recipe.RecipeViewModelFactory
 import kotlinx.coroutines.launch
 
 class FavoritesFragment : Fragment() {

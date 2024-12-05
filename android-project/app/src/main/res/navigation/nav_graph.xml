@@ -27,6 +27,9 @@
         <action
             android:id="@+id/action_recipeFragment_to_recipeDetailFragment"
             app:destination="@id/recipeDetailFragment" />
+        <action
+            android:id="@+id/action_recipeFragment_to_addNewRecipeAPIFragment"
+            app:destination="@id/addNewRecipeAPIFragment" />
     </fragment>
     <fragment
         android:id="@+id/recipeDetailFragment"
@@ -48,8 +51,12 @@
     </fragment>
     <fragment
         android:id="@+id/addNewRecipeFragment"
-        android:name="com.tasty.recipesapp.ui.addrecipe.AddNewRecipeFragment"
+        android:name="com.tasty.recipesapp.ui.addrecipedb.AddNewRecipeFragment"
         android:label="fragment_add_new_recipe"
         tools:layout="@layout/fragment_add_new_recipe" />
+    <fragment
+        android:id="@+id/addNewRecipeAPIFragment"
+        android:name="com.tasty.recipesapp.ui.addrecipeapi.AddNewRecipeAPIFragment"
+        android:label="AddNewRecipeAPIFragment" />
 
 </navigation>

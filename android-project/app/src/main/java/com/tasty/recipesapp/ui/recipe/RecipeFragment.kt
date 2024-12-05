@@ -59,6 +59,11 @@ class RecipeFragment : Fragment() {
             findNavController().navigate(action)
         }
 
+        // Plus button click listener to show the Add Recipe dialog
+        binding.imageButtonAddRecipe.setOnClickListener {
+            findNavController().navigate(R.id.action_recipeFragment_to_addNewRecipeAPIFragment)
+        }
+
         // Set click listener for the favorite button
         recipeAdapter.onFavoriteClickListener = { recipe ->
             if (recipe.isFavorite) viewModel.removeFavorite(recipe)

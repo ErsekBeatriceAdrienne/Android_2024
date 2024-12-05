@@ -18,6 +18,7 @@ import com.tasty.recipesapp.adapters.TodoAdapter
 import com.tasty.recipesapp.models.home.HomeViewModel
 import com.tasty.recipesapp.models.home.HomeViewModelFactory
 
+
 class HomeFragment : Fragment() {
     private lateinit var todoAdapter: TodoAdapter
     private lateinit var homeViewModel: HomeViewModel
