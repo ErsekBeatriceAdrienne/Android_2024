@@ -34,15 +34,11 @@ class LocalDBRepository(private val recipeDao: RecipeDao, private val favoriteDa
     }
 
     suspend fun getFavorites(): List<RecipeModel> {
-        val favoriteEntities = favoriteDao.getAllFavorites() // Get all favorite entities
-        val favoriteRecipes = mutableListOf<RecipeModel>()
-
-        // For each favorite, get the corresponding RecipeModel
-        for (favorite in favoriteEntities) {
-            val recipe = recipeDao.getRecipeById(favorite.recipeId.toString())
-            recipe?.let { favoriteRecipes.add(it.toModel()) }
+        return favoriteDao.getAllFavorites().map { favorite ->
+            RecipeModel(
+                recipeID = favorite.recipeId.toInt()
+            )
         }
-        return favoriteRecipes
     }
 
     suspend fun deleteRecipe(recipe: RecipeEntity) {
@@ -76,8 +72,11 @@ class LocalDBRepository(private val recipeDao: RecipeDao, private val favoriteDa
         return favoriteDao.isFavorite(recipeId.toLong())
     }
 
-    suspend fun saveFavorite(recipeId: String) {
-        val favoriteEntity = FavoriteEntity(recipeId.toLong(), recipeId.toLong())
+    suspend fun saveFavorite(recipe: RecipeModel) {
+        val favoriteEntity = FavoriteEntity(
+            recipeId = recipe.recipeID.toLong(),
+        )
         favoriteDao.addFavorite(favoriteEntity)
     }
+
 }
