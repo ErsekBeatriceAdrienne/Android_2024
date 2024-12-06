@@ -1,6 +1,6 @@
 package com.tasty.recipesapp.ui.addrecipeapi
 
-import android.app.AlertDialog
+import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,9 +11,9 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import com.tasty.recipesapp.R
 import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.models.recipe.recipemodels.ComponentModel
@@ -22,14 +22,14 @@ import com.tasty.recipesapp.models.recipe.recipemodels.InstructionModel
 import com.tasty.recipesapp.models.recipe.recipemodels.MeasurementModel
 import com.tasty.recipesapp.models.recipe.recipemodels.NutritionModel
 import com.tasty.recipesapp.models.recipe.recipemodels.UnitModel
-import com.tasty.recipesapp.repository.restapi.RecipeAPIRepository
+import com.tasty.recipesapp.restapi.client.RecipeAPIClient
 import com.tasty.recipesapp.restapi.auth.SharedPrefsUtil
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.tasty.recipesapp.restapi.auth.TokenProvider
+import com.tasty.recipesapp.restapi.service.RecipeService
 import kotlinx.coroutines.launch
 
 class AddNewRecipeAPIFragment : Fragment() {
-    val recipeAPIRepository = RecipeAPIRepository()
+    private val recipeAPIClient = RecipeAPIClient()
 
     private lateinit var recipeTitleEditText: EditText
     private lateinit var recipeDescriptionEditText: EditText
@@ -271,4 +271,30 @@ class AddNewRecipeAPIFragment : Fragment() {
             // Hide the loading spinner
         }
     }
+
+    suspend fun addRecipe(recipe : RecipeModel) {
+        try {
+            val response = recipeAPIClient.apiService.addRecipe(recipe)
+            if (response.isSuccessful) {
+                Toast.makeText(requireContext(), "Recipe added successfully!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Failed to add recipe: ${response.errorBody()?.string()}", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error adding recipe", e)
+        }
+    }
+
+    private fun checkLoginAndAddRecipe() {
+        val token = TokenProvider(requireContext()).getAuthToken()
+        if (token.isNullOrEmpty()) {
+            Toast.makeText(requireContext(), "Please log in to add a recipe.", Toast.LENGTH_SHORT).show()
+            //signInWithGoogle()
+        } else {
+            lifecycleScope.launch {
+                addRecipe()
+            }
+        }
+    }
+
 }

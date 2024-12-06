@@ -18,6 +18,15 @@
         android:theme="@style/Theme.RecipesApp"
         tools:targetApi="31"
         android:windowSoftInputMode="adjustResize">
+
+        <!-- Google Sign-In meta-data -->
+        <meta-data
+            android:name="com.google.android.gms.app_id"
+            android:value="162589133748-qjgufs6rv44fcrt4q8dstre6v1elo4cs.apps.googleusercontent.com" />
+        <meta-data
+            android:name="com.google.android.gms.client_secret"
+            android:value="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" />
+
         <activity
             android:name=".activities.SplashActivity"
             android:exported="true">

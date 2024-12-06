@@ -7,12 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tasty.recipesapp.database.entities.FavoriteEntity
 import com.tasty.recipesapp.repository.roomdatabase.LocalDBRepository
-import com.tasty.recipesapp.repository.restapi.RecipeAPIRepository
+import com.tasty.recipesapp.restapi.client.RecipeAPIClient
 import kotlinx.coroutines.launch
 
 class RecipeViewModel(private val localRepository: LocalDBRepository) : ViewModel() {
 
-    private val recipeRepository = RecipeAPIRepository()
+    private val recipeClient = RecipeAPIClient()
     private val _recipes = MutableLiveData<List<RecipeModel>>()
     val recipes: LiveData<List<RecipeModel>> get() = _recipes
 
@@ -27,7 +27,7 @@ class RecipeViewModel(private val localRepository: LocalDBRepository) : ViewMode
     fun fetchRecipes() {
         viewModelScope.launch {
             try {
-                val recipeList = recipeRepository.getRecipesFromApi()
+                val recipeList = recipeClient.getRecipesFromApi()
                 _recipes.postValue(recipeList)
             } catch (e: Exception) {
                 _recipes.postValue(emptyList())  // Handle error by posting an empty list
@@ -39,7 +39,7 @@ class RecipeViewModel(private val localRepository: LocalDBRepository) : ViewMode
     private fun getAllRecipesFromApi() {
         viewModelScope.launch {
             try {
-                val recipesFromApi = recipeRepository.getRecipesFromApi()
+                val recipesFromApi = recipeClient.getRecipesFromApi()
                 if (recipesFromApi.isNotEmpty()) {
                     _recipes.postValue(recipesFromApi)
                 } else {

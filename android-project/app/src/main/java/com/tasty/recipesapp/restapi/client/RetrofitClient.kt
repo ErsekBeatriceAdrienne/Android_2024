@@ -5,19 +5,21 @@ import com.tasty.recipesapp.restapi.auth.AuthInterceptor
 import com.tasty.recipesapp.restapi.auth.TokenProvider
 import com.tasty.recipesapp.restapi.service.RecipeService
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
 class RetrofitClient(context: Context) {
 
     private val tokenProvider = TokenProvider(context)
     private val authInterceptor = AuthInterceptor(tokenProvider)
+    private val loggingInterceptor = HttpLoggingInterceptor().apply {
+        level = HttpLoggingInterceptor.Level.BODY
+    }
 
     private val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor(authInterceptor) // Add the auth interceptor to every request
-        .readTimeout(30, TimeUnit.SECONDS)
-        .connectTimeout(30, TimeUnit.SECONDS)
+        .addInterceptor(loggingInterceptor)
+        .addInterceptor(authInterceptor)
         .build()
 
     private val retrofit = Retrofit.Builder()

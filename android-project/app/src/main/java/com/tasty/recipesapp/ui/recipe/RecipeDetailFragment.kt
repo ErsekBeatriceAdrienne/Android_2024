@@ -15,13 +15,13 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.tasty.recipesapp.databinding.FragmentRecipeDetailBinding
 import com.tasty.recipesapp.models.recipe.RecipeModel
-import com.tasty.recipesapp.repository.restapi.RecipeAPIRepository
+import com.tasty.recipesapp.restapi.client.RecipeAPIClient
 import kotlinx.coroutines.launch
 
 class RecipeDetailFragment : Fragment()
 {
     private lateinit var binding: FragmentRecipeDetailBinding
-    private val apiRepository: RecipeAPIRepository = RecipeAPIRepository()
+    private val apiRepository: RecipeAPIClient = RecipeAPIClient()
     private lateinit var recipe: RecipeModel
 
     override fun onCreateView(
