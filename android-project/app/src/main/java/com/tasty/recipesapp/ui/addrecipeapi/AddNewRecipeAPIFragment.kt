@@ -2,6 +2,7 @@ package com.tasty.recipesapp.ui.addrecipeapi
 
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -15,6 +16,12 @@ import android.widget.Toast
 import androidx.core.content.ContentProviderCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.tasty.recipesapp.R
 import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.models.recipe.recipemodels.ComponentModel
@@ -25,6 +32,7 @@ import com.tasty.recipesapp.models.recipe.recipemodels.NutritionModel
 import com.tasty.recipesapp.models.recipe.recipemodels.UnitModel
 import com.tasty.recipesapp.restapi.client.RecipeAPIClient
 import com.tasty.recipesapp.restapi.auth.SharedPrefsUtil
+import com.tasty.recipesapp.restapi.auth.SharedPrefsUtil.getAccessToken
 import com.tasty.recipesapp.restapi.auth.TokenProvider
 import kotlinx.coroutines.launch
 
@@ -53,6 +61,9 @@ class AddNewRecipeAPIFragment : Fragment() {
     private val instructionsList = mutableListOf<InstructionModel>()
     private var instructionCounter = 1
 
+    private lateinit var googleSignInClient: GoogleSignInClient
+    private val RC_SIGN_IN = 9001
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -62,6 +73,8 @@ class AddNewRecipeAPIFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_add_new_recipe, container, false)
+
+        configureGoogleSignIn()
 
         // Initialize all the EditTexts
         recipeTitleEditText = view.findViewById(R.id.recipeTitleEditText)
@@ -94,18 +107,127 @@ class AddNewRecipeAPIFragment : Fragment() {
         }
 
         addRecipeButton.setOnClickListener {
-            // Check if the user is logged in
-            if (SharedPrefsUtil.isLoggedIn(requireContext())) {
-                lifecycleScope.launch {
-                    addRecipe()
-                }
-            } else {
-                // If not logged in, prompt to log in
-                Toast.makeText(requireContext(), "Please log in to create a recipe.", Toast.LENGTH_SHORT).show()
-            }
+            checkLoginAndAddRecipe()
         }
 
         return view
+    }
+
+    private fun configureGoogleSignIn() {
+        val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestEmail()  // Requesting email and profile permissions
+            .requestProfile()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(requireActivity(), signInOptions)
+    }
+
+    private fun checkLoginAndAddRecipe() {
+        val token = getAccessToken()
+        if (token.isNullOrEmpty()) {
+            // If no token is found, initiate Google Sign-In
+            Toast.makeText(requireContext(), "Please log in to add a recipe.", Toast.LENGTH_SHORT).show()
+            signInWithGoogle()
+        } else {
+            // Token exists, proceed with recipe submission
+            lifecycleScope.launch {
+                addRecipe() // Add the recipe after verifying the login
+            }
+        }
+    }
+
+    private fun signInWithGoogle() {
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, RC_SIGN_IN)
+    }
+
+    // Handle the result of Google Sign-In
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                account?.let {
+                    // Store the token and proceed with the recipe submission
+                    val accessToken = it.idToken
+                    if (accessToken != null) {
+                        saveAccessToken(accessToken)
+                    }
+                    lifecycleScope.launch {
+                        addRecipe()  // Now add the recipe after successful login
+                    }
+                }
+            } catch (e: ApiException) {
+                Log.w(TAG, "Google sign-in failed", e)
+                Toast.makeText(requireContext(), "Google sign-in failed.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun saveAccessToken(idToken: String) {
+        val sharedPreferences = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        editor.putString("access_token", idToken)
+        editor.apply()
+    }
+
+    private fun getAccessToken(): String? {
+        val sharedPreferences = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("access_token", null)
+    }
+
+    private suspend fun addRecipe() {
+        // Get the user input from the UI
+        val title = recipeTitleEditText.text.toString().trim()
+        val description = recipeDescriptionEditText.text.toString().trim()
+
+        // Validate inputs
+        if (title.isEmpty() || description.isEmpty()) {
+            Toast.makeText(requireContext(), "Title and description are required!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Create RecipeModel
+        val recipe = RecipeModel(
+            name = title,
+            description = description,
+            thumbnailUrl = thumbnailUrlEditText.text.toString(),
+            keywords = keywordsEditText.text.toString(),
+            isPublic = isPublicCheckbox.isChecked,
+            originalVideoUrl = originalVideoUrlEditText.text.toString(),
+            country = countryEditText.text.toString(),
+            numServings = numServingsEditText.text.toString().toIntOrNull() ?: 0,
+            components = collectComponents(),
+            instructions = collectInstructions(),
+            nutrition = NutritionModel(
+                calories = caloriesEditText.text.toString().toIntOrNull() ?: 0,
+                fat = fatEditText.text.toString().toIntOrNull() ?: 0,
+                protein = proteinEditText.text.toString().toIntOrNull() ?: 0,
+                sugar = sugarEditText.text.toString().toIntOrNull() ?: 0,
+                carbohydrates = carbsEditText.text.toString().toIntOrNull() ?: 0,
+                fiber = fiberEditText.text.toString().toIntOrNull() ?: 0
+            )
+        )
+
+        // Show loading indicator (e.g., a progress bar)
+        showLoading(true)
+
+        try {
+            // Post the recipe data to API
+            val response = recipeAPIClient.apiService.addRecipe(recipe)
+            if (response.isSuccessful) {
+                Toast.makeText(requireContext(), "Recipe added successfully!", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), "Failed to add recipe: ${response.errorBody()?.string()}", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), "Error adding recipe: ${e.message}", Toast.LENGTH_SHORT).show()
+        } finally {
+            // Hide loading indicator
+            showLoading(false)
+        }
     }
 
     // Method to dynamically add a new instruction field
@@ -165,55 +287,6 @@ class AddNewRecipeAPIFragment : Fragment() {
         Log.d("AddNewRecipeFragment", "Dynamic fields added.")
     }
 
-
-    private suspend fun addRecipe() {
-        // Get the user input from the UI
-        val title = recipeTitleEditText.text.toString().trim()
-        val description = recipeDescriptionEditText.text.toString().trim()
-
-        // Validate inputs
-        if (title.isEmpty() || description.isEmpty()) {
-            Toast.makeText(requireContext(), "Title and description are required!", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        // Create RecipeModel
-        val recipe = RecipeModel(
-            name = title,
-            description = description,
-            thumbnailUrl = thumbnailUrlEditText.text.toString(),
-            keywords = keywordsEditText.text.toString(),
-            isPublic = isPublicCheckbox.isChecked,
-            originalVideoUrl = originalVideoUrlEditText.text.toString(),
-            country = countryEditText.text.toString(),
-            numServings = numServingsEditText.text.toString().toIntOrNull() ?: 0,
-            components = collectComponents(),
-            instructions = collectInstructions(),
-            nutrition = NutritionModel(
-                calories = caloriesEditText.text.toString().toIntOrNull() ?: 0,
-                fat = fatEditText.text.toString().toIntOrNull() ?: 0,
-                protein = proteinEditText.text.toString().toIntOrNull() ?: 0,
-                sugar = sugarEditText.text.toString().toIntOrNull() ?: 0,
-                carbohydrates = carbsEditText.text.toString().toIntOrNull() ?: 0,
-                fiber = fiberEditText.text.toString().toIntOrNull() ?: 0
-            )
-        )
-
-        // Show loading indicator (e.g., a progress bar)
-        showLoading(true)
-
-        try {
-            // Post the recipe data to API
-            //val addedRecipe = recipeAPIRepository.addRecipeToApi(recipe)
-            Toast.makeText(requireContext(), "Recipe added successfully!", Toast.LENGTH_SHORT).show()
-        } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Error adding recipe: ${e.message}", Toast.LENGTH_SHORT).show()
-        } finally {
-            // Hide loading indicator
-            showLoading(false)
-        }
-    }
-
     private fun collectComponents(): List<ComponentModel> {
         val components = mutableListOf<ComponentModel>()
         // Loop through dynamic fields and collect data for components
@@ -267,31 +340,6 @@ class AddNewRecipeAPIFragment : Fragment() {
             // Show a loading spinner or something similar
         } else {
             // Hide the loading spinner
-        }
-    }
-
-    suspend fun addRecipe(recipe : RecipeModel) {
-        try {
-            val response = recipeAPIClient.apiService.addRecipe(recipe)
-            if (response.isSuccessful) {
-                Toast.makeText(requireContext(), "Recipe added successfully!", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(requireContext(), "Failed to add recipe: ${response.errorBody()?.string()}", Toast.LENGTH_SHORT).show()
-            }
-        } catch (e: Exception) {
-            Log.e(TAG, "Error adding recipe", e)
-        }
-    }
-
-    private fun checkLoginAndAddRecipe() {
-        val token = TokenProvider(requireContext()).getAuthToken()
-        if (token.isNullOrEmpty()) {
-            Toast.makeText(requireContext(), "Please log in to add a recipe.", Toast.LENGTH_SHORT).show()
-            //signInWithGoogle()
-        } else {
-            lifecycleScope.launch {
-                addRecipe()
-            }
         }
     }
 

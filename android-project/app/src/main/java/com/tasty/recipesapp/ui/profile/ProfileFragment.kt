@@ -33,9 +33,6 @@ class ProfileFragment : Fragment() {
         ProfileViewModelFactory(LocalDBRepository(database.recipeDao(), database.favoriteDao()))
     }
 
-    private lateinit var googleSignInClient: GoogleSignInClient
-    private val RC_SIGN_IN = 9001
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,13 +41,6 @@ class ProfileFragment : Fragment() {
 
         binding.buttonRecipeOfTheDay.setOnClickListener {
             get_recipe_of_the_day();
-        }
-
-        // Set up Google Sign-In client
-        googleSignInClient = GoogleSignIn.getClient(requireActivity(), viewModel.getGoogleSignInOptions())
-
-        binding.googleSignInButton.setOnClickListener {
-            signInWithGoogle()
         }
 
         return binding.root
@@ -86,27 +76,4 @@ class ProfileFragment : Fragment() {
             binding.textViewRandomRecipeDescription.text = " - ${recipe?.description}" ?: ""
         }
     }
-
-    // Google Sign-In method
-    private fun signInWithGoogle() {
-        val signInIntent: Intent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
-    }
-
-    // Handle the result of the sign-in
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RC_SIGN_IN) {
-            val task: Task<GoogleSignInAccount> = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                // Google Sign-In was successful, authenticate with Firebase or handle the account
-                val account = task.getResult(ApiException::class.java)
-                Log.d("ProfileFragment", "Signed in successfully: ${account?.displayName}")
-                // Do something with the signed-in account (e.g., save to SharedPreferences or navigate)
-            } catch (e: ApiException) {
-                Log.w("ProfileFragment", "Google sign-in failed", e)
-            }
-        }
-    }
-
 }
