@@ -1,9 +1,5 @@
 package com.tasty.recipesapp.restapi.client
 
-import android.content.ContentValues.TAG
-import android.util.Log
-import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.restapi.service.RecipeService
 import okhttp3.OkHttpClient

@@ -13,12 +13,17 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.Task
 import com.tasty.recipesapp.R
 import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.models.recipe.recipemodels.ComponentModel
@@ -27,7 +32,10 @@ import com.tasty.recipesapp.models.recipe.recipemodels.InstructionModel
 import com.tasty.recipesapp.models.recipe.recipemodels.MeasurementModel
 import com.tasty.recipesapp.models.recipe.recipemodels.NutritionModel
 import com.tasty.recipesapp.models.recipe.recipemodels.UnitModel
+import com.tasty.recipesapp.restapi.auth.TokenProvider
 import com.tasty.recipesapp.restapi.client.RecipeAPIClient
+import com.tasty.recipesapp.restapi.client.RetrofitClient
+import com.tasty.recipesapp.restapi.service.RecipeService
 import kotlinx.coroutines.launch
 
 class AddNewRecipeAPIFragment : Fragment() {
@@ -56,10 +64,24 @@ class AddNewRecipeAPIFragment : Fragment() {
     private var instructionCounter = 1
 
     private lateinit var googleSignInClient: GoogleSignInClient
+    private lateinit var googleSignInLauncher: ActivityResultLauncher<Intent>
     private val RC_SIGN_IN = 9001
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        googleSignInLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            Log.d(TAG, "Result code: ${result.resultCode}, Intent: ${result.data}")
+            if (result.resultCode == AppCompatActivity.RESULT_OK && result.data != null) {
+                val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+                handleSignInResult(task)
+            } else {
+                Log.w(TAG, "Google Sign-In was canceled or failed with resultCode: ${result.resultCode}")
+                Toast.makeText(requireContext(), "Sign-in canceled.", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onCreateView(
@@ -107,17 +129,35 @@ class AddNewRecipeAPIFragment : Fragment() {
         return view
     }
 
+    private fun handleSignInResult(task: Task<GoogleSignInAccount>) {
+        try {
+            val account = task.getResult(ApiException::class.java)
+            Log.d(TAG, "Sign-in successful. Account: ${account.email}, Token: ${account.idToken}")
+            val idToken = account?.idToken
+            if (idToken != null) {
+                TokenProvider(requireContext()).setAuthToken(idToken)
+                Toast.makeText(requireContext(), "Login successful!", Toast.LENGTH_SHORT).show()
+            } else {
+                Log.e(TAG, "ID token is null")
+                Toast.makeText(requireContext(), "Failed to get ID token.", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: ApiException) {
+            Log.e(TAG, "Sign-in failed: ${e.statusCode}, ${e.message}")
+            Toast.makeText(requireContext(), "Sign-in failed.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun configureGoogleSignIn() {
-        val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()  // Requesting email and profile permissions
-            .requestProfile()
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken("162589133748-qjgufs6rv44fcrt4q8dstre6v1elo4cs.apps.googleusercontent.com") // Your OAuth 2.0 Client ID
+            .requestEmail()
             .build()
 
-        googleSignInClient = GoogleSignIn.getClient(requireActivity(), signInOptions)
+        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
     }
 
     private fun checkLoginAndAddRecipe() {
-        val token = getAccessToken()
+        val token = TokenProvider(requireContext()).getAuthToken()
         if (token.isNullOrEmpty()) {
             // If no token is found, initiate Google Sign-In
             Toast.makeText(requireContext(), "Please log in to add a recipe.", Toast.LENGTH_SHORT).show()
@@ -125,54 +165,25 @@ class AddNewRecipeAPIFragment : Fragment() {
         } else {
             // Token exists, proceed with recipe submission
             lifecycleScope.launch {
-                addRecipe() // Add the recipe after verifying the login
+                val service = RetrofitClient(requireContext()).getRecipeService()
+                try {
+                    addRecipe(service, token)
+                } catch (e: Exception) {
+                    Log.e(TAG, "Recipe upload failed", e)
+                    Toast.makeText(requireContext(), "Error uploading recipe.", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
 
     private fun signInWithGoogle() {
         val signInIntent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
+        Log.d(TAG, "Launching Google Sign-In Intent: $signInIntent")
+        googleSignInLauncher.launch(signInIntent)
     }
 
-    // Handle the result of Google Sign-In
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                val account = task.getResult(ApiException::class.java)
-                account?.let {
-                    // Store the token and proceed with the recipe submission
-                    val accessToken = it.idToken
-                    if (accessToken != null) {
-                        saveAccessToken(accessToken)
-                    }
-                    lifecycleScope.launch {
-                        addRecipe()  // Now add the recipe after successful login
-                    }
-                }
-            } catch (e: ApiException) {
-                Log.w(TAG, "Google sign-in failed", e)
-                Toast.makeText(requireContext(), "Google sign-in failed.", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    private fun saveAccessToken(idToken: String) {
-        val sharedPreferences = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-        editor.putString("access_token", idToken)
-        editor.apply()
-    }
-
-    private fun getAccessToken(): String? {
-        val sharedPreferences = requireContext().getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        return sharedPreferences.getString("access_token", null)
-    }
-
-    private suspend fun addRecipe() {
+    private suspend fun addRecipe(service: RecipeService, token: String) {
         // Get the user input from the UI
         val title = recipeTitleEditText.text.toString().trim()
         val description = recipeDescriptionEditText.text.toString().trim()
@@ -205,22 +216,17 @@ class AddNewRecipeAPIFragment : Fragment() {
             )
         )
 
-        // Show loading indicator (e.g., a progress bar)
-        showLoading(true)
-
-        try {
-            // Post the recipe data to API
-            val response = recipeAPIClient.apiService.addRecipe(recipe)
-            if (response.isSuccessful) {
-                Toast.makeText(requireContext(), "Recipe added successfully!", Toast.LENGTH_SHORT).show()
+        val response = service.addRecipe(recipe)
+        if (response.isSuccessful) {
+            Toast.makeText(requireContext(), "Recipe uploaded successfully!", Toast.LENGTH_SHORT).show()
+        } else {
+            if (response.code() == 401) { // Unauthorized
+                TokenProvider(requireContext()).setAuthToken(null) // Clear invalid token
+                Toast.makeText(requireContext(), "Session expired. Please log in again.", Toast.LENGTH_SHORT).show()
+                signInWithGoogle() // Prompt for login
             } else {
-                Toast.makeText(requireContext(), "Failed to add recipe: ${response.errorBody()?.string()}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Failed to upload recipe: ${response.message()}", Toast.LENGTH_SHORT).show()
             }
-        } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Error adding recipe: ${e.message}", Toast.LENGTH_SHORT).show()
-        } finally {
-            // Hide loading indicator
-            showLoading(false)
         }
     }
 
@@ -238,18 +244,6 @@ class AddNewRecipeAPIFragment : Fragment() {
 
         // Add the EditText to the container
         instructionsContainer.addView(instructionEditText)
-    }
-
-
-    // Method to save the instruction to the list and update the UI
-    private fun saveInstruction(instructionText: String) {
-        val instructionModel = InstructionModel(
-            instructionID = instructionCounter++,
-            displayText = instructionText,
-            position = instructionsList.size + 1
-        )
-        instructionsList.add(instructionModel)
-        Toast.makeText(requireContext(), "Instruction added", Toast.LENGTH_SHORT).show()
     }
 
     private fun addDynamicFields() {

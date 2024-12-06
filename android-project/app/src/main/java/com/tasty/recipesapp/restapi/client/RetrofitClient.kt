@@ -28,7 +28,6 @@ class RetrofitClient(context: Context) {
         .client(okHttpClient) // Set the OkHttp client for authentication
         .build()
 
-    fun getRecipeService(): RecipeService {
-        return retrofit.create(RecipeService::class.java)
-    }
+    fun getRecipeService(): RecipeService = retrofit.create(RecipeService::class.java)
+
 }
