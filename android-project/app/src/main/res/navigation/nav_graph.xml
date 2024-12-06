@@ -30,9 +30,6 @@
         <action
             android:id="@+id/action_recipeFragment_to_addNewRecipeAPIFragment"
             app:destination="@id/addNewRecipeAPIFragment" />
-        <action
-            android:id="@+id/action_recipeFragment_to_googleAuthFragment"
-            app:destination="@id/googleAuthFragment" />
     </fragment>
     <fragment
         android:id="@+id/recipeDetailFragment"
@@ -60,11 +57,7 @@
     <fragment
         android:id="@+id/addNewRecipeAPIFragment"
         android:name="com.tasty.recipesapp.ui.addrecipeapi.AddNewRecipeAPIFragment"
-        android:label="AddNewRecipeAPIFragment" />
-    <fragment
-        android:id="@+id/googleAuthFragment"
-        android:name="com.tasty.recipesapp.ui.login.GoogleAuthFragment"
-        android:label="fragment_google_auth"
-        tools:layout="@layout/fragment_google_auth" />
+        android:label="AddNewRecipeAPIFragment" >
+    </fragment>
 
 </navigation>

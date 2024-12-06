@@ -29,24 +29,19 @@
             android:clipToOutline="true"
             android:layout_gravity="center" />
 
-        <!-- Profile Name -->
-        <TextView
-            android:id="@+id/profileName"
+        <!-- Google Sign-In Button -->
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/googleSignInButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Érsek Beatrice-Adrienne"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/unselected_icon_color"
-            android:layout_marginBottom="8dp"
-            android:gravity="center" />
+            android:layout_centerInParent="true"/>
 
         <!-- Recipe of the Day Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonRecipeOfTheDay"
             android:layout_width="374dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/profileName"
+            android:layout_below="@id/googleSignInButton"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_marginStart="17dp"

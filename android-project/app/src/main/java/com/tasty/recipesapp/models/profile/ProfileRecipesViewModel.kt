@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.models.recipe.toEntity
 import com.tasty.recipesapp.repository.roomdatabase.LocalDBRepository
@@ -44,5 +45,12 @@ class ProfileRecipesViewModel(private val repository: LocalDBRepository) : ViewM
 
     fun getRandomRecipe() {
         _randomRecipe.value = _recipes.value?.shuffled()?.firstOrNull()
+    }
+
+    fun getGoogleSignInOptions(): GoogleSignInOptions {
+        return GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken("YOUR_GOOGLE_CLIENT_ID") // Replace with your Google client ID
+            .requestEmail()
+            .build()
     }
 }

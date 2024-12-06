@@ -1,6 +1,7 @@
 package com.tasty.recipesapp.ui.addrecipeapi
 
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -25,7 +26,6 @@ import com.tasty.recipesapp.models.recipe.recipemodels.UnitModel
 import com.tasty.recipesapp.restapi.client.RecipeAPIClient
 import com.tasty.recipesapp.restapi.auth.SharedPrefsUtil
 import com.tasty.recipesapp.restapi.auth.TokenProvider
-import com.tasty.recipesapp.restapi.service.RecipeService
 import kotlinx.coroutines.launch
 
 class AddNewRecipeAPIFragment : Fragment() {
@@ -102,8 +102,6 @@ class AddNewRecipeAPIFragment : Fragment() {
             } else {
                 // If not logged in, prompt to log in
                 Toast.makeText(requireContext(), "Please log in to create a recipe.", Toast.LENGTH_SHORT).show()
-                // Optionally, navigate to a login screen
-                //showLoginPromptDialog()
             }
         }
 
