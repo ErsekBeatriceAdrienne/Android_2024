@@ -3,6 +3,7 @@ package com.tasty.recipesapp.restapi.client
 import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.restapi.service.RecipeService
 import okhttp3.OkHttpClient
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -19,5 +20,9 @@ class RecipeAPIClient {
 
     suspend fun getRecipesFromApi(): List<RecipeModel> {
         return apiService.getRecipes()
+    }
+
+    suspend fun deleteRecipe(recipeId: String): Response<Unit> {
+        return apiService.deleteRecipe(recipeId)
     }
 }

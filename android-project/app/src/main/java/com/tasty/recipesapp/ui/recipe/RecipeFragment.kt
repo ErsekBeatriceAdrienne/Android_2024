@@ -3,6 +3,7 @@ package com.tasty.recipesapp.ui.recipe
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +23,8 @@ import com.tasty.recipesapp.models.recipe.RecipeModel
 import com.tasty.recipesapp.models.recipe.RecipeViewModel
 import com.tasty.recipesapp.models.recipe.RecipeViewModelFactory
 import com.tasty.recipesapp.repository.roomdatabase.LocalDBRepository
+import com.tasty.recipesapp.restapi.auth.TokenProvider
+import com.tasty.recipesapp.restapi.client.RecipeAPIClient
 import kotlinx.coroutines.launch
 
 class RecipeFragment : Fragment() {
@@ -98,15 +101,35 @@ class RecipeFragment : Fragment() {
             .setMessage("Are you sure you want to delete the recipe '${recipe.name}'?")
             .setIcon(R.drawable.delete)
             .setPositiveButton("Yes") { _, _ ->
-                viewLifecycleOwner.lifecycleScope.launch {
+                lifecycleScope.launch {
                     try {
-                        viewModel.deleteRecipeById(recipe.recipeID)
-                        allRecipes.remove(recipe)
-                        recipeAdapter.updateRecipes(allRecipes)
+                        // Get token from TokenProvider
+                        val token = TokenProvider(requireContext()).getAuthToken()
 
-                        Toast.makeText(requireContext(), "Recipe deleted", Toast.LENGTH_SHORT).show()
+                        if (token.isNullOrEmpty()) {
+                            Toast.makeText(requireContext(), "No valid token found!", Toast.LENGTH_SHORT).show()
+                            return@launch
+                        }
+
+                        // Call delete recipe API with the token
+                        val response = RecipeAPIClient().deleteRecipe(recipe.recipeID.toString())
+
+                        if (response.isSuccessful) {
+                            // If successful, remove recipe from local database
+                            viewModel.deleteRecipeById(recipe.recipeID)
+                            allRecipes.remove(recipe)
+                            recipeAdapter.updateRecipes(allRecipes)
+
+                            Toast.makeText(requireContext(), "Recipe deleted", Toast.LENGTH_SHORT).show()
+                        } else {
+                            // Detailed error logging
+                            val errorMessage = response.errorBody()?.string() ?: "Unknown error"
+                            Log.e("DeleteRecipe", "Error: ${response.code()} - $errorMessage")
+                            Toast.makeText(requireContext(), "Error deleting recipe from API: $errorMessage", Toast.LENGTH_SHORT).show()
+                        }
                     } catch (e: Exception) {
-                        Toast.makeText(requireContext(), "Error deleting recipe", Toast.LENGTH_SHORT).show()
+                        Log.e("DeleteRecipe", "Exception: ${e.message}", e)
+                        Toast.makeText(requireContext(), "Error deleting recipe: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
                 }
             }

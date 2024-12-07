@@ -1,7 +1,6 @@
 package com.tasty.recipesapp.ui.addrecipeapi
 
 import android.content.ContentValues.TAG
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -33,14 +32,15 @@ import com.tasty.recipesapp.models.recipe.recipemodels.MeasurementModel
 import com.tasty.recipesapp.models.recipe.recipemodels.NutritionModel
 import com.tasty.recipesapp.models.recipe.recipemodels.UnitModel
 import com.tasty.recipesapp.restapi.auth.TokenProvider
+import com.tasty.recipesapp.restapi.client.OAuthRetrofitClient
 import com.tasty.recipesapp.restapi.client.RecipeAPIClient
 import com.tasty.recipesapp.restapi.client.RetrofitClient
 import com.tasty.recipesapp.restapi.service.RecipeService
 import kotlinx.coroutines.launch
 
-class AddNewRecipeAPIFragment : Fragment() {
+class AddNewRecipeAPIFragment : Fragment()
+{
     private val recipeAPIClient = RecipeAPIClient()
-
     private lateinit var recipeTitleEditText: EditText
     private lateinit var recipeDescriptionEditText: EditText
     private lateinit var thumbnailUrlEditText: EditText
@@ -60,12 +60,10 @@ class AddNewRecipeAPIFragment : Fragment() {
     private lateinit var addRecipeButton: Button
     private lateinit var instructionsContainer: LinearLayout
     private lateinit var addInstructionButton: Button
-    private val instructionsList = mutableListOf<InstructionModel>()
     private var instructionCounter = 1
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var googleSignInLauncher: ActivityResultLauncher<Intent>
-    private val RC_SIGN_IN = 9001
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,16 +71,16 @@ class AddNewRecipeAPIFragment : Fragment() {
         googleSignInLauncher = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
-            Log.d(TAG, "Result code: ${result.resultCode}, Intent: ${result.data}")
             if (result.resultCode == AppCompatActivity.RESULT_OK && result.data != null) {
                 val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
                 handleSignInResult(task)
             } else {
-                Log.w(TAG, "Google Sign-In was canceled or failed with resultCode: ${result.resultCode}")
-                Toast.makeText(requireContext(), "Sign-in canceled.", Toast.LENGTH_SHORT).show()
+                Log.d("AddRecipe","Sign-in canceled or failed.")
+                Toast.makeText(requireContext(), "Sign-in canceled or failed.", Toast.LENGTH_SHORT).show()
             }
         }
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -123,7 +121,12 @@ class AddNewRecipeAPIFragment : Fragment() {
         }
 
         addRecipeButton.setOnClickListener {
-            checkLoginAndAddRecipe()
+            //checkLoginAndAddRecipe()
+            TokenProvider(requireContext()).setAuthToken("eyJhbGciOiJSUzI1NiIsImtpZCI6IjJjOGEyMGFmN2ZjOThmOTdmNDRiMTQyYjRkNWQwODg0ZWIwOTM3YzQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIxNjI1ODkxMzM3NDgtcWpndWZzNnJ2NDRmY3J0NHE4ZHN0cmU2djFlbG80Y3MuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiIxNjI1ODkxMzM3NDgtcWpndWZzNnJ2NDRmY3J0NHE4ZHN0cmU2djFlbG80Y3MuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDY1OTc4MTg4NzA1MTkwOTYwMzUiLCJoZCI6InN0dWRlbnQubXMuc2FwaWVudGlhLnJvIiwiZW1haWwiOiJlcnNlay5iZWF0cmljZUBzdHVkZW50Lm1zLnNhcGllbnRpYS5ybyIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoiR05CN0FueW1yUzZLUGpWQUhoMWlWdyIsIm5hbWUiOiLDiXJzZWsgQmVhdHJpY2UtQWRyaWVubmUiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSlBMei1rRDQxYmQzVy1xSVJIRTJPalVsWmV2X0N4cmZpcTg2UWdsbkxGbWJBWjVCV1Y9czk2LWMiLCJnaXZlbl9uYW1lIjoiw4lyc2VrIiwiZmFtaWx5X25hbWUiOiJCZWF0cmljZS1BZHJpZW5uZSIsImlhdCI6MTczMzU1Mzg0NywiZXhwIjoxNzMzNTU3NDQ3fQ.Zt2zT5fPrZP5Arb4HTs0tqefc6NZXsiu6I7bU19u2Wan2GLgFAldU8qiSgkT8i1u_p5yOwSy8RcnvztpsIAM1n-aVSJhy3edB8ACLyt104BhAWZeOb2BE__iYJA7ygxSLiXZITjKeIL1XcCKSYq5PLfAnZyqyvd7VhNZpyXjvr42lqtdIRpTUX0L4IWqhbYp3BVHsqXDDRS16MybY2s8GenDcYV_m7CQTbnsJVs_eLoDLu6BmvZrIt-DePKCTQrNP0msLI9pgtUUJr4vuUB74WiYUMDpsFdbRc5OTcy5-XwgUUA0K7vJf-U5i_NXsTOYjBJIC-7J8nbsTCj-JNd6RA")
+            lifecycleScope.launch {
+                val service = RetrofitClient(requireContext()).getRecipeService()
+                addRecipe(service,"eyJhbGciOiJSUzI1NiIsImtpZCI6IjJjOGEyMGFmN2ZjOThmOTdmNDRiMTQyYjRkNWQwODg0ZWIwOTM3YzQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIxNjI1ODkxMzM3NDgtcWpndWZzNnJ2NDRmY3J0NHE4ZHN0cmU2djFlbG80Y3MuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiIxNjI1ODkxMzM3NDgtcWpndWZzNnJ2NDRmY3J0NHE4ZHN0cmU2djFlbG80Y3MuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDY1OTc4MTg4NzA1MTkwOTYwMzUiLCJoZCI6InN0dWRlbnQubXMuc2FwaWVudGlhLnJvIiwiZW1haWwiOiJlcnNlay5iZWF0cmljZUBzdHVkZW50Lm1zLnNhcGllbnRpYS5ybyIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoiR05CN0FueW1yUzZLUGpWQUhoMWlWdyIsIm5hbWUiOiLDiXJzZWsgQmVhdHJpY2UtQWRyaWVubmUiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSlBMei1rRDQxYmQzVy1xSVJIRTJPalVsWmV2X0N4cmZpcTg2UWdsbkxGbWJBWjVCV1Y9czk2LWMiLCJnaXZlbl9uYW1lIjoiw4lyc2VrIiwiZmFtaWx5X25hbWUiOiJCZWF0cmljZS1BZHJpZW5uZSIsImlhdCI6MTczMzU1Mzg0NywiZXhwIjoxNzMzNTU3NDQ3fQ.Zt2zT5fPrZP5Arb4HTs0tqefc6NZXsiu6I7bU19u2Wan2GLgFAldU8qiSgkT8i1u_p5yOwSy8RcnvztpsIAM1n-aVSJhy3edB8ACLyt104BhAWZeOb2BE__iYJA7ygxSLiXZITjKeIL1XcCKSYq5PLfAnZyqyvd7VhNZpyXjvr42lqtdIRpTUX0L4IWqhbYp3BVHsqXDDRS16MybY2s8GenDcYV_m7CQTbnsJVs_eLoDLu6BmvZrIt-DePKCTQrNP0msLI9pgtUUJr4vuUB74WiYUMDpsFdbRc5OTcy5-XwgUUA0K7vJf-U5i_NXsTOYjBJIC-7J8nbsTCj-JNd6RA" )
+            }
         }
 
         return view
@@ -132,56 +135,70 @@ class AddNewRecipeAPIFragment : Fragment() {
     private fun handleSignInResult(task: Task<GoogleSignInAccount>) {
         try {
             val account = task.getResult(ApiException::class.java)
-            Log.d(TAG, "Sign-in successful. Account: ${account.email}, Token: ${account.idToken}")
-            val idToken = account?.idToken
-            if (idToken != null) {
-                TokenProvider(requireContext()).setAuthToken(idToken)
-                Toast.makeText(requireContext(), "Login successful!", Toast.LENGTH_SHORT).show()
+            val authCode = account?.serverAuthCode
+            if (authCode != null) {
+                exchangeAuthorizationCodeForTokens(authCode)
             } else {
-                Log.e(TAG, "ID token is null")
-                Toast.makeText(requireContext(), "Failed to get ID token.", Toast.LENGTH_SHORT).show()
+                Log.d("AddRecipe","Failed to get authorization code.")
+                Toast.makeText(requireContext(), "Failed to get authorization code.", Toast.LENGTH_SHORT).show()
             }
         } catch (e: ApiException) {
-            Log.e(TAG, "Sign-in failed: ${e.statusCode}, ${e.message}")
+            Log.d("AddRecipe","Sign-in failed.")
             Toast.makeText(requireContext(), "Sign-in failed.", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun exchangeAuthorizationCodeForTokens(authCode: String) {
+        lifecycleScope.launch {
+            try {
+                val response = OAuthRetrofitClient.api.exchangeAuthorizationCode(
+                    clientId = "162589133748-qjgufs6rv44fcrt4q8dstre6v1elo4cs.apps.googleusercontent.com",
+                    clientSecret = "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",
+                    authorizationCode = authCode
+                )
+                if (response.isSuccessful) {
+                    val tokens = response.body()
+                    tokens?.id_token?.let {
+                        TokenProvider(requireContext()).setAuthToken(it)
+                        Toast.makeText(requireContext(), "Login successful!", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "Token exchange failed.", Toast.LENGTH_SHORT).show()
+                }
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Error during token exchange.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
     private fun configureGoogleSignIn() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("162589133748-qjgufs6rv44fcrt4q8dstre6v1elo4cs.apps.googleusercontent.com") // Your OAuth 2.0 Client ID
+            .requestServerAuthCode("162589133748-qjgufs6rv44fcrt4q8dstre6v1elo4cs.apps.googleusercontent.com")
             .requestEmail()
+            .requestProfile()
             .build()
 
         googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
     }
 
-    private fun checkLoginAndAddRecipe() {
-        val token = TokenProvider(requireContext()).getAuthToken()
-        if (token.isNullOrEmpty()) {
-            // If no token is found, initiate Google Sign-In
-            Toast.makeText(requireContext(), "Please log in to add a recipe.", Toast.LENGTH_SHORT).show()
-            signInWithGoogle()
-        } else {
-            // Token exists, proceed with recipe submission
-            lifecycleScope.launch {
-                val service = RetrofitClient(requireContext()).getRecipeService()
-                try {
-                    addRecipe(service, token)
-                } catch (e: Exception) {
-                    Log.e(TAG, "Recipe upload failed", e)
-                    Toast.makeText(requireContext(), "Error uploading recipe.", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
     private fun signInWithGoogle() {
         val signInIntent = googleSignInClient.signInIntent
-        Log.d(TAG, "Launching Google Sign-In Intent: $signInIntent")
+        Log.d("AddRecipe", "Launching Google Sign-In Intent: $signInIntent")
         googleSignInLauncher.launch(signInIntent)
     }
 
+    private fun checkLoginAndAddRecipe() {
+        val token = TokenProvider(requireContext()).getAuthToken()
+        if (token.isNullOrEmpty()) {
+            Toast.makeText(requireContext(), "Please log in to add a recipe.", Toast.LENGTH_SHORT).show()
+            signInWithGoogle()
+        } else {
+            lifecycleScope.launch {
+                val service = RetrofitClient(requireContext()).getRecipeService()
+                addRecipe(service, token)
+            }
+        }
+    }
 
     private suspend fun addRecipe(service: RecipeService, token: String) {
         // Get the user input from the UI
@@ -220,13 +237,7 @@ class AddNewRecipeAPIFragment : Fragment() {
         if (response.isSuccessful) {
             Toast.makeText(requireContext(), "Recipe uploaded successfully!", Toast.LENGTH_SHORT).show()
         } else {
-            if (response.code() == 401) { // Unauthorized
-                TokenProvider(requireContext()).setAuthToken(null) // Clear invalid token
-                Toast.makeText(requireContext(), "Session expired. Please log in again.", Toast.LENGTH_SHORT).show()
-                signInWithGoogle() // Prompt for login
-            } else {
-                Toast.makeText(requireContext(), "Failed to upload recipe: ${response.message()}", Toast.LENGTH_SHORT).show()
-            }
+            Toast.makeText(requireContext(), "Failed to upload recipe: ${response.message()}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -321,14 +332,4 @@ class AddNewRecipeAPIFragment : Fragment() {
         }
         return instructions
     }
-
-    private fun showLoading(isLoading: Boolean) {
-        addRecipeButton.isEnabled = !isLoading
-        if (isLoading) {
-            // Show a loading spinner or something similar
-        } else {
-            // Hide the loading spinner
-        }
-    }
-
 }

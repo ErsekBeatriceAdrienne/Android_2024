@@ -10,7 +10,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitClient(context: Context) {
-
     private val tokenProvider = TokenProvider(context)
     private val authInterceptor = AuthInterceptor(tokenProvider)
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
@@ -18,16 +17,15 @@ class RetrofitClient(context: Context) {
     }
 
     private val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor(loggingInterceptor)
         .addInterceptor(authInterceptor)
+        .addInterceptor(loggingInterceptor)
         .build()
 
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://recipe-appservice-cthjbdfafnhfdtes.germanywestcentral-01.azurewebsites.net")
         .addConverterFactory(GsonConverterFactory.create())
-        .client(okHttpClient) // Set the OkHttp client for authentication
+        .client(okHttpClient)
         .build()
 
     fun getRecipeService(): RecipeService = retrofit.create(RecipeService::class.java)
-
 }
