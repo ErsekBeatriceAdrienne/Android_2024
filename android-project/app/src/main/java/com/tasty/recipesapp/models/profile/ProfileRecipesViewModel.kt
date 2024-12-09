@@ -24,7 +24,8 @@ class ProfileRecipesViewModel(private val repository: LocalDBRepository) : ViewM
 
     private fun loadAllRecipes() {
         viewModelScope.launch {
-            _recipes.value = repository.getAllRecipes()
+            val recipes = repository.getAllRecipes() ?: emptyList()
+            _recipes.postValue(recipes)
         }
     }
 
